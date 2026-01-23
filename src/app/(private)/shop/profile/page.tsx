@@ -30,7 +30,7 @@ import { Switch } from '~/components/ui/switch'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import { toast } from 'sonner'
 import { Address } from '~/app/(private)/profile/AddressManagement'
-import { toggleShopJoinSaleCampaignAPI, updateShopInfoAPI, updateShopLogoAPI } from '~/apiRequests/shop.apiRequest'
+import { closeShopAPI, toggleShopJoinSaleCampaignAPI, updateShopInfoAPI, updateShopLogoAPI } from '~/apiRequests/shop.apiRequest'
 import { getAddressesAPI } from '~/apiRequests/user.apiRequest'
 import { BankEnum } from '~/zodSchema/shop.schema'
 
@@ -78,6 +78,7 @@ export default function ProfilePage() {
   
   const [isUpdatingSaleCampaign, setIsUpdatingSaleCampaign] = useState(false)
   const [isUpdatingInfo, setIsUpdatingInfo] = useState(false)
+  const [isClosingShop, setIsClosingShop] = useState(false)
 
   const form = useForm<ShopFormValues>({
     resolver: zodResolver(shopFormSchema),
@@ -230,6 +231,20 @@ export default function ProfilePage() {
       toast.error('Không thể cập nhật trạng thái chương trình khuyến mãi')
     } finally {
       setIsUpdatingSaleCampaign(false)
+    }
+  }
+
+  // Đóng shop
+  const handleCloseShop = async () => {
+    setIsClosingShop(true)
+    try {
+      const newShopInfo = await closeShopAPI(shop.id)
+      setShop(newShopInfo)
+      toast.success('Đã đóng shop thành công')
+    } catch (error) {
+      toast.error('Không thể đóng shop')
+    } finally {
+      setIsClosingShop(false)
     }
   }
 
@@ -472,6 +487,37 @@ export default function ProfilePage() {
               onCheckedChange={handleSaleCampaignToggle}
               disabled={isUpdatingSaleCampaign}
               className='data-[state=checked]:bg-[#004643]'
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Đóng shop */}
+      <Card className='border-red-200'>
+        <CardHeader>
+          <CardTitle className='text-red-600'>Đóng shop</CardTitle>
+          <CardDescription>
+            Đóng shop sẽ ngừng hoạt động kinh doanh và không thể mở lại
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className='flex items-center justify-between'>
+            <div className='space-y-0.5'>
+              <div className='text-sm font-medium'>
+                Xác nhận đóng shop
+              </div>
+              <div className='text-sm text-gray-500'>
+                {shop.status === 'CLOSED' 
+                  ? 'Shop đã được đóng và không thể mở lại'
+                  : 'Bật công tắc này để đóng shop vĩnh viễn'
+                }
+              </div>
+            </div>
+            <Switch
+              checked={shop.status === 'CLOSED'}
+              onCheckedChange={handleCloseShop}
+              disabled={isClosingShop || shop.status === 'CLOSED'}
+              className='data-[state=checked]:bg-red-500'
             />
           </div>
         </CardContent>

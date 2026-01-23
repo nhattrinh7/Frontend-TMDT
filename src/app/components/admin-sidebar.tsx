@@ -24,19 +24,24 @@ const menuItems = [
     url: '/admin/users', 
   },
   {
+    title: 'Đơn hàng',
+    icon: ShoppingCart,
+    url: '/admin/orders', 
+  },
+  {
     title: 'Shops',
     icon: Store,
     isActive: true,
     subItems: [
       {
-        title: 'Quản lí shops',
-        icon: Package,
-        url: '/admin/shops',
-      },
-      {
         title: 'Duyệt shop',
         icon: UserPlus,
         url: '/admin/shops/new',
+      },
+      {
+        title: 'Quản lí shops',
+        icon: Package,
+        url: '/admin/shops',
       },
     ],
   },
@@ -51,41 +56,11 @@ const menuItems = [
         url: '/admin/products/new',
       },
       {
-        title: 'Thời trang và phụ kiện',
+        title: 'Quản lí sản phẩm',
         icon: Shirt,
-        url: '/admin/products/fashion',
-      },
-      {
-        title: 'Làm đẹp và sức khỏe',
-        icon: Sparkles,
-        url: '/admin/products/beauty',
-      },
-      {
-        title: 'Điện tử và công nghệ',
-        icon: Laptop,
-        url: '/admin/products/technology',
-      },
-      {
-        title: 'Nhà cửa và đời sống',
-        icon: Home,
-        url: '/admin/products/home',
-      },
-      {
-        title: 'Thể thao và giải trí',
-        icon: Dumbbell,
-        url: '/admin/products/sports',
-      },
-      {
-        title: 'Thực phẩm và đồ uống',
-        icon: UtensilsCrossed,
-        url: '/admin/products/food',
+        url: '/admin/products',
       },
     ],
-  },
-  {
-    title: 'Đơn hàng',
-    icon: ShoppingCart,
-    url: '/admin/orders', 
   },
   {
     title: 'Thương hiệu',

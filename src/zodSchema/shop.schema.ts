@@ -105,7 +105,7 @@ export type Shop = z.infer<typeof ShopSchema>
 export const createShopBodyType = z.object({
   name: z.string(),
   description: z.string(),
-  category: z.string(),
+  categoryId: z.string(),
   bankName: z.string(),
   bankNumber: z.string(),
   taxCode: z.string(),

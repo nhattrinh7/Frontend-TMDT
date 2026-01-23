@@ -34,3 +34,9 @@ export const updateShopInfoAPI = async (shopId: string, data: Partial<UpdateShop
 export const toggleShopJoinSaleCampaignAPI = async (shopId: string) => {
   await http.patch<ApiResponse<Shop>>(`/api/v1/shops/${shopId}/sale-campaign`)
 }
+
+// Đóng shop
+export const closeShopAPI = async (shopId: string) => {
+  const response = await http.patch<ApiResponse<Shop>>(`/api/v1/shops/${shopId}/close`)
+  return response.data
+}

@@ -7,6 +7,7 @@ import {
   ProductsPaginatedResponse,
   UpdateProductInput,
   ProductDetail,
+  AdminProductsPaginatedResponse,
 } from '~/zodSchema/product.schema'
 
 // Upload ảnh cho sản phẩm, ảnh gì cũng dùng api này, cũng chỉ là gửi ảnh lên để lấy về url thôi
@@ -62,10 +63,9 @@ export const getShopProductsPaginatedAPI = async (params: GetProductsPaginatedPa
   if (params.search) searchParams.append('search', params.search)
   if (params.isActive !== undefined) searchParams.append('isActive', params.isActive.toString())
   if (params.approveStatus) searchParams.append('approveStatus', params.approveStatus)
-  if (params.shopId) searchParams.append('shopId', params.shopId)
   
   const queryString = searchParams.toString()
-  const url = `/api/v1/products${queryString ? `?${queryString}` : ''}`
+  const url = `/api/v1/products/shop/${params.shopId}${queryString ? `?${queryString}` : ''}`
   
   const response = await http.get<ApiResponse<ProductsPaginatedResponse>>(url)
   return response.data
@@ -102,5 +102,47 @@ export const updateProductAPI = async (productId: string, data: UpdateProductInp
     data
   )
   return response.data
+}
+
+// ========== APIs cho Admin duyệt sản phẩm ==========
+
+export type GetAdminProductsPaginatedParams = {
+  page?: number
+  limit?: number
+  search?: string
+  approveStatus?: 'PENDING' | 'ACCEPTED' | 'REJECTED'
+}
+
+// Lấy danh sách sản phẩm cho admin (không cần shopId)
+export const getProductsPaginatedAPI = async (params: GetAdminProductsPaginatedParams) => {
+  const searchParams = new URLSearchParams()
+  
+  if (params.page) searchParams.append('page', params.page.toString())
+  if (params.limit) searchParams.append('limit', params.limit.toString())
+  if (params.search) searchParams.append('search', params.search)
+  if (params.approveStatus) searchParams.append('approveStatus', params.approveStatus)
+  
+  const queryString = searchParams.toString()
+  const url = `/api/v1/products${queryString ? `?${queryString}` : ''}`
+  
+  const response = await http.get<ApiResponse<AdminProductsPaginatedResponse>>(url)
+  return response.data
+}
+
+// Duyệt sản phẩm
+export const approveProductAPI = async (productId: string) => {
+  const response = await http.patch<ApiResponse<void>>(
+    `/api/v1/products/${productId}/approve`
+  )
+  return response
+}
+
+// Từ chối sản phẩm
+export const rejectProductAPI = async (productId: string, rejectReason: string) => {
+  const response = await http.patch<ApiResponse<void>>(
+    `/api/v1/products/${productId}/reject`,
+    { rejectReason }
+  )
+  return response
 }
 

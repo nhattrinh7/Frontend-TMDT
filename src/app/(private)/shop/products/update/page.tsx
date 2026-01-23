@@ -20,6 +20,16 @@ import {
 } from '~/components/ui/form'
 import { toast } from 'sonner'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '~/components/ui/alert-dialog'
+import {
   UpdateProductSchema,
   UpdateProductInput,
   ProductDetail,
@@ -61,6 +71,8 @@ function UpdateProductContent() {
   const [categoryName, setCategoryName] = useState<string>('')
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showResubmitDialog, setShowResubmitDialog] = useState(false)
+  const [pendingFormData, setPendingFormData] = useState<UpdateProductInput | null>(null)
 
   const form = useForm<UpdateProductInput>({
     resolver: zodResolver(UpdateProductSchema),
@@ -163,6 +175,20 @@ function UpdateProductContent() {
   const onSubmit = async (data: UpdateProductInput) => {
     if (!productId) return
 
+    // Nếu sản phẩm bị REJECTED, hiển thị popup xác nhận trước khi cập nhật
+    if (product?.approveStatus === 'REJECTED') {
+      setPendingFormData(data)
+      setShowResubmitDialog(true)
+      return
+    }
+
+    // Nếu không phải REJECTED, cập nhật trực tiếp
+    await performUpdate(data)
+  }
+
+  const performUpdate = async (data: UpdateProductInput) => {
+    if (!productId) return
+
     try {
       setIsSubmitting(true)
       await updateProductAPI(productId, data)
@@ -174,6 +200,18 @@ function UpdateProductContent() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const handleConfirmUpdate = async () => {
+    if (!pendingFormData) return
+    setShowResubmitDialog(false)
+    await performUpdate(pendingFormData)
+    setPendingFormData(null)
+  }
+
+  const handleCancelUpdate = () => {
+    setShowResubmitDialog(false)
+    setPendingFormData(null)
   }
 
   if (isLoading) {
@@ -405,6 +443,31 @@ function UpdateProductContent() {
           </div>
         </form>
       </Form>
+
+      {/* AlertDialog xác nhận xin duyệt lại sản phẩm */}
+      <AlertDialog open={showResubmitDialog} onOpenChange={setShowResubmitDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận xin duyệt lại sản phẩm</AlertDialogTitle>
+            <AlertDialogDescription>
+              Sản phẩm này trước đó đã bị từ chối bởi Admin Szone. Nếu bạn cập nhật sản phẩm này, 
+              đồng nghĩa với việc bạn xin Admin Szone duyệt lại sản phẩm. 
+              Bạn có chắc chắn muốn tiếp tục?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleCancelUpdate}>
+              Hủy
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleConfirmUpdate}
+              className="bg-[#004643] hover:bg-[#004643]/90"
+            >
+              Đồng ý và cập nhật
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Plus, Edit, Trash2, MapPin, Phone, X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useBoundStore } from '~/zustand/store'
@@ -14,6 +14,22 @@ import {
   updateAddressAPI 
 } from '~/apiRequests/user.apiRequest'
 import { toast } from 'sonner'
+import provinceData from '~/lib/province_and_ward.json'
+
+interface Ward {
+  ward_code: string
+  name: string
+  province_code: string
+}
+
+interface Province {
+  province_code: string
+  name: string
+  short_name: string
+  code: string
+  place_type: string
+  wards: Ward[]
+}
 
 export interface Address {
   id: string
@@ -33,11 +49,22 @@ export default function AddressManagement() {
   const [isLoading, setIsLoading] = useState(true)
   const [editingAddress, setEditingAddress] = useState<Address | null>(null)
   const [isAdding, setIsAdding] = useState(false)
+  
+  // State cho form thêm địa chỉ
+  const [addSelectedProvince, setAddSelectedProvince] = useState<string>('')
+  const [addWards, setAddWards] = useState<Ward[]>([])
+  
+  // State cho form chỉnh sửa địa chỉ  
+  const [editSelectedProvince, setEditSelectedProvince] = useState<string>('')
+  const [editWards, setEditWards] = useState<Ward[]>([])
 
   const user = useBoundStore((state) => state.user)
   
   const editForm = useForm<Address>()
   const addForm = useForm<Address>()
+  
+  // Memoize provinces list
+  const provinces = useMemo(() => provinceData as Province[], [])
 
   // Fetch addresses from backend
   useEffect(() => {
@@ -84,10 +111,20 @@ export default function AddressManagement() {
   const handleEdit = (address: Address) => {
     setEditingAddress(address)
     editForm.reset(address)
+    // Thiết lập tỉnh và danh sách ward cho form chỉnh sửa
+    setEditSelectedProvince(address.province)
+    const selectedProvince = provinces.find(p => p.name === address.province)
+    if (selectedProvince) {
+      setEditWards(selectedProvince.wards)
+    } else {
+      setEditWards([])
+    }
   }
 
   const handleAdd = () => {
     setIsAdding(true)
+    setAddSelectedProvince('')
+    setAddWards([])
     addForm.reset({
       recipientName: '',
       recipientPhoneNumber: '',
@@ -96,6 +133,32 @@ export default function AddressManagement() {
       detail: '',
       isDefault: false
     })
+  }
+  
+  // Xử lý khi chọn tỉnh trong form thêm
+  const handleAddProvinceChange = (provinceName: string) => {
+    setAddSelectedProvince(provinceName)
+    const selectedProvince = provinces.find(p => p.name === provinceName)
+    if (selectedProvince) {
+      setAddWards(selectedProvince.wards)
+    } else {
+      setAddWards([])
+    }
+    addForm.setValue('province', provinceName)
+    addForm.setValue('ward', '') // Reset ward khi đổi tỉnh
+  }
+  
+  // Xử lý khi chọn tỉnh trong form chỉnh sửa
+  const handleEditProvinceChange = (provinceName: string) => {
+    setEditSelectedProvince(provinceName)
+    const selectedProvince = provinces.find(p => p.name === provinceName)
+    if (selectedProvince) {
+      setEditWards(selectedProvince.wards)
+    } else {
+      setEditWards([])
+    }
+    editForm.setValue('province', provinceName)
+    editForm.setValue('ward', '') // Reset ward khi đổi tỉnh
   }
 
   const onSubmitEdit = async (data: Omit<Address, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => {
@@ -276,11 +339,19 @@ export default function AddressManagement() {
                 <label className='block text-sm font-semibold text-gray-700 mb-2'>
                   Tỉnh/Thành phố <span className='text-red-500'>*</span>
                 </label>
-                <input
-                  {...addForm.register('province', { required: 'Vui lòng nhập tỉnh/thành phố' })}
-                  className='text-gray-600 w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#004643] focus:outline-none transition-all'
-                  placeholder='Nhập tỉnh/thành phố'
-                />
+                <select
+                  value={addSelectedProvince}
+                  onChange={(e) => handleAddProvinceChange(e.target.value)}
+                  className='text-gray-600 w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#004643] focus:outline-none transition-all bg-white'
+                >
+                  <option value=''>Chọn tỉnh/thành phố</option>
+                  {provinces.map((province) => (
+                    <option key={province.province_code} value={province.name}>
+                      {province.name}
+                    </option>
+                  ))}
+                </select>
+                <input type='hidden' {...addForm.register('province', { required: 'Vui lòng chọn tỉnh/thành phố' })} />
                 {addForm.formState.errors.province && (
                   <p className='text-red-500 text-sm mt-1'>{addForm.formState.errors.province.message}</p>
                 )}
@@ -290,11 +361,18 @@ export default function AddressManagement() {
                 <label className='block text-sm font-semibold text-gray-700 mb-2'>
                   Phường/Xã <span className='text-red-500'>*</span>
                 </label>
-                <input
-                  {...addForm.register('ward', { required: 'Vui lòng nhập phường/xã' })}
-                  className='text-gray-600 w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#004643] focus:outline-none transition-all'
-                  placeholder='Nhập phường/xã'
-                />
+                <select
+                  {...addForm.register('ward', { required: 'Vui lòng chọn phường/xã' })}
+                  className='text-gray-600 w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#004643] focus:outline-none transition-all bg-white'
+                  disabled={!addSelectedProvince}
+                >
+                  <option value=''>Chọn phường/xã</option>
+                  {addWards.map((ward) => (
+                    <option key={ward.ward_code} value={ward.name}>
+                      {ward.name}
+                    </option>
+                  ))}
+                </select>
                 {addForm.formState.errors.ward && (
                   <p className='text-red-500 text-sm mt-1'>{addForm.formState.errors.ward.message}</p>
                 )}
@@ -388,11 +466,19 @@ export default function AddressManagement() {
                 <label className='block text-sm font-semibold text-gray-700 mb-2'>
                   Tỉnh/Thành phố <span className='text-red-500'>*</span>
                 </label>
-                <input
-                  {...editForm.register('province', { required: 'Vui lòng nhập tỉnh/thành phố' })}
-                  className='text-gray-600 w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all'
-                  placeholder='Nhập tỉnh/thành phố'
-                />
+                <select
+                  value={editSelectedProvince}
+                  onChange={(e) => handleEditProvinceChange(e.target.value)}
+                  className='text-gray-600 w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#e16162] focus:outline-none transition-all bg-white'
+                >
+                  <option value=''>Chọn tỉnh/thành phố</option>
+                  {provinces.map((province) => (
+                    <option key={province.province_code} value={province.name}>
+                      {province.name}
+                    </option>
+                  ))}
+                </select>
+                <input type='hidden' {...editForm.register('province', { required: 'Vui lòng chọn tỉnh/thành phố' })} />
                 {editForm.formState.errors.province && (
                   <p className='text-red-500 text-sm mt-1'>{editForm.formState.errors.province.message}</p>
                 )}
@@ -402,11 +488,18 @@ export default function AddressManagement() {
                 <label className='block text-sm font-semibold text-gray-700 mb-2'>
                   Phường/Xã <span className='text-red-500'>*</span>
                 </label>
-                <input
-                  {...editForm.register('ward', { required: 'Vui lòng nhập phường/xã' })}
-                  className='text-gray-600 w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none transition-all'
-                  placeholder='Nhập phường/xã'
-                />
+                <select
+                  {...editForm.register('ward', { required: 'Vui lòng chọn phường/xã' })}
+                  className='text-gray-600 w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#e16162] focus:outline-none transition-all bg-white'
+                  disabled={!editSelectedProvince}
+                >
+                  <option value=''>Chọn phường/xã</option>
+                  {editWards.map((ward) => (
+                    <option key={ward.ward_code} value={ward.name}>
+                      {ward.name}
+                    </option>
+                  ))}
+                </select>
                 {editForm.formState.errors.ward && (
                   <p className='text-red-500 text-sm mt-1'>{editForm.formState.errors.ward.message}</p>
                 )}

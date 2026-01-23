@@ -63,3 +63,84 @@ export const BrandFormSchema = z.object({
   country: z.string().min(1, 'Quốc gia không được để trống'),
 })
 export type BrandFormInput = z.infer<typeof BrandFormSchema>
+
+// ========== Admin Shops Management ==========
+
+// Address schema (nested in shop)
+export const ShopAddressSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  recipientName: z.string(),
+  recipientPhoneNumber: z.string(),
+  province: z.string(),
+  ward: z.string(),
+  detail: z.string(),
+  isDefault: z.boolean(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+})
+export type ShopAddress = z.infer<typeof ShopAddressSchema>
+
+// Shop owner schema (nested in shop)
+export const ShopOwnerSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  email: z.string(),
+  roleId: z.string(),
+  fullName: z.string(),
+  phoneNumber: z.string(),
+  dob: z.string(),
+  gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
+  avatar: z.string().nullable(),
+  status: z.enum(['ACTIVE', 'BANNED']),
+  require2FA: z.boolean(),
+  emailVerified: z.boolean(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+})
+export type ShopOwner = z.infer<typeof ShopOwnerSchema>
+
+// Admin shop schema (full shop info with owner and address)
+export const AdminShopSchema = z.object({
+  id: z.string(),
+  ownerId: z.string(),
+  name: z.string(),
+  description: z.string(),
+  logo: z.string().nullable(),
+  addressId: z.string(),
+  ratingAvg: z.number(),
+  ratingCount: z.number(),
+  status: z.enum(['UNDER_REVIEW', 'ACTIVE', 'CLOSED', 'BANNED', 'REJECTED']),
+  totalRevenue: z.number(),
+  revenueInMonth: z.number(),
+  totalOrderCount: z.number(),
+  orderCountInMonth: z.number(),
+  bankName: z.string(),
+  bankNumber: z.string(),
+  taxCode: z.string(),
+  categoryId: z.string(),
+  isJoinSaleCampaign: z.boolean(),
+  verifiedAt: z.string().nullable(),
+  rejectReason: z.string().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  owner: ShopOwnerSchema,
+  address: ShopAddressSchema,
+})
+export type AdminShop = z.infer<typeof AdminShopSchema>
+
+// Response từ API getShopsPaginated
+export const ShopsPaginatedResponseSchema = z.object({
+  shops: z.array(AdminShopSchema),
+  meta: AdminPaginationMetaSchema,
+})
+export type ShopsPaginatedResponse = z.infer<typeof ShopsPaginatedResponseSchema>
+
+// Params cho API getShopsPaginated
+export type GetShopsPaginatedParams = {
+  page?: number
+  limit?: number
+  status: 'UNDER_REVIEW' | 'ACTIVE' | 'CLOSED' | 'BANNED' | 'REJECTED'
+  search?: string
+  categoryIds: string[]
+}

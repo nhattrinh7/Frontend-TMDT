@@ -147,15 +147,32 @@ export default function NewProductPage() {
     setIsSubmitting(true)
 
     try {
-      const payload = {
-        ...data,
-        shopId: shop.id,
-        variants: variants.map((v) => ({
+      // Chuyển đổi classifications sang format cho API
+      const classificationsForAPI = classifications
+        .filter(c => c.name && c.options.some(o => o.value))
+        .map(c => ({
+          name: c.name,
+          values: c.options.filter(o => o.value).map(o => o.value),
+        }))
+
+      // Chuyển đổi variants để bao gồm optionValues
+      const variantsForAPI = variants.map(v => {
+        // SKU format: "Đỏ-S" -> optionValues: ["Đỏ", "S"]
+        const optionValues = v.sku.split('-')
+        return {
           sku: v.sku,
           price: v.price,
           stock: v.stock,
           image: v.image || null,
-        })),
+          optionValues: classificationsForAPI.length > 0 ? optionValues : undefined,
+        }
+      })
+
+      const payload = {
+        ...data,
+        shopId: shop.id,
+        classifications: classificationsForAPI.length > 0 ? classificationsForAPI : undefined,
+        variants: variantsForAPI,
       }
 
       await createProductAPI(payload)

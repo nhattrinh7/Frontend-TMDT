@@ -12,6 +12,7 @@ export const ProductVariantInputSchema = z.object({
   price: z.number().min(0, 'Giá phải lớn hơn hoặc bằng 0'),
   stock: z.number().min(0, 'Số lượng phải lớn hơn hoặc bằng 0'),
   image: z.url().optional().nullable(),
+  optionValues: z.array(z.string()).optional(), // Mảng các giá trị option theo thứ tự classifications
 })
 export type ProductVariantInput = z.infer<typeof ProductVariantInputSchema>
 
@@ -44,9 +45,17 @@ export const CreateProductSchema = z.object({
 })
 export type CreateProductInput = z.infer<typeof CreateProductSchema>
 
+// Schema cho classification gửi lên API (dùng cho tạo sản phẩm)
+export const ClassificationInputSchema = z.object({
+  name: z.string().min(1, 'Tên phân loại không được để trống'),
+  values: z.array(z.string().min(1)).min(1, 'Cần ít nhất 1 giá trị'),
+})
+export type ClassificationInput = z.infer<typeof ClassificationInputSchema>
+
 // Schema cho dữ liệu gửi lên API
 export const CreateProductBodySchema = CreateProductSchema.extend({
   shopId: z.uuid(),
+  classifications: z.array(ClassificationInputSchema).optional(), // Phân loại hàng
 })
 export type CreateProductBody = z.infer<typeof CreateProductBodySchema>
 
@@ -153,3 +162,26 @@ export const UpdateProductBodySchema = UpdateProductSchema.extend({
   productId: z.uuid(),
 })
 export type UpdateProductBody = z.infer<typeof UpdateProductBodySchema>
+
+// ========== Schemas cho trang Admin duyệt sản phẩm ==========
+
+export const AdminProductSchema = ProductSchema.extend({
+  variants: z.array(ProductVariantSchema),
+  shop: z.object({
+    id: z.uuid(),
+    name: z.string(),
+    logo: z.string().nullable(),
+  }),
+  category: z.object({
+    id: z.uuid(),
+    name: z.string(),
+  }),
+})
+export type AdminProduct = z.infer<typeof AdminProductSchema>
+
+export const AdminProductsPaginatedResponseSchema = z.object({
+  products: z.array(AdminProductSchema),
+  meta: PaginationMetaSchema,
+})
+export type AdminProductsPaginatedResponse = z.infer<typeof AdminProductsPaginatedResponseSchema>
+

@@ -7,6 +7,8 @@ import {
   GetBrandsPaginatedParams,
   BrandFormInput,
   Brand,
+  ShopsPaginatedResponse,
+  GetShopsPaginatedParams,
 } from '~/zodSchema/admin.schema'
 
 // ========== Admin Users Management APIs ==========
@@ -93,3 +95,64 @@ export const uploadBrandLogoAPI = async (file: File) => {
   return response.data
 }
 
+// ========== Admin Shops Management APIs ==========
+
+// Lấy danh sách categoryIds cấp 1 mà role quản lý
+export const getTopLevelCategoryIdsByRoleIdAPI = async (roleId: string) => {
+  const response = await http.get<ApiResponse<string[]>>(
+    `/api/v1/roles/${roleId}/category-ids/top-level`
+  )
+  return response.data
+}
+
+// Lấy danh sách shops với pagination, search và filter theo status
+export const getShopsPaginatedAPI = async (params: GetShopsPaginatedParams) => {
+  const searchParams = new URLSearchParams()
+
+  if (params.page) searchParams.append('page', params.page.toString())
+  if (params.limit) searchParams.append('limit', params.limit.toString())
+  searchParams.append('status', params.status)
+  if (params.search) searchParams.append('search', params.search)
+  if (params.categoryIds.length > 0) {
+    searchParams.append('categoryIds', params.categoryIds.join(','))
+  }
+
+  const queryString = searchParams.toString()
+  const url = `/api/v1/admin/shops${queryString ? `?${queryString}` : ''}`
+
+  const response = await http.get<ApiResponse<ShopsPaginatedResponse>>(url)
+  return response.data
+}
+
+// Duyệt shop
+export const approveShopAPI = async (shopId: string) => {
+  const response = await http.patch<ApiResponse<void>>(
+    `/api/v1/admin/shops/${shopId}/approve`
+  )
+  return response.data
+}
+
+// Từ chối shop
+export const rejectShopAPI = async (shopId: string, reason: string) => {
+  const response = await http.patch<ApiResponse<void>>(
+    `/api/v1/admin/shops/${shopId}/reject`,
+    { reason }
+  )
+  return response.data
+}
+
+// Ban shop
+export const banShopAPI = async (shopId: string) => {
+  const response = await http.patch<ApiResponse<{ message: string }>>(
+    `/api/v1/admin/shops/${shopId}/ban`
+  )
+  return response.data
+}
+
+// Unban shop
+export const unbanShopAPI = async (shopId: string) => {
+  const response = await http.patch<ApiResponse<{ message: string }>>(
+    `/api/v1/admin/shops/${shopId}/unban`
+  )
+  return response.data
+}

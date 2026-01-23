@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense, useCallback } from 'react'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
-import { Plus, Trash2, MoreHorizontal, ChevronLeft } from 'lucide-react'
+import { Plus, Trash2, MoreHorizontal, ChevronLeft, Pencil } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Button } from '~/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
@@ -33,7 +33,8 @@ import {
   AlertDialogTitle,
 } from '~/components/ui/alert-dialog'
 import { CreateVoucherForm } from '~/app/components/create-voucher-form'
-import { getShopVouchersAPI, deleteVoucherAPI } from '~/apiRequests/voucher.apiRequest'
+import { UpdateShopVoucherForm } from '~/app/components/update-shop-voucher-form'
+import { getShopVouchersAPI, softDeleteVoucherAPI } from '~/apiRequests/voucher.apiRequest'
 import { Voucher } from '~/zodSchema/voucher.schema'
 import { useBoundStore } from '~/zustand/store'
 import { toast } from 'sonner'
@@ -50,6 +51,8 @@ function VouchersContent() {
 
   const activeTab = searchParams.get('status') || 'ongoing'
   const isCreating = searchParams.get('action') === 'create'
+  const isUpdating = searchParams.get('action') === 'update'
+  const updateVoucherId = searchParams.get('voucherId') || ''
   const currentPage = Number(searchParams.get('page')) || 1
   const itemsPerPage = 5
 
@@ -102,7 +105,7 @@ function VouchersContent() {
 
     try {
       setIsDeleting(true)
-      await deleteVoucherAPI(voucherToDelete.id)
+      await softDeleteVoucherAPI(voucherToDelete.id)
       toast.success('Xóa voucher thành công!')
       handleCloseDeleteDialog()
       refetchVouchers()
@@ -134,7 +137,11 @@ function VouchersContent() {
   }
 
   const handleCloseForm = () => {
-    updateParams({ action: '' })
+    updateParams({ action: '', voucherId: '' })
+  }
+
+  const handleUpdateVoucher = (voucher: Voucher) => {
+    updateParams({ action: 'update', voucherId: voucher.id })
   }
 
   const handlePageChange = (page: number) => {
@@ -232,7 +239,8 @@ function VouchersContent() {
     data,
     totalCount,
     showUsed = false,
-  }: { data: Voucher[]; totalCount: number; showUsed?: boolean }) => (
+    showActions = false,
+  }: { data: Voucher[]; totalCount: number; showUsed?: boolean; showActions?: boolean }) => (
     <div className='rounded-md border border-[#004643]/10 bg-white'>
       <Table>
         <TableHeader className='bg-[#f0f7f6]'>
@@ -287,9 +295,17 @@ function VouchersContent() {
                         <MoreHorizontal className='h-5 w-5' />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align='end'>
+                    <DropdownMenuContent align='end' className='bg-white'>
+                      {showActions && (
+                        <DropdownMenuItem 
+                          className='cursor-pointer text-[#004643] focus:bg-[#004643]/10 focus:text-[#004643]'
+                          onClick={() => handleUpdateVoucher(voucher)}
+                        >
+                          <Pencil className='mr-2 h-4 w-4' /> Cập nhật
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem 
-                        className='text-red-600 cursor-pointer'
+                        className='text-red-600 cursor-pointer focus:bg-red-50 focus:text-red-600'
                         onClick={() => handleOpenDeleteDialog(voucher)}
                       >
                         <Trash2 className='mr-2 h-4 w-4' /> Xóa
@@ -320,6 +336,17 @@ function VouchersContent() {
             <ChevronLeft className='mr-1 h-4 w-4' /> Quay lại danh sách
           </Button>
           <CreateVoucherForm onClose={handleCloseForm} onSuccess={refetchVouchers} />
+        </div>
+      ) : isUpdating && updateVoucherId ? (
+        <div className='animate-in fade-in slide-in-from-bottom-4 duration-300'>
+          <Button variant='ghost' onClick={handleCloseForm} className='mb-4 text-[#004643]'>
+            <ChevronLeft className='mr-1 h-4 w-4' /> Quay lại danh sách
+          </Button>
+          <UpdateShopVoucherForm
+            voucherId={updateVoucherId}
+            onClose={handleCloseForm}
+            onSuccess={refetchVouchers}
+          />
         </div>
       ) : (
         <>
@@ -386,13 +413,14 @@ function VouchersContent() {
                 ) : (
                   <>
                     <TabsContent value='upcoming'>
-                      <VoucherTable data={getPaginatedData(upcomingVouchers)} totalCount={upcomingVouchers.length} />
+                      <VoucherTable data={getPaginatedData(upcomingVouchers)} totalCount={upcomingVouchers.length} showActions />
                     </TabsContent>
                     <TabsContent value='ongoing'>
                       <VoucherTable
                         data={getPaginatedData(ongoingVouchers)}
                         totalCount={ongoingVouchers.length}
                         showUsed
+                        showActions
                       />
                     </TabsContent>
                     <TabsContent value='ended'>
