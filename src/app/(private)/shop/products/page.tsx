@@ -13,6 +13,7 @@ import {
   getShopProductsPaginatedAPI,
   hideProductAPI,
   unhideProductAPI,
+  softDeleteProductAPI,
 } from '~/apiRequests/product.apiRequest'
 import { ProductWithVariants, PaginationMeta } from '~/zodSchema/product.schema'
 import { useBoundStore } from '~/zustand/store'
@@ -109,6 +110,17 @@ export default function ProductsPage() {
     }
   }
 
+  const handleDeleteProduct = async (productId: string) => {
+    try {
+      await softDeleteProductAPI(productId)
+      toast.success('Đã xóa sản phẩm thành công')
+      fetchProducts()
+    } catch (error) {
+      console.error('Failed to delete product:', error)
+      toast.error('Không thể xóa sản phẩm')
+    }
+  }
+
   if (!shop) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -158,6 +170,7 @@ export default function ProductsPage() {
               activeTab={activeTab}
               onHide={handleHideProduct}
               onUnhide={handleUnhideProduct}
+              onDelete={handleDeleteProduct}
               isLoading={isLoading}
             />
 

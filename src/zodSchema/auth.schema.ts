@@ -8,6 +8,7 @@ export const userSchema = z.object({
   username: z.string(),
   email: z.email(),        
   roleId: z.string(),
+  roleName: z.string(),
   fullName: z.string(),
   phoneNumber: z.string(),
   dob: z.string(),
@@ -16,6 +17,7 @@ export const userSchema = z.object({
   status: StatusEnum,
   emailVerified: z.boolean(),
   require2FA: z.boolean(),
+  permissions: z.array(z.string()),
   createdAt: z.string(),
   updatedAt: z.string(),
 })

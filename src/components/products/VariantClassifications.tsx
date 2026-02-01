@@ -7,14 +7,14 @@ import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Badge } from '~/components/ui/badge'
-import { cn } from '~/lib/utils'
-import { Classification, ClassificationOption } from '~/zodSchema/product.schema'
+import { Classification } from '~/zodSchema/product.schema'
 
 type VariantClassificationsProps = {
   value: Classification[]
   onChange: (classifications: Classification[]) => void
   maxClassifications?: number
   disabled?: boolean
+  editMode?: boolean // Khi true, kh\u00f4ng cho th\u00eam classification m\u1edbi nh\u01b0ng v\u1eabn cho x\u00f3a v\u00e0 th\u00eam/b\u1edbt option value
 }
 
 // Generate unique ID
@@ -25,6 +25,7 @@ export default function VariantClassifications({
   onChange,
   maxClassifications = 2,
   disabled = false,
+  editMode = false,
 }: VariantClassificationsProps) {
   // Thêm phân loại mới
   const handleAddClassification = useCallback(() => {
@@ -214,8 +215,8 @@ export default function VariantClassifications({
         </Card>
       ))}
 
-      {/* Nút thêm phân loại */}
-      {!disabled && value.length < maxClassifications && (
+      {/* Nút thêm phân loại - ẩn trong editMode */}
+      {!disabled && !editMode && value.length < maxClassifications && (
         <Button
           type="button"
           variant="outline"

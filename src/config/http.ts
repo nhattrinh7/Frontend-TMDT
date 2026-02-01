@@ -206,6 +206,7 @@ const handleClientLogout = async () => {
     } finally {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
+      localStorage.removeItem('bound-store') // Clear zustand persist store (user & shop)
       clientLogoutRequest = null
       location.href = '/login'
     }

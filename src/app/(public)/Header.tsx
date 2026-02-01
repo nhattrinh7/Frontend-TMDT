@@ -1,18 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { Search, ShoppingCart, Globe, User } from 'lucide-react'
 import { useBoundStore } from '~/zustand/store'
 import { getAccessTokenFromLocalStorage } from '~/lib/utils'
-import { useEffect } from 'react'
 import { checkUserHasShopAPI } from '~/apiRequests/shop.apiRequest'
+import { addSearchHistory } from '~/lib/search-history.util'
+import SearchHistoryDropdown from '~/app/components/search-history-dropdown'
 
 export default function Header() {
   const [searchValue, setSearchValue] = useState('')
   const [hasShop, setHasShop] = useState(false)
+  const [showHistory, setShowHistory] = useState(false)
   const user = useBoundStore((state) => state.user)
+  const router = useRouter()
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
   const accessToken = getAccessTokenFromLocalStorage()
 
@@ -30,6 +35,52 @@ export default function Header() {
     }
     checkUserHasShopOrNot()
   }, [user])
+
+  // Handle search submit
+  const handleSearch = useCallback(() => {
+    const trimmedQuery = searchValue.trim()
+    if (!trimmedQuery) return
+
+    // Lưu vào history
+    addSearchHistory(trimmedQuery)
+
+    // Navigate to search page
+    router.push(`/search?search=${encodeURIComponent(trimmedQuery)}`)
+    
+    // Hide dropdown và blur input
+    setShowHistory(false)
+    searchInputRef.current?.blur()
+  }, [searchValue, router])
+
+  // Handle Enter key
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  }, [handleSearch])
+
+  // Handle history item selection
+  const handleHistorySelect = useCallback((query: string) => {
+    setSearchValue(query)
+    setShowHistory(false)
+    
+    // Navigate to search page
+    router.push(`/search?search=${encodeURIComponent(query)}`)
+  }, [router])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const searchContainer = searchInputRef.current?.parentElement?.parentElement
+      if (searchContainer && !searchContainer.contains(event.target as Node)) {
+        setShowHistory(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
 
   // Get first letter of username for avatar
   const getInitials = (username: string) => {
@@ -118,20 +169,31 @@ export default function Header() {
             </div>
 
             {/* Search Bar - Desktop */}
-            <div className='hidden md:flex flex-1 justify-center mx-4 lg:mx-8'>
-              <div className='w-full max-w-5xl flex items-stretch bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow'>
+            <div className='hidden md:flex flex-1 max-w-4xl mx-4 lg:mx-8 relative'>
+              <div className='w-full flex items-stretch bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow'>
                 <input
+                  ref={searchInputRef}
                   type='text'
                   placeholder='Tìm kiếm sản phẩm, cửa hàng...'
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
-                  className='flex-1 px-5 py-3.5 lg:py-4 text-base lg:text-lg text-gray-700 focus:outline-none placeholder:text-gray-400'
+                  onFocus={() => setShowHistory(true)}
+                  onKeyDown={handleKeyDown}
+                  className='flex-1 px-5 py-3 lg:py-3.5 text-sm lg:text-base text-gray-700 focus:outline-none placeholder:text-gray-400'
                 />
-                <button className='bg-linear-to-r from-[#FF6B35] to-[#FF5722] hover:from-[#FF5722] hover:to-[#FF4500] text-white px-6 lg:px-8 py-3.5 lg:py-4 flex items-center justify-center transition-all'>
-                  <Search className='w-6 h-6 lg:w-7 lg:h-7' />
+                <button 
+                  onClick={handleSearch}
+                  className='bg-gradient-to-r from-[#FF6B35] to-[#FF5722] hover:from-[#FF5722] hover:to-[#FF4500] text-white px-6 lg:px-8 py-3 lg:py-3.5 flex items-center justify-center transition-all'
+                >
+                  <Search className='w-5 h-5 lg:w-6 lg:h-6' />
                 </button>
               </div>
+              <SearchHistoryDropdown 
+                isVisible={showHistory}
+                onSelect={handleHistorySelect}
+              />
             </div>
+
 
             {/* Cart */}
             <button className='relative shrink-0 p-2 hover:bg-white/10 rounded-lg transition-all group'>
@@ -150,9 +212,13 @@ export default function Header() {
                 placeholder='Tìm kiếm...'
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleKeyDown}
                 className='flex-1 px-4 py-3 text-base text-gray-700 focus:outline-none placeholder:text-gray-400'
               />
-              <button className='bg-linear-to-r from-[#FF6B35] to-[#FF5722] text-white px-5 py-3 flex items-center justify-center'>
+              <button 
+                onClick={handleSearch}
+                className='bg-linear-to-r from-[#FF6B35] to-[#FF5722] text-white px-5 py-3 flex items-center justify-center'
+              >
                 <Search className='w-6 h-6' />
               </button>
             </div>

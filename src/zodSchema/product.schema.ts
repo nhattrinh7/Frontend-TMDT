@@ -8,6 +8,7 @@ export type UploadMediaResponse = z.infer<typeof UploadMediaResponseSchema>
 
 
 export const ProductVariantInputSchema = z.object({
+  id: z.string().optional(), // Optional - có khi update, không có khi tạo mới
   sku: z.string().min(1, 'SKU không được để trống'),
   price: z.number().min(0, 'Giá phải lớn hơn hoặc bằng 0'),
   stock: z.number().min(0, 'Số lượng phải lớn hơn hoặc bằng 0'),
@@ -90,6 +91,9 @@ export const ProductSchema = z.object({
   isActive: z.boolean(),
   approveStatus: ApproveProductStatusEnum,
   rejectReason: z.string().nullable().optional(),
+  isDeleted: z.boolean(),
+  deletedAt: z.string().nullable().optional(),
+  deletedBy: z.string().nullable().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
   variants: z.array(ProductVariantSchema).optional(),
@@ -117,6 +121,7 @@ export const ProductDetailSchema = ProductSchema.extend({
   category: z.object({
     name: z.string(),
   }).optional(),
+  classifications: z.array(ClassificationInputSchema).optional(),  // Thêm classifications
 })
 export type ProductDetail = z.infer<typeof ProductDetailSchema>
 
@@ -145,13 +150,15 @@ export const UpdateProductSchema = z.object({
   video: z.string().optional().nullable(),
   unit: z.string().min(1, 'Đơn vị không được để trống'),
   attributes: z.record(z.string(), z.string()),
+  classifications: z.array(ClassificationInputSchema).optional(),  // Thêm classifications
   variants: z.array(
     z.object({
-      id: z.uuid(),
+      id: z.uuid().optional(),  // Optional - variant mới không có id
       sku: z.string().min(1, 'SKU không được để trống'),
       price: z.number().min(0, 'Giá phải lớn hơn hoặc bằng 0'),
       stock: z.number().min(0, 'Số lượng phải lớn hơn hoặc bằng 0'),
       image: z.string().optional().nullable(),
+      optionValues: z.array(z.string()).optional(),  // Thêm optionValues
     })
   ),
 })

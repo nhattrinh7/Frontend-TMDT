@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Fragment, useState } from 'react'
-import { ChevronDown, ChevronRight, Eye, EyeOff, Pencil, ExternalLink } from 'lucide-react'
+import { ChevronDown, ChevronRight, Eye, EyeOff, Pencil, ExternalLink, Trash2 } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import {
   Table,
@@ -15,6 +15,7 @@ import {
 } from '~/components/ui/table'
 import { ProductWithVariants } from '~/zodSchema/product.schema'
 import { formatPrice } from '~/lib/utils'
+import DeleteProductDialog from './DeleteProductDialog'
 
 type TabType = 'active' | 'rejected' | 'pending' | 'hidden'
 
@@ -23,6 +24,7 @@ type ProductTableProps = {
   activeTab: TabType
   onHide?: (productId: string) => void
   onUnhide?: (productId: string) => void
+  onDelete?: (productId: string) => void
   isLoading?: boolean
 }
 
@@ -31,9 +33,12 @@ export default function ProductTable({
   activeTab,
   onHide,
   onUnhide,
+  onDelete,
   isLoading = false,
 }: ProductTableProps) {
   const [expandedProducts, setExpandedProducts] = useState<Set<string>>(new Set())
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null)
 
   const toggleExpand = (productId: string) => {
     setExpandedProducts((prev) => {
@@ -78,6 +83,21 @@ export default function ProductTable({
     })
   }
 
+  // Handle delete button click
+  const handleDeleteClick = (productId: string, productName: string) => {
+    setProductToDelete({ id: productId, name: productName })
+    setDeleteDialogOpen(true)
+  }
+
+  // Handle delete confirmation
+  const handleDeleteConfirm = () => {
+    if (productToDelete && onDelete) {
+      onDelete(productToDelete.id)
+    }
+    setDeleteDialogOpen(false)
+    setProductToDelete(null)
+  }
+
   // Render actions based on tab
   const renderActions = (product: ProductWithVariants) => {
     switch (activeTab) {
@@ -104,6 +124,16 @@ export default function ProductTable({
               <ExternalLink className="size-4" />
             </Button>
           </Link>
+          {onDelete && (
+            <Button
+              variant="ghost"
+              size="icon"
+              title="Xóa sản phẩm"
+              onClick={() => handleDeleteClick(product.id, product.name)}
+            >
+              <Trash2 className="size-4 text-destructive" />
+            </Button>
+          )}
         </div>
       )
     case 'rejected':
@@ -115,6 +145,16 @@ export default function ProductTable({
               <ExternalLink className="size-4" />
             </Button>
           </Link>
+          {onDelete && (
+            <Button
+              variant="ghost"
+              size="icon"
+              title="Xóa sản phẩm"
+              onClick={() => handleDeleteClick(product.id, product.name)}
+            >
+              <Trash2 className="size-4 text-destructive" />
+            </Button>
+          )}
         </div>
       )
     case 'hidden':
@@ -133,6 +173,16 @@ export default function ProductTable({
               onClick={() => onUnhide(product.id)}
             >
               <Eye className="size-4" />
+            </Button>
+          )}
+          {onDelete && (
+            <Button
+              variant="ghost"
+              size="icon"
+              title="Xóa sản phẩm"
+              onClick={() => handleDeleteClick(product.id, product.name)}
+            >
+              <Trash2 className="size-4 text-destructive" />
             </Button>
           )}
         </div>
@@ -509,38 +559,48 @@ export default function ProductTable({
   }
 
   return (
-    <div className="rounded-lg border">
-      <Table>
-        <TableHeader>
-          {renderTableHeader()}
-        </TableHeader>
-        <TableBody>
-          {products.map((product) => {
-            const isExpanded = expandedProducts.has(product.id)
-            const summary = getProductSummary(product)
+    <>
+      <div className="rounded-lg border">
+        <Table>
+          <TableHeader>
+            {renderTableHeader()}
+          </TableHeader>
+          <TableBody>
+            {products.map((product) => {
+              const isExpanded = expandedProducts.has(product.id)
+              const summary = getProductSummary(product)
 
-            return (
-              <Fragment key={product.id}>
-                {/* Product Row */}
-                <TableRow className="hover:bg-muted/30">
-                  {renderProductRow(product, summary)}
-                </TableRow>
+              return (
+                <Fragment key={product.id}>
+                  {/* Product Row */}
+                  <TableRow className="hover:bg-muted/30">
+                    {renderProductRow(product, summary)}
+                  </TableRow>
 
-                {/* Variant Rows */}
-                {isExpanded &&
-                  product.variants?.map((variant) => (
-                    <TableRow
-                      key={variant.id}
-                      className="bg-muted/20 hover:bg-muted/40"
-                    >
-                      {renderVariantRow(variant)}
-                    </TableRow>
-                  ))}
-              </Fragment>
-            )
-          })}
-        </TableBody>
-      </Table>
-    </div>
+                  {/* Variant Rows */}
+                  {isExpanded &&
+                    product.variants?.map((variant) => (
+                      <TableRow
+                        key={variant.id}
+                        className="bg-muted/20 hover:bg-muted/40"
+                      >
+                        {renderVariantRow(variant)}
+                      </TableRow>
+                    ))}
+                </Fragment>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteProductDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        productName={productToDelete?.name || ''}
+        onConfirm={handleDeleteConfirm}
+      />
+    </>
   )
 }

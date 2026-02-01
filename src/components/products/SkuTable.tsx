@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState, useRef, useCallback } from 'react'
+import { useMemo, useState, useRef, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import { ImagePlus, Loader2, X } from 'lucide-react'
 import {
@@ -81,11 +81,38 @@ export default function SkuTable({
     if (skuCombinations.length === 0) return []
 
     return skuCombinations.map((combo) => {
-      // Tìm variant đã có
+      // 1. Tìm variant đã có (Exact match)
       const existing = value.find((v) => v.sku === combo.sku)
       if (existing) return existing
 
-      // Tạo mới
+      // 2. Tìm variant "gần đúng" nhất bằng cách đếm số tokens trùng khớp
+      // Ví dụ: Có "Đỏ-M", thêm "L" -> "Đỏ-L" sẽ kế thừa từ "Đỏ-M" (1 token match)
+      const newTokens = combo.sku.split('-')
+      
+      let bestMatch: ProductVariantInput | undefined
+      let bestMatchCount = 0
+      
+      for (const v of value) {
+        const oldTokens = v.sku.split('-')
+        const matchCount = newTokens.filter((t) => oldTokens.includes(t)).length
+        if (matchCount > bestMatchCount) {
+          bestMatchCount = matchCount
+          bestMatch = v
+        }
+      }
+
+      if (bestMatch) {
+        // Kế thừa dữ liệu từ variant cũ, nhưng dùng SKU mới và bỏ ID (để backend tạo mới nếu cần)
+        return {
+          sku: combo.sku,
+          price: bestMatch.price,
+          stock: bestMatch.stock,
+          image: bestMatch.image,
+          id: undefined, // Reset ID để tránh trùng lặp variant ID khi tách 1 variant thành nhiều
+        }
+      }
+
+      // Tạo mới hoàn toàn nếu không tìm thấy liên quan
       return {
         sku: combo.sku,
         price: 0,
@@ -94,6 +121,23 @@ export default function SkuTable({
       }
     })
   }, [skuCombinations, value])
+
+  // Sync variants ra ngoài khi structure thay đổi
+  useEffect(() => {
+    // Kiểm tra xem variants tính toán được có khác với value hiện tại không
+    // So sánh độ dài trước
+    if (variants.length !== value.length) {
+      onChange(variants)
+      return
+    }
+
+    // So sánh từng phần tử (chỉ cần so sánh SKU vì variants được derived từ skuCombinations)
+    const isDifferent = variants.some((v, i) => v.sku !== value[i]?.sku)
+    
+    if (isDifferent) {
+      onChange(variants)
+    }
+  }, [variants, value, onChange])
 
   // Update variant tại index
   const updateVariant = useCallback(
@@ -117,8 +161,8 @@ export default function SkuTable({
       try {
         const url = await onUploadImage(file)
         updateVariant(index, { image: url })
-      } catch (err) {
-        console.error('Upload SKU image error:', err)
+      } catch {
+        // console.error('Upload SKU image error:', err)
       } finally {
         setUploadingIndex(null)
         // Reset input

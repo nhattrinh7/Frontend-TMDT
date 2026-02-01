@@ -104,6 +104,14 @@ export const updateProductAPI = async (productId: string, data: UpdateProductInp
   return response.data
 }
 
+// Xóa mềm sản phẩm
+export const softDeleteProductAPI = async (productId: string) => {
+  const response = await http.delete<ApiResponse<void>>(
+    `/api/v1/products/${productId}/soft-delete`
+  )
+  return response.data
+}
+
 // ========== APIs cho Admin duyệt sản phẩm ==========
 
 export type GetAdminProductsPaginatedParams = {

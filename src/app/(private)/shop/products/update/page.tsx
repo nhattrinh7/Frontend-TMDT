@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -34,6 +34,8 @@ import {
   UpdateProductInput,
   ProductDetail,
   ProductVariantWithStock,
+  Classification,
+  ProductVariantInput,
 } from '~/zodSchema/product.schema'
 import {
   getProductByIdAPI,
@@ -41,7 +43,8 @@ import {
   uploadImageAPI,
   uploadVideoAPI,
 } from '~/apiRequests/product.apiRequest'
-import EditableSkuTable from '~/components/products/EditableSkuTable'
+import VariantClassifications from '~/components/products/VariantClassifications'
+import SkuTable from '~/components/products/SkuTable'
 import ImageUploader from '~/components/products/ImageUploader'
 import GalleryUploader from '~/components/products/GalleryUploader'
 import VideoUploader from '~/components/products/VideoUploader'
@@ -73,6 +76,10 @@ function UpdateProductContent() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showResubmitDialog, setShowResubmitDialog] = useState(false)
   const [pendingFormData, setPendingFormData] = useState<UpdateProductInput | null>(null)
+  
+  // State cho classifications và variants
+  const [classifications, setClassifications] = useState<Classification[]>([])
+  const [variants, setVariants] = useState<ProductVariantInput[]>([])
 
   const form = useForm<UpdateProductInput>({
     resolver: zodResolver(UpdateProductSchema),
@@ -84,6 +91,7 @@ function UpdateProductContent() {
       video: null,
       unit: '',
       attributes: {},
+      classifications: [],
       variants: [],
     },
   })
@@ -115,6 +123,29 @@ function UpdateProductContent() {
           setCategoryName(productData.category.name)
         }
 
+        // Parse classifications từ product data NẾU CÓ
+        if (productData.classifications && productData.classifications.length > 0) {
+          const parsedClassifications = productData.classifications.map((c, idx) => ({
+            id: `classification-${idx}`,
+            name: c.name,
+            options: c.values.map((v, vIdx) => ({
+              id: `option-${idx}-${vIdx}`,
+              value: v,
+            })),
+          }))
+          setClassifications(parsedClassifications)
+
+          // Parse variants CÓ SẴN với đầy đủ thông tin
+          const parsedVariants = productData.variants.map((v: ProductVariantWithStock) => ({
+            id: v.id,  // GIỮ ID để update variant hiện có
+            sku: v.sku,
+            price: v.price,
+            stock: v.stock ?? 0,
+            image: v.image || null,
+          }))
+          setVariants(parsedVariants)
+        }
+
         // Set form values
         form.reset({
           name: productData.name,
@@ -124,6 +155,7 @@ function UpdateProductContent() {
           video: productData.video || null,
           unit: productData.unit,
           attributes: productData.attributes as Record<string, string>,
+          classifications: productData.classifications || [],
           variants: productData.variants.map((v: ProductVariantWithStock) => ({
             id: v.id,
             sku: v.sku,
@@ -143,6 +175,11 @@ function UpdateProductContent() {
 
     fetchData()
   }, [productId, router, form])
+
+  // Sync variants với form khi variants thay đổi
+  useEffect(() => {
+    form.setValue('variants', variants)
+  }, [variants, form])
 
   const handleMainImageUpload = async (file: File): Promise<string> => {
     const response = await uploadImageAPI(file)
@@ -172,6 +209,11 @@ function UpdateProductContent() {
     throw new Error('Upload failed')
   }
 
+  const handleImageUpload = useCallback(async (file: File) => {
+    const response = await uploadImageAPI(file)
+    return response.url
+  }, [])
+
   const onSubmit = async (data: UpdateProductInput) => {
     if (!productId) return
 
@@ -191,7 +233,35 @@ function UpdateProductContent() {
 
     try {
       setIsSubmitting(true)
-      await updateProductAPI(productId, data)
+
+      // Chuyển đổi classifications sang format cho API
+      const classificationsForAPI = classifications
+        .filter(c => c.name && c.options.some(o => o.value))
+        .map(c => ({
+          name: c.name,
+          values: c.options.filter(o => o.value).map(o => o.value),
+        }))
+
+      // Chuyển đổi variants
+      const variantsForAPI = variants.map(v => {
+        const optionValues = v.sku.split('-')  // SKU format: "Đỏ-M"
+        return {
+          id: v.id,  // Có thể undefined nếu là variant mới
+          sku: v.sku,
+          price: v.price,
+          stock: v.stock,
+          image: v.image || '',
+          optionValues: classificationsForAPI.length > 0 ? optionValues : undefined,
+        }
+      })
+
+      const payload = {
+        ...data,
+        classifications: classificationsForAPI.length > 0 ? classificationsForAPI : undefined,
+        variants: variantsForAPI,
+      }
+
+      await updateProductAPI(productId, payload)
       toast.success('Đã cập nhật sản phẩm thành công')
       router.push('/shop/products')
     } catch (error) {
@@ -353,15 +423,37 @@ function UpdateProductContent() {
                 </Card>
               )}
 
-              {/* SKU Table Card */}
+              {/* Phân loại hàng */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Danh sách phân loại hàng (SKU)</CardTitle>
+                  <CardTitle>Phân loại hàng</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <EditableSkuTable form={form} />
+                <CardContent className="space-y-4">
+                  <VariantClassifications
+                    value={classifications}
+                    onChange={setClassifications}
+                    maxClassifications={5}
+                    editMode={true}
+                  />
                 </CardContent>
               </Card>
+
+              {/* Bảng SKU - chỉ hiện khi có classifications */}
+              {classifications.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Danh sách phân loại hàng (SKU)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <SkuTable
+                      classifications={classifications}
+                      value={variants}
+                      onChange={setVariants}
+                      onUploadImage={handleImageUpload}
+                    />
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
             {/* Right Column - Media */}
