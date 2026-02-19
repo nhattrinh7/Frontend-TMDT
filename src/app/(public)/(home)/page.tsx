@@ -116,7 +116,7 @@ const bestSellingProducts = [
     name: 'Canon EOS R6 Mark II',
     price: 54990000,
     originalPrice: 62990000,
-    image: 'https://images.unsplash.com/photo-1606980702360-d2a44351d3d3?w=400&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop',
     rating: 4.9,
     sold: 876,
   },

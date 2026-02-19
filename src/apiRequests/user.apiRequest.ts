@@ -9,7 +9,9 @@ import {
   DeleteAddressResType,
   UpdateAddressResType,
   UpdateAddressBodyType,
-  ChangePasswordBodyType
+  ChangePasswordBodyType,
+  CountCartItemsResType,
+  GetCartResType
 } from '~/zodSchema/user.schema'
 import { Address } from '~/app/(private)/profile/AddressManagement'
 
@@ -77,3 +79,54 @@ export const changePasswordAPI = async (userId: string, data: ChangePasswordBody
   await http.put<ApiResponse>(`/api/v1/users/${userId}/change-password`, data)
 }
 
+// Đếm số lượng cart items
+export const countCartItemsAPI = async (userId: string) => {
+  const response = await http.get<ApiResponse<CountCartItemsResType>>(`/api/v1/users/${userId}/count-cart-items`)
+  return response
+}
+
+// Lấy giỏ hàng
+export const getCartAPI = async (userId: string) => {
+  const response = await http.get<ApiResponse<GetCartResType>>(`/api/v1/users/${userId}/cart`)
+  return response
+}
+
+// Thêm vào giỏ hàng (check trước khi add)
+export const addToCartAPI = async (data: { productVariantId: string; quantity: number }) => {
+  const response = await http.put<ApiResponse<unknown>>('/api/v1/users/add-to-cart', data)
+  return response
+}
+
+// Xóa cart items
+export const deleteCartItemsAPI = async (data: { productVariantIds: string[] }) => {
+  const response = await http.patch<ApiResponse<{ deletedCount: number }>>('/api/v1/users/delete-cart-items', data)
+  return response
+}
+
+// ===== PASSCODE =====
+
+// Kiểm tra user đã có passcode chưa
+export const checkPassCodeAPI = async () => {
+  const response = await http.get<ApiResponse<{ hasPassCode: boolean }>>('/api/v1/users/check-pass-code')
+  return response
+}
+
+// Tạo passcode
+export const createPassCodeAPI = async (data: { passCode: string }) => {
+  await http.post<ApiResponse>('/api/v1/users/pass-code', data)
+}
+
+// Đổi passcode
+export const changePassCodeAPI = async (data: { currentPassCode: string; newPassCode: string }) => {
+  await http.put<ApiResponse>('/api/v1/users/change-pass-code', data)
+}
+
+// Yêu cầu gửi OTP reset passcode
+export const requestPassCodeResetAPI = async () => {
+  await http.post<ApiResponse>('/api/v1/users/request-pass-code-reset')
+}
+
+// Reset passcode (xác nhận OTP + passcode mới)
+export const resetPassCodeAPI = async (data: { otp: string; newPassCode: string }) => {
+  await http.put<ApiResponse>('/api/v1/users/reset-pass-code', data)
+}

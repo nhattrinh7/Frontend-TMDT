@@ -327,7 +327,7 @@ export default function ProfilePage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+            <form key={shop.id} onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
               <FormField
                 control={form.control}
                 name='name'
@@ -397,7 +397,8 @@ export default function ProfilePage() {
                     <FormLabel>Ngân hàng</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      value={field.value}
+                      value={field.value || (shop.bankName as string) || undefined}
+                      key={shop.id}
                     >
                       <FormControl>
                         <SelectTrigger>

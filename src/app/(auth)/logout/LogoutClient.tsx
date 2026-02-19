@@ -9,6 +9,7 @@ export default function LogoutClient() {
   const router = useRouter()
   const clearUser = useBoundStore((state) => state.clearUser)
   const clearShop = useBoundStore((state) => state.clearShop)
+  const clearCart = useBoundStore((state) => state.clearCart)
   
   useEffect(() => {
     // Clear localStorage (Client-side)
@@ -18,10 +19,11 @@ export default function LogoutClient() {
     // Clear Zustand store
     clearUser()
     clearShop()
+    clearCart()
     
     // Redirect to login
     router.push('/login')
-  }, [router, clearUser, clearShop])
+  }, [router, clearUser, clearShop, clearCart])
   
   return (
     <div className="flex items-center justify-center min-h-screen">

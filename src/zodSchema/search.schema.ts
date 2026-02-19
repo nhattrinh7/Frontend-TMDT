@@ -60,4 +60,5 @@ export interface SearchParams {
   sort?: 'asc' | 'desc'
   minRating?: number
   maxRating?: number
+  shopId?: string
 }

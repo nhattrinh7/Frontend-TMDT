@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { User, MapPin, Lock } from 'lucide-react'
+import { User, MapPin, Lock, KeyRound } from 'lucide-react'
 import PersonalInfo from '~/app/(private)/profile/PersonalInfo'
 import AddressManagement from '~/app/(private)/profile/AddressManagement'
 import ChangePassword from '~/app/(private)/profile/ChangePassword'
+import Passcode from '~/app/(private)/profile/Passcode'
 
-type TabType = 'personal' | 'address' | 'password'
+type TabType = 'personal' | 'address' | 'password' | 'passcode'
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<TabType>('personal')
@@ -27,6 +28,11 @@ export default function ProfilePage() {
       label: 'Đổi Mật Khẩu',
       icon: Lock,
     },
+    {
+      id: 'passcode' as TabType,
+      label: 'Passcode',
+      icon: KeyRound,
+    },
   ]
 
   const renderContent = () => {
@@ -37,6 +43,8 @@ export default function ProfilePage() {
       return <AddressManagement />
     case 'password':
       return <ChangePassword />
+    case 'passcode':
+      return <Passcode />
     default:
       return <PersonalInfo />
     }

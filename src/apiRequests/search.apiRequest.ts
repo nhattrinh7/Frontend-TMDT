@@ -20,6 +20,7 @@ export const searchAPI = async (params: SearchParams) => {
   if (params.sort) searchParams.append('sort', params.sort)
   if (params.minRating !== undefined) searchParams.append('minRating', params.minRating.toString())
   if (params.maxRating !== undefined) searchParams.append('maxRating', params.maxRating.toString())
+  if (params.shopId) searchParams.append('shopId', params.shopId)
 
   const queryString = searchParams.toString()
   const url = `/api/v1/search${queryString ? `?${queryString}` : ''}`

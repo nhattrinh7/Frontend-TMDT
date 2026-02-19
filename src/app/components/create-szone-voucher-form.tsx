@@ -51,6 +51,14 @@ const szoneVoucherSchema = z.object({
   discountValue: z.coerce
     .number()
     .positive('Giá trị giảm phải lớn hơn 0'),
+  minOrderValue: z.coerce
+    .number()
+    .nonnegative('Giá trị đơn hàng tối thiểu phải >= 0')
+    .default(0),
+  maxDiscountValue: z.coerce
+    .number()
+    .nonnegative('Mức giảm tối đa phải >= 0')
+    .optional(),
   startDate: z.date(),
   endDate: z.date(),
   usageLimit: z.coerce
@@ -273,6 +281,8 @@ export function CreateSzoneVoucherForm({ onClose, onSuccess }: CreateSzoneVouche
       description: '',
       discountType: 'PERCENT',
       discountValue: 0,
+      minOrderValue: 0,
+      maxDiscountValue: undefined,
       usageLimit: 100,
       perUserLimit: 1,
       scope: 'ALL',
@@ -329,6 +339,8 @@ export function CreateSzoneVoucherForm({ onClose, onSuccess }: CreateSzoneVouche
         description: data.description,
         discountType: data.discountType,
         discountValue: data.discountValue,
+        minOrderValue: data.minOrderValue,
+        maxDiscountValue: data.discountType === 'PERCENT' ? data.maxDiscountValue : undefined,
         startDate: data.startDate.toISOString(),
         endDate: data.endDate.toISOString(),
         usageLimit: data.usageLimit,
@@ -572,6 +584,69 @@ export function CreateSzoneVoucherForm({ onClose, onSuccess }: CreateSzoneVouche
                   </FormItem>
                 )}
               />
+            </div>
+
+            {/* Giá trị đơn hàng tối thiểu và Mức giảm tối đa */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <FormField
+                control={form.control}
+                name='minOrderValue'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-[#004643] font-semibold'>
+                      Giá Trị Đơn Hàng Tối Thiểu <span className='text-red-500'>*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <div className='relative'>
+                        <Input
+                          type='number'
+                          placeholder='VD: 100000'
+                          {...field}
+                          className='border-[#004643]/20 focus:border-[#004643] pr-12 bg-white text-gray-900'
+                        />
+                        <span className='absolute right-3 top-1/2 -translate-y-1/2 text-[#004643]/70 font-semibold'>
+                          VNĐ
+                        </span>
+                      </div>
+                    </FormControl>
+                    <FormDescription className='text-xs'>
+                      Giá trị đơn hàng tối thiểu để áp dụng voucher
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {watchDiscountType === 'PERCENT' && (
+                <FormField
+                  control={form.control}
+                  name='maxDiscountValue'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className='text-[#004643] font-semibold'>
+                        Mức Giảm Tối Đa
+                      </FormLabel>
+                      <FormControl>
+                        <div className='relative'>
+                          <Input
+                            type='number'
+                            placeholder='VD: 100000'
+                            {...field}
+                            className='border-[#004643]/20 focus:border-[#004643] pr-12 bg-white text-gray-900'
+                          />
+                          <span className='absolute right-3 top-1/2 -translate-y-1/2 text-[#004643]/70 font-semibold'>
+                            VNĐ
+                          </span>
+                        </div>
+                      </FormControl>
+                      <FormDescription className='text-xs'>
+                        Số tiền giảm tối đa khi áp dụng voucher phần trăm
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </div>
 
             {/* Phạm vi áp dụng */}

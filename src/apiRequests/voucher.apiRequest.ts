@@ -75,6 +75,8 @@ export interface VoucherDetailResponse {
   description: string
   discountType: 'FIXED' | 'PERCENT'
   discountValue: number
+  minOrderValue: number
+  maxDiscountValue: number | null
   startDate: string
   endDate: string
   usageLimit: number

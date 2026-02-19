@@ -192,3 +192,69 @@ export const AdminProductsPaginatedResponseSchema = z.object({
 })
 export type AdminProductsPaginatedResponse = z.infer<typeof AdminProductsPaginatedResponseSchema>
 
+// ========== Schemas cho trang Chi tiết sản phẩm (Public) ==========
+
+// Variant cho API getProductToSold
+export const ProductVariantToSoldSchema = z.object({
+  id: z.uuid(),
+  sku: z.string(),
+  price: z.number(),
+  image: z.string().nullable(),
+  stock: z.number(),
+})
+export type ProductVariantToSold = z.infer<typeof ProductVariantToSoldSchema>
+
+// Schema cho API getProductToSold
+export const ProductToSoldSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  description: z.string(),
+  attributes: z.record(z.string(), z.string()),
+  mainImage: z.string(),
+  galleryImage: z.array(z.string()),
+  video: z.string().nullable(),
+  ratingAvg: z.number(),
+  ratingCount: z.number(),
+  unit: z.string(),
+  soldQuantity: z.number(),
+  availableQuantity: z.number(),
+  variants: z.array(ProductVariantToSoldSchema),
+  shop: z.object({
+    id: z.uuid(),
+    name: z.string(),
+    logo: z.string().nullable(),
+    productCount: z.number(),
+    createdAt: z.string(),
+  }),
+})
+export type ProductToSold = z.infer<typeof ProductToSoldSchema>
+
+// Schema cho Review
+export const ProductReviewSchema = z.object({
+  id: z.uuid(),
+  productId: z.uuid(),
+  orderId: z.uuid(),
+  sku: z.string(),
+  rating: z.number(),
+  content: z.string(),
+  images: z.array(z.string()),
+  video: z.string().nullable(),
+  isHidden: z.boolean(),
+  hiddenReason: z.string().nullable(),
+  hiddenAt: z.string().nullable(),
+  createdAt: z.string(),
+  user: z.object({
+    id: z.uuid(),
+    username: z.string(),
+    avatar: z.string().nullable(),
+  }),
+})
+export type ProductReview = z.infer<typeof ProductReviewSchema>
+
+// Schema cho response API getProductReviews với pagination
+export const ProductReviewsPaginatedResponseSchema = z.object({
+  items: z.array(ProductReviewSchema),
+  meta: PaginationMetaSchema,
+})
+export type ProductReviewsPaginatedResponse = z.infer<typeof ProductReviewsPaginatedResponseSchema>
+

@@ -30,25 +30,30 @@ export default function ShopResults({ shops, searchQuery }: ShopResultsProps) {
         )}
       </div>
 
-      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4'>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4'>
         {displayedShops.map((shop) => (
-          <Link
+          <div
             key={shop.id}
-            href={`/shop/${shop.id}`}
-            className='group flex flex-col items-center'
+            className='flex flex-col items-center bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow'
           >
-            <div className='relative w-32 h-32 mb-3 shrink-0'>
+            <div className='relative w-20 h-20 mb-3 shrink-0'>
               <Image
                 src={shop.logo}
                 alt={shop.name}
                 fill
-                className='object-cover rounded-full group-hover:scale-110 transition-transform'
+                className='object-cover rounded-full'
               />
             </div>
-            <h3 className='font-bold text-base text-gray-800 line-clamp-2 text-center'>
+            <h3 className='text-base text-gray-800 line-clamp-2 text-center mb-3 px-2'>
               {shop.name}
             </h3>
-          </Link>
+            <Link
+              href={`/shop/${shop.id}`}
+              className='px-4 py-1.5 text-sm border-2 border-[#004643] text-[#004643] rounded-md hover:bg-[#004643] hover:text-white transition-colors whitespace-nowrap'
+            >
+              Xem shop
+            </Link>
+          </div>
         ))}
       </div>
     </div>

@@ -8,6 +8,8 @@ import {
   UpdateProductInput,
   ProductDetail,
   AdminProductsPaginatedResponse,
+  ProductToSold,
+  ProductReviewsPaginatedResponse,
 } from '~/zodSchema/product.schema'
 
 // Upload ảnh cho sản phẩm, ảnh gì cũng dùng api này, cũng chỉ là gửi ảnh lên để lấy về url thôi
@@ -152,5 +154,39 @@ export const rejectProductAPI = async (productId: string, rejectReason: string) 
     { rejectReason }
   )
   return response
+}
+
+// ========== APIs cho trang Chi tiết sản phẩm (Public) ==========
+
+// Lấy thông tin sản phẩm để bán (public)
+export const getProductToSoldAPI = async (productId: string) => {
+  const response = await http.get<ApiResponse<ProductToSold>>(
+    `/api/v1/products/${productId}/to-sold`
+  )
+  return response.data
+}
+
+// Lấy reviews của sản phẩm với pagination
+export type GetProductReviewsParams = {
+  productId: string
+  page?: number
+  limit?: number
+  rating?: 1 | 2 | 3 | 4 | 5
+  hasMedia?: boolean
+}
+
+export const getProductReviewsPaginatedAPI = async (params: GetProductReviewsParams) => {
+  const searchParams = new URLSearchParams()
+  
+  if (params.page) searchParams.append('page', params.page.toString())
+  if (params.limit) searchParams.append('limit', params.limit.toString())
+  if (params.rating) searchParams.append('rating', params.rating.toString())
+  if (params.hasMedia !== undefined) searchParams.append('hasMedia', params.hasMedia.toString())
+  
+  const queryString = searchParams.toString()
+  const url = `/api/v1/products/${params.productId}/reviews${queryString ? `?${queryString}` : ''}`
+  
+  const response = await http.get<ApiResponse<ProductReviewsPaginatedResponse>>(url)
+  return response.data
 }
 
