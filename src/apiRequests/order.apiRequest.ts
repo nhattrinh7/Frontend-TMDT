@@ -102,3 +102,48 @@ export const getEligibleSzoneVouchersAPI = async (
   )
   return response
 }
+
+// ============ PLACE ORDER ============
+
+export interface PlaceOrderRequest {
+  itemsByShop: Record<string, { productId: string; productVariantId: string; quantity: number }[]>
+  shopVouchers?: Record<string, string>
+  szoneVoucherId?: string
+  expectedFinalPrice: number
+  addressId: string
+  paymentMethod: 'COD' | 'WALLET' | 'QRCODE'
+}
+
+export interface PlaceOrderResponse {
+  success: boolean
+  sagaId: string
+  message?: string
+  paymentMethod?: string
+}
+
+export interface ConfirmWalletPaymentRequest {
+  sagaId: string
+  passcode: string
+}
+
+export interface ConfirmWalletPaymentResponse {
+  success: boolean
+  message?: string
+  error?: string
+}
+
+export const placeOrderAPI = async (data: PlaceOrderRequest) => {
+  const response = await http.post<ApiResponse<PlaceOrderResponse>>(
+    '/api/v1/sagas/place-order',
+    data
+  )
+  return response
+}
+
+export const confirmWalletPaymentAPI = async (data: ConfirmWalletPaymentRequest) => {
+  const response = await http.post<ApiResponse<ConfirmWalletPaymentResponse>>(
+    '/api/v1/sagas/confirm-wallet-payment',
+    data
+  )
+  return response
+}

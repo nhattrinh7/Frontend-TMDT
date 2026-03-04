@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { getCartAPI, deleteCartItemsAPI } from '~/apiRequests/user.apiRequest'
+import { getCartAPI, deleteCartItemsAPI, updateCartQuantityAPI } from '~/apiRequests/user.apiRequest'
 import { checkInventoryToMinusAPI, checkInventoryToPlusAPI } from '~/apiRequests/inventory.apiRequest'
 import { useBoundStore } from '~/zustand/store'
 import { Checkbox } from '~/components/ui/checkbox'
@@ -113,6 +113,12 @@ export default function CartPage() {
       // Cập nhật quantity vào zustand
       updateQuantity(itemId, quantity)
 
+      // Đồng bộ quantity với backend
+      await updateCartQuantityAPI({
+        productVariantId: item.productVariantId,
+        quantity
+      })
+
       // Nếu không thành công, hiển thị thông báo (optional)
       if (!isPlusSuccess) {
         console.warn(`Số lượng tối đa có thể mua: ${quantity}`)
@@ -140,6 +146,12 @@ export default function CartPage() {
 
       // Cập nhật quantity vào zustand
       updateQuantity(itemId, quantity)
+
+      // Đồng bộ quantity với backend
+      await updateCartQuantityAPI({
+        productVariantId: item.productVariantId,
+        quantity
+      })
 
       // Nếu không thành công, hiển thị thông báo (optional)
       if (!isMinusSuccess) {

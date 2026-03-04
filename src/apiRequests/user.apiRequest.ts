@@ -103,6 +103,12 @@ export const deleteCartItemsAPI = async (data: { productVariantIds: string[] }) 
   return response
 }
 
+// Cập nhật số lượng cart item
+export const updateCartQuantityAPI = async (data: { productVariantId: string; quantity: number }) => {
+  const response = await http.put<ApiResponse<{ productVariantId: string; quantity: number }>>('/api/v1/users/update-cart-quantity', data)
+  return response
+}
+
 // ===== PASSCODE =====
 
 // Kiểm tra user đã có passcode chưa

@@ -76,22 +76,31 @@ export const createCartSlice: StateCreator<ICartSlice, [['zustand/devtools', nev
       const shopData = data as CartGroupedByShopType
       const existingShopIndex = state.cart.findIndex(s => s.id === shopData.id)
       
-      // Case 2a: Shop đã tồn tại - thêm item mới vào shop
+      // Case 2a: Shop đã tồn tại
       if (existingShopIndex !== -1) {
-        newCart = state.cart.map((shop, index) =>
-          index === existingShopIndex
-            ? {
-              ...shop,
-              items: [
-                ...shop.items,
-                ...shopData.items.map(item => ({
-                  ...item,
-                  isSelected: false
-                }))
-              ]
+        newCart = state.cart.map((shop, index) => {
+          if (index !== existingShopIndex) return shop
+
+          // Kiểm tra item đã tồn tại trong shop chưa
+          const newItems = [...shop.items]
+          shopData.items.forEach(newItem => {
+            const existingItemIndex = newItems.findIndex(
+              i => i.productVariantId === newItem.productVariantId
+            )
+            if (existingItemIndex !== -1) {
+              // Item đã tồn tại → cập nhật quantity
+              newItems[existingItemIndex] = {
+                ...newItems[existingItemIndex],
+                quantity: newItem.quantity
+              }
+            } else {
+              // Item chưa tồn tại → thêm mới
+              newItems.push({ ...newItem, isSelected: false })
             }
-            : shop
-        )
+          })
+
+          return { ...shop, items: newItems }
+        })
       } else {
         // Case 2b: Shop chưa tồn tại - thêm cả shop và item
         newCart = [
@@ -132,22 +141,32 @@ export const createCartSlice: StateCreator<ICartSlice, [['zustand/devtools', nev
       const shopData = data as CartGroupedByShopType
       const existingShopIndex = state.cart.findIndex(s => s.id === shopData.id)
       
-      // Case 2a: Shop đã tồn tại - thêm item mới vào shop
+      // Case 2a: Shop đã tồn tại
       if (existingShopIndex !== -1) {
-        newCart = state.cart.map((shop, index) =>
-          index === existingShopIndex
-            ? {
-              ...shop,
-              items: [
-                ...shop.items,
-                ...shopData.items.map(item => ({
-                  ...item,
-                  isSelected: true
-                }))
-              ]
+        newCart = state.cart.map((shop, index) => {
+          if (index !== existingShopIndex) return shop
+
+          // Kiểm tra item đã tồn tại trong shop chưa
+          const newItems = [...shop.items]
+          shopData.items.forEach(newItem => {
+            const existingItemIndex = newItems.findIndex(
+              i => i.productVariantId === newItem.productVariantId
+            )
+            if (existingItemIndex !== -1) {
+              // Item đã tồn tại → cập nhật quantity + isSelected
+              newItems[existingItemIndex] = {
+                ...newItems[existingItemIndex],
+                quantity: newItem.quantity,
+                isSelected: true
+              }
+            } else {
+              // Item chưa tồn tại → thêm mới
+              newItems.push({ ...newItem, isSelected: true })
             }
-            : shop
-        )
+          })
+
+          return { ...shop, items: newItems }
+        })
       } else {
         // Case 2b: Shop chưa tồn tại - thêm cả shop và item
         newCart = [

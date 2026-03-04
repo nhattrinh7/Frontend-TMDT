@@ -13,9 +13,10 @@ interface OrderSummaryProps {
   summary: CalculatePriceSummary | null
   isLoading: boolean
   onPlaceOrder: () => void
+  isPlacingOrder?: boolean
 }
 
-export default function OrderSummary({ summary, isLoading, onPlaceOrder }: OrderSummaryProps) {
+export default function OrderSummary({ summary, isLoading, onPlaceOrder, isPlacingOrder = false }: OrderSummaryProps) {
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-6">
       <h2 className="mb-4 text-lg font-bold text-slate-900">Chi Tiết Thanh Toán</h2>
@@ -67,9 +68,10 @@ export default function OrderSummary({ summary, isLoading, onPlaceOrder }: Order
 
           <button
             onClick={onPlaceOrder}
-            className="mt-6 w-full rounded-lg bg-emerald-800 py-3.5 text-base font-bold text-white shadow-sm transition-all hover:bg-emerald-900 hover:shadow-md active:scale-[0.98]"
+            disabled={isPlacingOrder}
+            className="mt-6 w-full rounded-lg bg-emerald-800 py-3.5 text-base font-bold text-white shadow-sm transition-all hover:bg-emerald-900 hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Đặt Hàng
+            {isPlacingOrder ? 'Đang xử lý...' : 'Đặt Hàng'}
           </button>
         </>
       )}

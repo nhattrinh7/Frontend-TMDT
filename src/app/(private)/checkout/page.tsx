@@ -3,7 +3,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useBoundStore } from '~/zustand/store'
-import { calculatePriceAPI } from '~/apiRequests/order.apiRequest'
+import {
+  calculatePriceAPI,
+  placeOrderAPI,
+  confirmWalletPaymentAPI,
+} from '~/apiRequests/order.apiRequest'
+import { checkPassCodeAPI } from '~/apiRequests/user.apiRequest'
 import type {
   CalculatePriceResponse,
   CalculatePriceRequest,
@@ -15,15 +20,19 @@ import ShopItemsSection from './ShopItemsSection'
 import SzoneVoucherSection from './SzoneVoucherSection'
 import PaymentMethodSection, { type PaymentMethod } from './PaymentMethodSection'
 import OrderSummary from './OrderSummary'
+import WalletPasscodeDialog from './WalletPasscodeDialog'
+import QRCodeDialog from './QRCodeDialog'
+import OrderProcessingOverlay from './OrderProcessingOverlay'
+import { usePaymentSocket } from '~/hooks/usePaymentSocket'
 import { toast } from 'sonner'
 import { ArrowLeft } from 'lucide-react'
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const user = useBoundStore((state) => state.user)
   const cart = useBoundStore((state) => state.cart)
+  const removeSelectedItems = useBoundStore((state) => state.removeSelectedItems)
 
-  // State
+  // === Checkout State ===
   const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(null)
   const [shopVouchers, setShopVouchers] = useState<Record<string, string>>({})
   const [selectedVoucherNames, setSelectedVoucherNames] = useState<Record<string, string>>({})
@@ -32,6 +41,23 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('COD')
   const [priceData, setPriceData] = useState<CalculatePriceResponse | null>(null)
   const [isCalculating, setIsCalculating] = useState(true)
+
+  // === Place Order State ===
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false)
+  const [sagaId, setSagaId] = useState<string | null>(null)
+  const [showProcessingOverlay, setShowProcessingOverlay] = useState(false)
+  const [processingMessage, setProcessingMessage] = useState('Đang xử lý đơn hàng...')
+  const [showWalletDialog, setShowWalletDialog] = useState(false)
+  const [showQRDialog, setShowQRDialog] = useState(false)
+  const [qrData, setQrData] = useState<{ qrUrl: string; amount: number } | null>(null)
+
+  // WebSocket
+  const { connect, disconnect } = usePaymentSocket()
+
+  // Cleanup WebSocket khi unmount
+  useEffect(() => {
+    return () => disconnect()
+  }, [disconnect])
 
   // Lấy selected items từ cart store
   const selectedShops = cart
@@ -150,14 +176,148 @@ export default function CheckoutPage() {
     fetchCalculatePrice(undefined, voucherId)
   }
 
-  // Handler đặt hàng
-  const handlePlaceOrder = () => {
+  // ==================== PLACE ORDER FLOW ====================
+
+  /**
+   * Navigate to result page
+   */
+  const goToResult = (status: string, orderIds?: string[], message?: string) => {
+    disconnect()
+    const params = new URLSearchParams({ status })
+    if (orderIds?.length) params.set('orderIds', orderIds.join(','))
+    if (message) params.set('message', message)
+    router.push(`/checkout/result?${params.toString()}`)
+  }
+
+  /**
+   * Kết nối WebSocket và setup listeners
+   */
+  const connectWebSocket = () => {
+    connect({
+      onSuccess: (data) => {
+        setShowProcessingOverlay(false)
+        setShowWalletDialog(false)
+        setShowQRDialog(false)
+        removeSelectedItems() // Xóa selected items khỏi zustand cart
+        goToResult('success', data.orderIds)
+      },
+      onFailed: (data) => {
+        setShowProcessingOverlay(false)
+        setShowWalletDialog(false)
+        setShowQRDialog(false)
+        goToResult('failed', undefined, data.message)
+      },
+      onTimeout: () => {
+        setShowProcessingOverlay(false)
+        setShowWalletDialog(false)
+        setShowQRDialog(false)
+        goToResult('timeout')
+      },
+      onQRCode: (data) => {
+        setShowProcessingOverlay(false)
+        setQrData({ qrUrl: data.qrUrl, amount: data.amount })
+        setShowQRDialog(true)
+      },
+    })
+  }
+
+  /**
+   * Handler chính khi nhấn "Đặt Hàng"
+   */
+  const handlePlaceOrder = async () => {
+    // Validate
     if (!selectedAddress) {
       toast.error('Vui lòng chọn địa chỉ giao hàng')
       return
     }
-    // TODO: Gọi API place-order
-    toast.success('Chức năng đặt hàng đang được phát triển!')
+    if (!priceData) {
+      toast.error('Đang tính giá, vui lòng đợi')
+      return
+    }
+
+    // Nếu chọn WALLET, kiểm tra user đã tạo passcode chưa
+    if (paymentMethod === 'WALLET') {
+      try {
+        const { data } = await checkPassCodeAPI()
+        if (!data.hasPassCode) {
+          toast.error('Bạn chưa thiết lập passcode cho ví. Vui lòng vào Hồ sơ → Passcode để tạo.')
+          return
+        }
+      } catch {
+        toast.error('Không thể kiểm tra passcode, vui lòng thử lại')
+        return
+      }
+    }
+
+    setIsPlacingOrder(true)
+
+    try {
+      // 1. Kết nối WebSocket TRƯỚC khi gọi API
+      connectWebSocket()
+
+      // 2. Gọi placeOrder API
+      const itemsByShop = buildItemsByShop()
+      const cleanedShopVouchers: Record<string, string> = {}
+      for (const [key, val] of Object.entries(shopVouchers)) {
+        if (val) cleanedShopVouchers[key] = val
+      }
+
+      const response = await placeOrderAPI({
+        itemsByShop,
+        shopVouchers: Object.keys(cleanedShopVouchers).length > 0 ? cleanedShopVouchers : undefined,
+        szoneVoucherId: szoneVoucherId || undefined,
+        expectedFinalPrice: priceData.summary.finalPrice,
+        addressId: selectedAddress.id,
+        paymentMethod,
+      })
+
+      const { sagaId: newSagaId } = response.data
+      setSagaId(newSagaId)
+
+      // 3. Xử lý theo phương thức thanh toán
+      switch (paymentMethod) {
+      case 'COD':
+        // COD: show loading, chờ WebSocket payment:success
+        setShowProcessingOverlay(true)
+        setProcessingMessage('Đang xử lý đơn hàng...')
+        break
+
+      case 'WALLET':
+        // WALLET: mở dialog nhập passcode
+        setShowWalletDialog(true)
+        break
+
+      case 'QRCODE':
+        // QRCODE: show loading, chờ WebSocket payment:qrcode
+        setShowProcessingOverlay(true)
+        setProcessingMessage('Đang tạo mã QR thanh toán...')
+        break
+      }
+    } catch (err) {
+      disconnect()
+      const errorMsg = err instanceof Error ? err.message : 'Đặt hàng thất bại, vui lòng thử lại'
+      toast.error(errorMsg)
+      setIsPlacingOrder(false)
+    }
+  }
+
+  /**
+   * Handler khi user nhập passcode ví
+   */
+  const handleWalletConfirm = async (passcode: string) => {
+    if (!sagaId) return
+
+    setProcessingMessage('Đang xác nhận thanh toán ví...')
+
+    const response = await confirmWalletPaymentAPI({ sagaId, passcode })
+
+    if (!response.data.success) {
+      throw new Error(response.data.error || 'Xác nhận thất bại')
+    }
+
+    // Thành công → ẩn dialog, show overlay, chờ WebSocket payment:success
+    setShowWalletDialog(false)
+    setShowProcessingOverlay(true)
   }
 
   // Redirect nếu không có items
@@ -233,10 +393,48 @@ export default function CheckoutPage() {
               summary={priceData?.summary || null}
               isLoading={isCalculating}
               onPlaceOrder={handlePlaceOrder}
+              isPlacingOrder={isPlacingOrder}
             />
           </div>
         </div>
       </div>
+
+      {/* === Overlays & Dialogs === */}
+
+      {/* Loading overlay */}
+      <OrderProcessingOverlay
+        isVisible={showProcessingOverlay}
+        message={processingMessage}
+      />
+
+      {/* WALLET: Passcode dialog */}
+      <WalletPasscodeDialog
+        open={showWalletDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            // User đóng dialog → cancel flow
+            setShowWalletDialog(false)
+            disconnect()
+            setIsPlacingOrder(false)
+          }
+        }}
+        onConfirm={handleWalletConfirm}
+        amount={priceData?.summary.finalPrice || 0}
+      />
+
+      {/* QRCODE: QR dialog */}
+      {qrData && (
+        <QRCodeDialog
+          open={showQRDialog}
+          onOpenChange={(open) => {
+            if (!open) {
+              setShowQRDialog(false)
+            }
+          }}
+          qrUrl={qrData.qrUrl}
+          amount={qrData.amount}
+        />
+      )}
     </>
   )
 }

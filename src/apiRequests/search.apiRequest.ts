@@ -23,7 +23,7 @@ export const searchAPI = async (params: SearchParams) => {
   if (params.shopId) searchParams.append('shopId', params.shopId)
 
   const queryString = searchParams.toString()
-  const url = `/api/v1/search${queryString ? `?${queryString}` : ''}`
+  const url = `/api/v1/searchs${queryString ? `?${queryString}` : ''}`
 
   const response = await http.get<ApiResponse<SearchResponse>>(url)
   return response.data

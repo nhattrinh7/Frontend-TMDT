@@ -47,6 +47,7 @@ export default function ProfilePage() {
   const user = useBoundStore((state) => state.user)
   const setUser = useBoundStore((state) => state.setUser)
   const logout = useBoundStore((state) => state.clearUser)
+  const clearCart = useBoundStore((state) => state.clearCart)
   const clearShop = useBoundStore((state) => state.clearShop)
 
   const router = useRouter()
@@ -199,6 +200,7 @@ export default function ProfilePage() {
       localStorage.removeItem('refreshToken')
       logout()
       clearShop()
+      clearCart()
 
       await logoutAPI()
       

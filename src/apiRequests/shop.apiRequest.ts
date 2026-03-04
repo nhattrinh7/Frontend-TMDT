@@ -8,7 +8,7 @@ export const createShopAPI = async (data: CreateShopBodyType) => {
 
 // Check người dùng đã có shop chưa
 export const checkUserHasShopAPI = async () => {
-  const response = await http.get<ApiResponse<{ hasShop: boolean }>>('/api/v1/shops/has-shop')
+  const response = await http.get<ApiResponse<{ hasShop: boolean; shopStatus: string | null }>>('/api/v1/shops/has-shop')
   return response
 }
 

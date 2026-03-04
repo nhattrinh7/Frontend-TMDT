@@ -14,7 +14,7 @@ import { countCartItemsAPI } from '~/apiRequests/user.apiRequest'
 
 export default function Header() {
   const [searchValue, setSearchValue] = useState('')
-  const [hasShop, setHasShop] = useState(false)
+  const [shopStatus, setShopStatus] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
   const cartItemsCount = useBoundStore((state) => state.cartItemsCount)
   const setCartItemsCount = useBoundStore((state) => state.setCartItemsCount)
@@ -31,7 +31,7 @@ export default function Header() {
     const checkUserHasShopOrNot = async () => {
       try {
         const response = await checkUserHasShopAPI()
-        setHasShop(response.data.hasShop)
+        setShopStatus(response.data.shopStatus)
       } catch {
         // Ignore error
       }
@@ -128,10 +128,16 @@ export default function Header() {
       <div className='hidden md:flex items-center justify-center border-b border-white/10'>
         <div className='w-full max-w-400 flex items-center justify-between px-4 lg:px-6 py-2 text-sm text-white'>
           <div className='flex items-center gap-4 lg:gap-6'>
-            {hasShop 
+            {shopStatus === 'ACTIVE'
               ? (
                 <Link href='/shop/orders' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
                   Kênh Người Bán
+                </Link>
+              )
+              : shopStatus === 'UNDER_REVIEW' || shopStatus === 'REJECTED'
+              ? (
+                <Link href='/shop-pending' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
+                  Đăng kí bán hàng
                 </Link>
               )
               : (

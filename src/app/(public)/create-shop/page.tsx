@@ -32,7 +32,7 @@ import { getRootCategoriesAPI } from '~/apiRequests/category.apiRequest'
 import { Category } from '~/zodSchema/category.schema'
 import { useBoundStore } from '~/zustand/store'
 import { toast } from 'sonner'
-import { createShopAPI } from '~/apiRequests/shop.apiRequest'
+import { createShopAPI, checkUserHasShopAPI } from '~/apiRequests/shop.apiRequest'
 import { useRouter } from 'next/navigation'
 import provinceData from '~/lib/province_and_ward.json'
 
@@ -117,6 +117,19 @@ export default function CreateShopForm() {
       return
     }
 
+    // Check nếu đã có shop → redirect sang trang pending (trang pending tự xử lý redirect tiếp)
+    const checkExistingShop = async () => {
+      try {
+        const response = await checkUserHasShopAPI()
+        if (response.data.hasShop) {
+          router.push('/shop-pending')
+          return
+        }
+      } catch {
+        // Ignore error, cho phép tiếp tục form
+      }
+    }
+
     const fetchAddresses = async () => {
       try {
         const response = await getAddressesAPI(user.id)
@@ -146,6 +159,7 @@ export default function CreateShopForm() {
       }
     }
 
+    checkExistingShop()
     fetchAddresses()
     fetchRootCategories()
   }, [user, router])
@@ -217,7 +231,7 @@ export default function CreateShopForm() {
       const dataToCreate = { ...values, addressId: selectedAddressId }
       await createShopAPI(dataToCreate)
       toast.success('Đăng kí thành công, kết quả phê duyệt sẽ được gửi vào email của bạn')
-      router.push('/shop/orders')
+      router.push('/shop-pending')
     } catch (error) {
       toast.error('Lỗi khi đăng kí, xem lại thông tin hoặc thử lại sau')
     } finally {
