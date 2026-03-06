@@ -120,7 +120,6 @@ const request = async <Response>(
     // 410: Access token hết hạn - cần refresh token
     else if (res.status === 410) {
       if (isClient) {
-        console.log('RefreshToken ở Next Client')
         // CLIENT-SIDE: Refresh token
         if (!clientRefreshRequest) {
           const refreshToken = localStorage.getItem('refreshToken')
@@ -168,7 +167,6 @@ const request = async <Response>(
         }
       } else {
         // SERVER-SIDE
-        console.log('RefreshToken ở Next Server')
         redirect('/refresh-token')
       }
     }

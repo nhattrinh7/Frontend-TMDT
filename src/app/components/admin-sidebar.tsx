@@ -1,5 +1,5 @@
 'use client'
-import { Sliders , Users, Store, Package, UserPlus, ShoppingBag, CheckCircle, Shirt, Sparkles, Laptop, Home, Dumbbell, UtensilsCrossed, ShoppingCart, Award, Ticket, ChevronRight, Star } from 'lucide-react'
+import { Sliders , Users, Store, Package, UserPlus, ShoppingBag, CheckCircle, Shirt, ShoppingCart, Award, Ticket, ChevronRight, Star } from 'lucide-react'
 import Link from 'next/link'
 
 import {

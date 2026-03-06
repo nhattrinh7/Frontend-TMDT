@@ -2,7 +2,6 @@ import { z } from 'zod'
 import { userSchema } from '~/zodSchema/auth.schema'
 
 const GenderEnum = z.enum(['MALE', 'FEMALE', 'OTHER'])
-const StatusEnum = z.enum(['ACTIVE', 'BANNED'])
 
 // Update profile
 export const updateProfileBodySchema = z.object({

@@ -27,8 +27,8 @@ export interface ICartSlice {
   removeItem: (itemId: string) => void
   removeSelectedItems: () => void
   clearCart: () => void
-  addItemToCart: (data: any) => void // Add item từ API response
-  addItemToCartWithSelection: (data: any) => void // Add item với isSelected = true (cho Buy Now)
+  addItemToCart: (data: CartGroupedByShopType | { productVariantId: string; quantity: number }) => void
+  addItemToCartWithSelection: (data: CartGroupedByShopType | { productVariantId: string; quantity: number }) => void
 }
 
 // Helper function để đếm số items trong cart

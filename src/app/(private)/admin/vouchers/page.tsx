@@ -174,14 +174,14 @@ function ManageVouchersContent() {
 
   const getScopeLabel = (scope: ScopeType) => {
     switch (scope) {
-      case 'ALL':
-        return 'Toàn sàn'
-      case 'CATEGORY':
-        return 'Ngành hàng'
-      case 'PRODUCT':
-        return 'Sản phẩm'
-      default:
-        return scope
+    case 'ALL':
+      return 'Toàn sàn'
+    case 'CATEGORY':
+      return 'Ngành hàng'
+    case 'PRODUCT':
+      return 'Sản phẩm'
+    default:
+      return scope
     }
   }
 

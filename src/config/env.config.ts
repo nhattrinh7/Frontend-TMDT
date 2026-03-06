@@ -6,16 +6,19 @@ const configSchema = z.object({
   NEXT_PUBLIC_API_ENDPOINT: z.string(),
   NEXT_PUBLIC_URL: z.string(),
   NEXT_PUBLIC_SAGA_WS_URL: z.string(),
+  NEXT_PUBLIC_CHAT_WS_URL: z.string(),
 })
 
 const configProject = configSchema.safeParse({
   NEXT_PUBLIC_API_ENDPOINT: process.env.NEXT_PUBLIC_API_ENDPOINT,
   NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
   NEXT_PUBLIC_SAGA_WS_URL: process.env.NEXT_PUBLIC_SAGA_WS_URL,
+  NEXT_PUBLIC_CHAT_WS_URL: process.env.NEXT_PUBLIC_CHAT_WS_URL,
 })
 
 if (!configProject.success) {
   configProject.error.issues.forEach((issue) => {
+    // eslint-disable-next-line no-console
     console.error(`\n***** - ${issue.path.join('.')}: ${issue.message} *****\n`)
   })
   throw new Error('Có khai báo biến môi trường thiếu hoặc không hợp lệ')

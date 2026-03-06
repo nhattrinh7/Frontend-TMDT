@@ -1,83 +1,221 @@
 'use client'
 
-import * as React from 'react'
-import { MessageSquare, X, Send, Minus } from 'lucide-react'
+import { useState, useEffect, useRef, type KeyboardEvent } from 'react'
+import { MessageSquare, X, Send, Minus, ImageIcon } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { ScrollArea } from '~/components/ui/scroll-area'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
+import { Avatar, AvatarFallback } from '~/components/ui/avatar'
 import { cn } from '~/lib/utils'
+import { useBoundStore } from '~/zustand/store'
+import { useChat } from '~/hooks/useChat'
+import { ConversationItem } from '~/app/components/chat-widget/ConversationItem'
+import { MessageItem, ReplyBar } from '~/app/components/chat-widget/MessageItem'
+import type { ChatConversation, ChatMessage } from '~/apiRequests/chat.apiRequest'
+import {
+  getConversationsAPI,
+  getMessagesAPI,
+  sendTextMessageAPI,
+  sendImageMessageAPI,
+  markAsReadAPI,
+  deleteMessageAPI,
+} from '~/apiRequests/chat.apiRequest'
+import { SENDER_TYPE } from '~/constants/chat.constant'
 
-interface Conversation {
-  id: string
-  name: string
-  avatar: string
-  lastMessage: string
-  time: string
-  unread?: boolean
-}
-
-const MOCK_CONVERSATIONS: Conversation[] = [
-  {
-    id: '1',
-    name: 'Nguyễn Văn A',
-    avatar: '/diverse-group-avatars.png',
-    lastMessage: 'Đơn hàng của mình khi nào giao vậy shop?',
-    time: '10:30',
-    unread: true,
-  },
-  {
-    id: '2',
-    name: 'Trần Thị B',
-    avatar: '/diverse-group-avatars.png',
-    lastMessage: 'Cảm ơn shop, hàng rất đẹp ạ!',
-    time: 'Hôm qua',
-  },
-  {
-    id: '3',
-    name: 'Lê Văn C',
-    avatar: '/diverse-group-avatars.png',
-    lastMessage: 'Shop có mã giảm giá cho khách quen không?',
-    time: '2 ngày trước',
-  },
-]
 
 export function ChatSidebar() {
-  const [isOpen, setIsOpen] = React.useState(false)
-  const [activeChats, setActiveChats] = React.useState<Conversation[]>([])
+  const shop = useBoundStore((state) => state.shop)
+  const [isOpen, setIsOpen] = useState(false)
+  const [conversations, setConversations] = useState<ChatConversation[]>([])
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null)
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [messageText, setMessageText] = useState('')
+  const [replyTo, setReplyTo] = useState<ChatMessage | null>(null)
+  const [sending, setSending] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const openChat = (conv: Conversation) => {
-    if (!activeChats.find((c) => c.id === conv.id)) {
-      setActiveChats((prev) => [...prev, conv].slice(-3)) // Tối đa 3 cửa sổ chat
+  const { onNewMessage, onConversationUpdated, onMessageDeleted, onMessagesRead } = useChat({
+    shopId: shop?.id,
+  })
+
+  // Load conversations
+  useEffect(() => {
+    if (shop?.id && isOpen) {
+      loadConversations()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shop?.id, isOpen])
+
+  // Load messages when active conversation changes
+  useEffect(() => {
+    if (activeConversationId && shop) {
+      loadMessages(activeConversationId)
+      markAsReadAPI(activeConversationId, shop.id, SENDER_TYPE.SHOP).catch(() => {})
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeConversationId])
+
+  // Socket.IO listeners
+  useEffect(() => {
+    onNewMessage((newMsg) => {
+      if (newMsg.conversationId === activeConversationId) {
+        setMessages(prev => [...prev, newMsg])
+        if (shop && newMsg.senderType !== SENDER_TYPE.SHOP) {
+          markAsReadAPI(newMsg.conversationId, shop.id, SENDER_TYPE.SHOP).catch(() => {})
+        }
+      }
+    })
+
+    onConversationUpdated((updatedConv) => {
+      setConversations(prev => {
+        const exists = prev.find(c => c.id === updatedConv.id)
+        if (exists) {
+          return prev
+            .map(c => c.id === updatedConv.id ? { ...c, ...updatedConv } : c)
+            .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+        }
+        loadConversations()
+        return prev
+      })
+    })
+
+    onMessageDeleted((data) => {
+      if (data.conversationId === activeConversationId) {
+        setMessages(prev =>
+          prev.map(m => m.id === data.messageId ? { ...m, isDeleted: true, message: null } : m)
+        )
+      }
+    })
+
+    onMessagesRead((data) => {
+      setConversations(prev =>
+        prev.map(c => c.id === data.conversationId
+          ? {
+            ...c,
+            unreadCountUser: data.readByType === 'USER' ? 0 : c.unreadCountUser,
+            unreadCountShop: data.readByType === 'SHOP' ? 0 : c.unreadCountShop,
+          }
+          : c
+        )
+      )
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeConversationId])
+
+  useEffect(() => {
+    // Luôn cuộn xuống mỗi khi danh sách tin nhắn thay đổi
+    requestAnimationFrame(() => {
+      const viewport = messagesEndRef.current?.closest('[data-radix-scroll-area-viewport]') as HTMLElement | null
+      if (viewport) {
+        viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' })
+      } else {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+      }
+    })
+  }, [messages])
+
+  const loadConversations = async () => {
+    if (!shop) return
+    try {
+      const res = await getConversationsAPI({ type: 'shop', shopId: shop.id })
+      if (res && 'data' in res) {
+        setConversations(((res as unknown) as { data: ChatConversation[] }).data || [])
+      }
+    } catch { /* ignore */ }
+  }
+
+  const loadMessages = async (conversationId: string) => {
+    try {
+      const res = await getMessagesAPI(conversationId)
+      if (res && 'data' in res) {
+        setMessages(((res as unknown) as { data: ChatMessage[] }).data || [])
+      }
+    } catch { /* ignore */ }
+  }
+
+  const handleSendText = async () => {
+    if (!messageText.trim() || sending || !shop) return
+    const conv = conversations.find(c => c.id === activeConversationId)
+    if (!conv) return
+
+    try {
+      setSending(true)
+      await sendTextMessageAPI({
+        shopId: shop.id,
+        senderId: shop.id,
+        senderType: SENDER_TYPE.SHOP,
+        message: messageText.trim(),
+        replyToMessageId: replyTo?.id || null,
+        userId: conv.userId,
+      })
+      setMessageText('')
+      setReplyTo(null)
+    } catch { /* ignore */ } finally {
+      setSending(false)
     }
   }
 
-  const closeChat = (id: string) => {
-    setActiveChats((prev) => prev.filter((c) => c.id !== id))
+  const handleSendImage = async (file: File) => {
+    if (!shop) return
+    const conv = conversations.find(c => c.id === activeConversationId)
+    if (!conv) return
+
+    try {
+      setSending(true)
+      await sendImageMessageAPI({
+        shopId: shop.id,
+        senderId: shop.id,
+        senderType: SENDER_TYPE.SHOP,
+        file,
+        replyToMessageId: replyTo?.id || null,
+        userId: conv.userId,
+      })
+      setReplyTo(null)
+    } catch { /* ignore */ } finally {
+      setSending(false)
+    }
   }
+
+  const handleDeleteMessage = async (messageId: string) => {
+    if (!shop) return
+    try {
+      await deleteMessageAPI(messageId, shop.id, SENDER_TYPE.SHOP)
+    } catch { /* ignore */ }
+  }
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendText()
+    }
+  }
+
+  const activeConv = conversations.find(c => c.id === activeConversationId)
 
   return (
     <>
-      {/* Cửa sổ chat nổi (Floating Chat Windows) */}
-      <div className='fixed bottom-0 right-16 z-[60] flex items-end gap-3 pointer-events-none'>
-        {activeChats.map((chat) => (
-          <div
-            key={chat.id}
-            className='w-72 pointer-events-auto bg-background border rounded-t-lg shadow-xl overflow-hidden flex flex-col h-[400px]'
-          >
-            <div className='bg-[#004643] text-white p-3 flex items-center justify-between'>
+      {/* Floating chat windows khi click conversation */}
+      {activeConv && (
+        <div className='fixed bottom-0 right-16 z-60 flex items-end gap-3 pointer-events-none'>
+          <div className='w-80 pointer-events-auto bg-background border rounded-t-lg shadow-xl overflow-hidden flex flex-col h-[450px]'>
+            {/* Header */}
+            <div className='bg-[#004643] text-white p-3 flex items-center justify-between shrink-0'>
               <div className='flex items-center gap-2'>
                 <Avatar className='size-6 border border-white/20'>
-                  <AvatarImage src={chat.avatar || '/placeholder.svg'} />
-                  <AvatarFallback>{chat.name[0]}</AvatarFallback>
+                  <AvatarFallback className='bg-white/20 text-white text-xs'>
+                    {(activeConv.userName || 'U')[0]}
+                  </AvatarFallback>
                 </Avatar>
-                <span className='text-sm font-medium truncate max-w-[140px]'>{chat.name}</span>
+                <span className='text-sm font-medium truncate max-w-[140px]'>
+                  {activeConv.userName || `User ${activeConv.userId.slice(0, 6)}`}
+                </span>
               </div>
               <div className='flex items-center gap-1'>
                 <Button
                   variant='ghost'
                   size='icon'
                   className='size-7 hover:bg-white/10 text-white'
-                  onClick={() => closeChat(chat.id)}
+                  onClick={() => setActiveConversationId(null)}
                 >
                   <Minus className='size-4' />
                 </Button>
@@ -85,37 +223,82 @@ export function ChatSidebar() {
                   variant='ghost'
                   size='icon'
                   className='size-7 hover:bg-white/10 text-white'
-                  onClick={() => closeChat(chat.id)}
+                  onClick={() => setActiveConversationId(null)}
                 >
                   <X className='size-4' />
                 </Button>
               </div>
             </div>
-            <ScrollArea className='flex-1 p-3 bg-slate-50'>
-              <div className='space-y-3 text-sm'>
-                <div className='bg-white p-2 rounded-lg border shadow-sm max-w-[85%]'>{chat.lastMessage}</div>
-                <div className='bg-[#004643] text-white p-2 rounded-lg ml-auto max-w-[85%]'>
-                  Chào bạn, chúng tôi sẽ kiểm tra và phản hồi sớm nhất!
+
+            {/* Messages */}
+            <ScrollArea className='flex-1 min-h-0 p-3 bg-slate-50'>
+              {messages.length === 0 ? (
+                <div className='flex items-center justify-center h-full text-xs text-gray-400'>
+                  Chưa có tin nhắn
                 </div>
-              </div>
+              ) : (
+                <div className='space-y-1'>
+                  {messages.map((msg) => (
+                    <MessageItem
+                      key={msg.id}
+                      message={msg}
+                      isOwnMessage={msg.senderType === SENDER_TYPE.SHOP}
+                      onReply={(m) => setReplyTo(m)}
+                      onDelete={handleDeleteMessage}
+                    />
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
+              )}
             </ScrollArea>
-            <div className='p-2 border-t bg-background'>
-              <div className='flex gap-2'>
+
+            {/* Reply bar */}
+            {replyTo && <ReplyBar replyTo={replyTo} onCancel={() => setReplyTo(null)} />}
+
+            {/* Input */}
+            <div className='p-2 border-t bg-background shrink-0'>
+              <div className='flex items-center gap-2'>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className='p-1.5 text-gray-400 hover:text-[#004643] rounded'
+                >
+                  <ImageIcon className='w-4 h-4' />
+                </button>
                 <input
+                  ref={fileInputRef}
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) handleSendImage(file)
+                    e.target.value = ''
+                  }}
+                />
+                <input
+                  value={messageText}
+                  onChange={(e) => setMessageText(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   className='flex-1 bg-muted px-3 py-1.5 rounded-full text-xs outline-none focus:ring-1 focus:ring-[#004643]'
                   placeholder='Nhập tin nhắn...'
                 />
-                <Button size='icon' className='size-8 rounded-full bg-[#004643] hover:bg-[#004643]/90'>
+                <Button
+                  size='icon'
+                  className='size-8 rounded-full bg-[#004643] hover:bg-[#004643]/90'
+                  onClick={handleSendText}
+                  disabled={!messageText.trim() || sending}
+                >
                   <Send className='size-3 text-white' />
                 </Button>
               </div>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
+      {/* Sidebar */}
       <div className='fixed top-0 right-0 z-50 flex h-screen'>
-        {/* Cột icon hẹp */}
+        {/* Icon column */}
         <div className='flex w-12 flex-col items-center border-l bg-background py-4 shadow-sm'>
           <Button
             variant='ghost'
@@ -130,7 +313,7 @@ export function ChatSidebar() {
           </Button>
         </div>
 
-        {/* Danh sách cuộc trò chuyện */}
+        {/* Conversation list */}
         <div
           className={cn(
             'flex flex-col border-l bg-background transition-all duration-300 ease-in-out',
@@ -146,38 +329,21 @@ export function ChatSidebar() {
 
           <ScrollArea className='flex-1'>
             <div className='p-2'>
-              {MOCK_CONVERSATIONS.map((conv) => (
-                <button
-                  key={conv.id}
-                  onClick={() => openChat(conv)}
-                  className='w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors text-left'
-                >
-                  <div className='relative'>
-                    <Avatar className='size-10'>
-                      <AvatarImage src={conv.avatar || '/placeholder.svg'} />
-                      <AvatarFallback>{conv.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div className='absolute bottom-0 right-0 size-2.5 bg-green-500 border-2 border-white rounded-full' />
-                  </div>
-                  <div className='flex-1 overflow-hidden'>
-                    <div className='flex justify-between items-baseline mb-0.5'>
-                      <span className={cn('text-sm font-semibold truncate', conv.unread && 'text-[#004643]')}>
-                        {conv.name}
-                      </span>
-                      <span className='text-[10px] text-muted-foreground shrink-0'>{conv.time}</span>
-                    </div>
-                    <p
-                      className={cn(
-                        'text-xs truncate text-muted-foreground',
-                        conv.unread && 'font-medium text-foreground',
-                      )}
-                    >
-                      {conv.lastMessage}
-                    </p>
-                  </div>
-                  {conv.unread && <div className='size-2 bg-[#004643] rounded-full shrink-0' />}
-                </button>
-              ))}
+              {conversations.length === 0 ? (
+                <div className='p-4 text-center text-xs text-gray-400'>
+                  {isOpen ? 'Chưa có cuộc trò chuyện nào' : ''}
+                </div>
+              ) : (
+                conversations.map((conv) => (
+                  <ConversationItem
+                    key={conv.id}
+                    conversation={conv}
+                    isActive={conv.id === activeConversationId}
+                    onClick={() => setActiveConversationId(conv.id)}
+                    viewerType={SENDER_TYPE.SHOP}
+                  />
+                ))
+              )}
             </div>
           </ScrollArea>
         </div>

@@ -99,14 +99,14 @@ export function ReviewList({ reviews }: ReviewListProps) {
 
   const handleZoomClick = (e: React.MouseEvent) => {
     if (zoomedMedia?.type === 'video') {
-       e.stopPropagation()
-       if (videoRef.current) {
-         if (videoRef.current.paused) {
-           videoRef.current.play()
-         } else {
-           videoRef.current.pause()
-         }
-       }
+      e.stopPropagation()
+      if (videoRef.current) {
+        if (videoRef.current.paused) {
+          videoRef.current.play()
+        } else {
+          videoRef.current.pause()
+        }
+      }
     } else {
       setZoomedMedia(null)
     }

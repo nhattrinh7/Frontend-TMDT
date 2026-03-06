@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { searchAPI } from '~/apiRequests/search.apiRequest'
 import { SearchResponse } from '~/zodSchema/search.schema'
@@ -10,7 +10,7 @@ import ProductResults from '~/components/search/ProductResults'
 import SearchPagination from '~/components/search/SearchPagination'
 import { Loader2 } from 'lucide-react'
 
-export default function SearchPage() {
+function SearchContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -161,5 +161,19 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className='min-h-screen bg-gray-50 flex items-center justify-center py-20'>
+          <Loader2 className='w-10 h-10 text-[#004643] animate-spin' />
+        </div>
+      }
+    >
+      <SearchContent />
+    </Suspense>
   )
 }

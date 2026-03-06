@@ -1,24 +1,24 @@
-'use client'
+"use client";
 
-import { useCallback } from 'react'
-import { Plus, X, Trash2 } from 'lucide-react'
-import { Button } from '~/components/ui/button'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
-import { Badge } from '~/components/ui/badge'
-import { Classification } from '~/zodSchema/product.schema'
+import { useCallback } from "react";
+import { Plus, X, Trash2 } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Badge } from "~/components/ui/badge";
+import { Classification } from "~/zodSchema/product.schema";
 
 type VariantClassificationsProps = {
-  value: Classification[]
-  onChange: (classifications: Classification[]) => void
-  maxClassifications?: number
-  disabled?: boolean
-  editMode?: boolean // Khi true, kh\u00f4ng cho th\u00eam classification m\u1edbi nh\u01b0ng v\u1eabn cho x\u00f3a v\u00e0 th\u00eam/b\u1edbt option value
-}
+  value: Classification[];
+  onChange: (classifications: Classification[]) => void;
+  maxClassifications?: number;
+  disabled?: boolean;
+  editMode?: boolean; // Khi true, kh\u00f4ng cho th\u00eam classification m\u1edbi nh\u01b0ng v\u1eabn cho x\u00f3a v\u00e0 th\u00eam/b\u1edbt option value
+};
 
 // Generate unique ID
-const generateId = () => Math.random().toString(36).substring(2, 9)
+const generateId = () => Math.random().toString(36).substring(2, 9);
 
 export default function VariantClassifications({
   value = [],
@@ -29,33 +29,33 @@ export default function VariantClassifications({
 }: VariantClassificationsProps) {
   // Thêm phân loại mới
   const handleAddClassification = useCallback(() => {
-    if (value.length >= maxClassifications) return
+    if (value.length >= maxClassifications) return;
 
     const newClassification: Classification = {
       id: generateId(),
-      name: '',
+      name: "",
       options: [],
-    }
-    onChange([...value, newClassification])
-  }, [value, maxClassifications, onChange])
+    };
+    onChange([...value, newClassification]);
+  }, [value, maxClassifications, onChange]);
 
   // Xóa phân loại
   const handleRemoveClassification = useCallback(
     (classificationId: string) => {
-      onChange(value.filter((c) => c.id !== classificationId))
+      onChange(value.filter((c) => c.id !== classificationId));
     },
-    [value, onChange]
-  )
+    [value, onChange],
+  );
 
   // Cập nhật tên phân loại
   const handleUpdateClassificationName = useCallback(
     (classificationId: string, name: string) => {
       onChange(
-        value.map((c) => (c.id === classificationId ? { ...c, name } : c))
-      )
+        value.map((c) => (c.id === classificationId ? { ...c, name } : c)),
+      );
     },
-    [value, onChange]
-  )
+    [value, onChange],
+  );
 
   // Thêm tùy chọn cho phân loại
   const handleAddOption = useCallback(
@@ -65,15 +65,15 @@ export default function VariantClassifications({
           if (c.id === classificationId) {
             return {
               ...c,
-              options: [...c.options, { id: generateId(), value: '' }],
-            }
+              options: [...c.options, { id: generateId(), value: "" }],
+            };
           }
-          return c
-        })
-      )
+          return c;
+        }),
+      );
     },
-    [value, onChange]
-  )
+    [value, onChange],
+  );
 
   // Xóa tùy chọn
   const handleRemoveOption = useCallback(
@@ -84,14 +84,14 @@ export default function VariantClassifications({
             return {
               ...c,
               options: c.options.filter((o) => o.id !== optionId),
-            }
+            };
           }
-          return c
-        })
-      )
+          return c;
+        }),
+      );
     },
-    [value, onChange]
-  )
+    [value, onChange],
+  );
 
   // Cập nhật giá trị tùy chọn
   const handleUpdateOptionValue = useCallback(
@@ -102,16 +102,16 @@ export default function VariantClassifications({
             return {
               ...c,
               options: c.options.map((o) =>
-                o.id === optionId ? { ...o, value: newValue } : o
+                o.id === optionId ? { ...o, value: newValue } : o,
               ),
-            }
+            };
           }
-          return c
-        })
-      )
+          return c;
+        }),
+      );
     },
-    [value, onChange]
-  )
+    [value, onChange],
+  );
 
   return (
     <div className="space-y-4">
@@ -150,7 +150,7 @@ export default function VariantClassifications({
                 onChange={(e) =>
                   handleUpdateClassificationName(
                     classification.id,
-                    e.target.value
+                    e.target.value,
                   )
                 }
                 disabled={disabled}
@@ -174,7 +174,7 @@ export default function VariantClassifications({
                         handleUpdateOptionValue(
                           classification.id,
                           option.id,
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       disabled={disabled}
@@ -230,10 +230,9 @@ export default function VariantClassifications({
 
       {value.length === 0 && (
         <p className="text-sm text-muted-foreground text-center py-2">
-          Thêm phân loại để tạo các biến thể sản phẩm (ví dụ: màu sắc, kích
-          cỡ)
+          Thêm phân loại để tạo các biến thể sản phẩm (ví dụ: màu sắc, kích cỡ)
         </p>
       )}
     </div>
-  )
+  );
 }

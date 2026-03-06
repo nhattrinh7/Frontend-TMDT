@@ -1,4 +1,5 @@
 import Header from '~/app/(public)/Header'
+import { ChatWidget } from '~/app/components/chat-widget/ChatWidget'
 
 export default function PublicLayout({
   children,
@@ -9,6 +10,7 @@ export default function PublicLayout({
     <div>
       <Header />
       {children}
+      <ChatWidget />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef } from 'react'
 import { VideoIcon, X, Loader2 } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { cn } from '~/lib/utils'
@@ -24,50 +24,47 @@ export default function VideoUploader({
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
-      if (!file) return
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
 
-      // Validate file type
-      if (!file.type.startsWith('video/')) {
-        setError('Vui lòng chọn file video')
-        return
+    // Validate file type
+    if (!file.type.startsWith('video/')) {
+      setError('Vui lòng chọn file video')
+      return
+    }
+
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Kích thước video tối đa 10MB')
+      return
+    }
+
+    setError(null)
+    setIsUploading(true)
+
+    try {
+      const url = await onUpload(file)
+      onChange(url)
+    } catch (err) {
+      setError('Upload video thất bại. Vui lòng thử lại.')
+      console.error('Upload error:', err)
+    } finally {
+      setIsUploading(false)
+      // Reset input
+      if (inputRef.current) {
+        inputRef.current.value = ''
       }
+    }
+  }
 
-      // Validate file size (max 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        setError('Kích thước video tối đa 10MB')
-        return
-      }
-
-      setError(null)
-      setIsUploading(true)
-
-      try {
-        const url = await onUpload(file)
-        onChange(url)
-      } catch (err) {
-        setError('Upload video thất bại. Vui lòng thử lại.')
-        console.error('Upload error:', err)
-      } finally {
-        setIsUploading(false)
-        // Reset input
-        if (inputRef.current) {
-          inputRef.current.value = ''
-        }
-      }
-    },
-    [onUpload, onChange]
-  )
-
-  const handleRemove = useCallback(() => {
+  const handleRemove = () => {
     onChange(null)
-  }, [onChange])
+  }
 
-  const handleClick = useCallback(() => {
+  const handleClick = () => {
     inputRef.current?.click()
-  }, [])
+  }
 
   return (
     <div className={cn('space-y-2', className)}>

@@ -130,24 +130,24 @@ export default function Header() {
           <div className='flex items-center gap-4 lg:gap-6'>
             {shopStatus === 'ACTIVE'
               ? (
-                <Link href='/shop/orders' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
+                <Link href='/shop/orders' target='_blank' rel='noopener noreferrer' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
                   Kênh Người Bán
                 </Link>
               )
               : shopStatus === 'UNDER_REVIEW' || shopStatus === 'REJECTED'
-              ? (
-                <Link href='/shop-pending' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
-                  Đăng kí bán hàng
-                </Link>
-              )
-              : (
-                <Link href='/create-shop' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
-                  Đăng kí bán hàng
-                </Link>
-              )
+                ? (
+                  <Link href='/shop-pending' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
+                    Đăng kí bán hàng
+                  </Link>
+                )
+                : (
+                  <Link href='/create-shop' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
+                    Đăng kí bán hàng
+                  </Link>
+                )
             }
             
-            <Link href='/admin/users' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
+            <Link href='/admin/users' target='_blank' rel='noopener noreferrer' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
               Kênh Quản Lý
             </Link>
           </div>

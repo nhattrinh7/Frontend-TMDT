@@ -11,7 +11,8 @@ import {
   UpdateAddressBodyType,
   ChangePasswordBodyType,
   CountCartItemsResType,
-  GetCartResType
+  GetCartResType,
+  CheckCartToAddResType
 } from '~/zodSchema/user.schema'
 import { Address } from '~/app/(private)/profile/AddressManagement'
 
@@ -93,7 +94,7 @@ export const getCartAPI = async (userId: string) => {
 
 // Thêm vào giỏ hàng (check trước khi add)
 export const addToCartAPI = async (data: { productVariantId: string; quantity: number }) => {
-  const response = await http.put<ApiResponse<unknown>>('/api/v1/users/add-to-cart', data)
+  const response = await http.put<ApiResponse<CheckCartToAddResType>>('/api/v1/users/add-to-cart', data)
   return response
 }
 

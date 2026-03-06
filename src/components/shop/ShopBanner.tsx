@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { MessageCircle } from 'lucide-react'
+import { openChatWithShop } from '~/app/components/chat-widget/ChatWidget'
 
 interface ShopBannerProps {
   shop: {
@@ -48,7 +49,10 @@ export default function ShopBanner({ shop }: ShopBannerProps) {
             <h1 className='text-3xl font-bold text-white mb-4'>{shop.name}</h1>
             
             {/* Nút Chat */}
-            <button className='bg-white hover:bg-gray-100 text-[#004643] font-semibold px-6 py-2.5 rounded-lg transition-colors flex items-center gap-2 shadow-md'>
+            <button
+              onClick={() => openChatWithShop(shop.id, shop.name)}
+              className='bg-white hover:bg-gray-100 text-[#004643] font-semibold px-6 py-2.5 rounded-lg transition-colors flex items-center gap-2 shadow-md'
+            >
               <MessageCircle className='w-5 h-5' />
               Chat Ngay
             </button>

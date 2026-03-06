@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import { useState, useCallback } from 'react'
-import { ChevronRight, ChevronDown, FolderTree, Check } from 'lucide-react'
+import { useState, useCallback } from "react";
+import { ChevronRight, ChevronDown, FolderTree, Check } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -9,17 +9,17 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
-} from '~/components/ui/dialog'
-import { Button } from '~/components/ui/button'
-import { ScrollArea } from '~/components/ui/scroll-area'
-import { cn } from '~/lib/utils'
-import { CategoryWithChildren } from '~/zodSchema/category.schema'
+} from "~/components/ui/dialog";
+import { Button } from "~/components/ui/button";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { cn } from "~/lib/utils";
+import { CategoryWithChildren } from "~/zodSchema/category.schema";
 
 type CategorySelectorProps = {
-  categories: CategoryWithChildren[]
-  selectedCategory: CategoryWithChildren | null
-  onSelect: (category: CategoryWithChildren) => void
-}
+  categories: CategoryWithChildren[];
+  selectedCategory: CategoryWithChildren | null;
+  onSelect: (category: CategoryWithChildren) => void;
+};
 
 // Component hiển thị từng category item
 function CategoryItem({
@@ -30,36 +30,36 @@ function CategoryItem({
   expandedIds,
   onToggleExpand,
 }: {
-  category: CategoryWithChildren
-  level?: number
-  selectedId?: string
-  onSelect: (category: CategoryWithChildren) => void
-  expandedIds: Set<string>
-  onToggleExpand: (id: string) => void
+  category: CategoryWithChildren;
+  level?: number;
+  selectedId?: string;
+  onSelect: (category: CategoryWithChildren) => void;
+  expandedIds: Set<string>;
+  onToggleExpand: (id: string) => void;
 }) {
-  const hasChildren = category.children && category.children.length > 0
-  const isExpanded = expandedIds.has(category.id)
-  const isSelected = selectedId === category.id
-  const isLeaf = !hasChildren
+  const hasChildren = category.children && category.children.length > 0;
+  const isExpanded = expandedIds.has(category.id);
+  const isSelected = selectedId === category.id;
+  const isLeaf = !hasChildren;
 
   const handleClick = () => {
     if (isLeaf) {
       // Chỉ cho phép chọn leaf node
-      onSelect(category)
+      onSelect(category);
     } else {
       // Toggle expand cho category cha
-      onToggleExpand(category.id)
+      onToggleExpand(category.id);
     }
-  }
+  };
 
   return (
     <div>
       <div
         className={cn(
-          'flex items-center gap-2 py-2 px-3 rounded-lg cursor-pointer transition-colors',
-          'hover:bg-muted/60',
-          isSelected && 'bg-primary/10 text-primary font-medium',
-          level > 0 && 'ml-4'
+          "flex items-center gap-2 py-2 px-3 rounded-lg cursor-pointer transition-colors",
+          "hover:bg-muted/60",
+          isSelected && "bg-primary/10 text-primary font-medium",
+          level > 0 && "ml-4",
         )}
         style={{ paddingLeft: `${level * 16 + 12}px` }}
         onClick={handleClick}
@@ -80,8 +80,8 @@ function CategoryItem({
         {/* Bullet point */}
         <span
           className={cn(
-            'w-2 h-2 rounded-full',
-            isLeaf ? 'bg-primary' : 'bg-muted-foreground/50'
+            "w-2 h-2 rounded-full",
+            isLeaf ? "bg-primary" : "bg-muted-foreground/50",
           )}
         />
 
@@ -109,50 +109,55 @@ function CategoryItem({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // Xây dựng cây category từ flat list
-function buildCategoryTree(categories: CategoryWithChildren[]): CategoryWithChildren[] {
-  const categoryMap = new Map<string, CategoryWithChildren>()
-  const rootCategories: CategoryWithChildren[] = []
+function buildCategoryTree(
+  categories: CategoryWithChildren[],
+): CategoryWithChildren[] {
+  const categoryMap = new Map<string, CategoryWithChildren>();
+  const rootCategories: CategoryWithChildren[] = [];
 
   // Tạo map của tất cả categories
   categories.forEach((cat) => {
-    categoryMap.set(cat.id, { ...cat, children: [] })
-  })
+    categoryMap.set(cat.id, { ...cat, children: [] });
+  });
 
   // Xây dựng cây
   categories.forEach((cat) => {
-    const category = categoryMap.get(cat.id)!
+    const category = categoryMap.get(cat.id)!;
     if (cat.parentId && categoryMap.has(cat.parentId)) {
-      const parent = categoryMap.get(cat.parentId)!
-      if (!parent.children) parent.children = []
-      parent.children.push(category)
+      const parent = categoryMap.get(cat.parentId)!;
+      if (!parent.children) parent.children = [];
+      parent.children.push(category);
     } else {
-      rootCategories.push(category)
+      rootCategories.push(category);
     }
-  })
+  });
 
-  return rootCategories
+  return rootCategories;
 }
 
 // Lấy đường dẫn từ gốc đến category được chọn
 function getCategoryPath(
   categories: CategoryWithChildren[],
   targetId: string,
-  path: string[] = []
+  path: string[] = [],
 ): string[] | null {
   for (const cat of categories) {
     if (cat.id === targetId) {
-      return [...path, cat.name]
+      return [...path, cat.name];
     }
     if (cat.children && cat.children.length > 0) {
-      const found = getCategoryPath(cat.children, targetId, [...path, cat.name])
-      if (found) return found
+      const found = getCategoryPath(cat.children, targetId, [
+        ...path,
+        cat.name,
+      ]);
+      if (found) return found;
     }
   }
-  return null
+  return null;
 }
 
 export default function CategorySelector({
@@ -160,40 +165,41 @@ export default function CategorySelector({
   selectedCategory,
   onSelect,
 }: CategorySelectorProps) {
-  const [open, setOpen] = useState(false)
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
+  const [open, setOpen] = useState(false);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   // Xây dựng cây từ flat list (nếu categories là flat)
-  const categoryTree = !categories || categories.length === 0
-    ? []
-    : categories[0].children !== undefined
-      ? categories
-      : buildCategoryTree(categories)
+  const categoryTree =
+    !categories || categories.length === 0
+      ? []
+      : categories[0].children !== undefined
+        ? categories
+        : buildCategoryTree(categories);
 
   const handleToggleExpand = useCallback((id: string) => {
     setExpandedIds((prev) => {
-      const newSet = new Set(prev)
+      const newSet = new Set(prev);
       if (newSet.has(id)) {
-        newSet.delete(id)
+        newSet.delete(id);
       } else {
-        newSet.add(id)
+        newSet.add(id);
       }
-      return newSet
-    })
-  }, [])
+      return newSet;
+    });
+  }, []);
 
   const handleSelect = useCallback(
     (category: CategoryWithChildren) => {
-      onSelect(category)
-      setOpen(false)
+      onSelect(category);
+      setOpen(false);
     },
-    [onSelect]
-  )
+    [onSelect],
+  );
 
   // Lấy đường dẫn category đã chọn
   const selectedPath = selectedCategory
     ? getCategoryPath(categoryTree, selectedCategory.id)
-    : null
+    : null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -208,7 +214,7 @@ export default function CategorySelector({
               <span className="font-medium">{selectedCategory.name}</span>
               {selectedPath && (
                 <span className="text-xs text-muted-foreground">
-                  {selectedPath.join(' > ')}
+                  {selectedPath.join(" > ")}
                 </span>
               )}
             </div>
@@ -252,5 +258,5 @@ export default function CategorySelector({
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
