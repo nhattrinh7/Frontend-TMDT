@@ -1,18 +1,24 @@
 'use client'
 
 import { useState } from 'react'
-import { User, MapPin, Lock, KeyRound } from 'lucide-react'
+import { User, MapPin, Lock, KeyRound, ShoppingBag } from 'lucide-react'
 import PersonalInfo from '~/app/(private)/profile/PersonalInfo'
 import AddressManagement from '~/app/(private)/profile/AddressManagement'
 import ChangePassword from '~/app/(private)/profile/ChangePassword'
 import Passcode from '~/app/(private)/profile/Passcode'
+import MyOrders from '~/app/(private)/profile/MyOrders'
 
-type TabType = 'personal' | 'address' | 'password' | 'passcode'
+type TabType = 'personal' | 'address' | 'password' | 'passcode' | 'orders'
 
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState<TabType>('personal')
+  const [activeTab, setActiveTab] = useState<TabType>('orders')
 
   const tabs = [
+    {
+      id: 'orders' as TabType,
+      label: 'Đơn Mua',
+      icon: ShoppingBag,
+    },
     {
       id: 'personal' as TabType,
       label: 'Thông Tin Cá Nhân',
@@ -45,14 +51,16 @@ export default function ProfilePage() {
       return <ChangePassword />
     case 'passcode':
       return <Passcode />
+    case 'orders':
+      return <MyOrders />
     default:
-      return <PersonalInfo />
+      return <MyOrders />
     }
   }
 
   return (
     <div className='min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8'>
-      <div className='w-full max-w-[100rem] mx-auto'>
+      <div className='w-full max-w-400 mx-auto'>
         <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
           {/* Sidebar */}
           <div className='lg:col-span-1'>
@@ -68,7 +76,7 @@ export default function ProfilePage() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-all ${
                         isActive
-                          ? 'bg-gradient-to-r from-[#004643] to-[#005d58] text-white shadow-md'
+                          ? 'bg-linear-to-r from-[#004643] to-[#005d58] text-white shadow-md'
                           : 'text-gray-700 hover:bg-gray-100'
                       }`}
                     >

@@ -190,3 +190,11 @@ export const getProductReviewsPaginatedAPI = async (params: GetProductReviewsPar
   return response.data
 }
 
+// Báo cáo review vi phạm
+export const reportReviewAPI = async (reviewId: string, body: { reason: string; description?: string }) => {
+  const response = await http.post<ApiResponse<void>>(
+    `/api/v1/reviews/${reviewId}/report`,
+    body
+  )
+  return response.data
+}

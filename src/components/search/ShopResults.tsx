@@ -37,12 +37,18 @@ export default function ShopResults({ shops, searchQuery }: ShopResultsProps) {
             className='flex flex-col items-center bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow'
           >
             <div className='relative w-20 h-20 mb-3 shrink-0'>
-              <Image
-                src={shop.logo}
-                alt={shop.name}
-                fill
-                className='object-cover rounded-full'
-              />
+              {shop.logo ? (
+                <Image
+                  src={shop.logo}
+                  alt={shop.name}
+                  fill
+                  className='object-cover rounded-full'
+                />
+              ) : (
+                <div className='w-full h-full rounded-full bg-gray-200 flex items-center justify-center'>
+                  <span className='text-2xl text-gray-400'>🏪</span>
+                </div>
+              )}
             </div>
             <h3 className='text-base text-gray-800 line-clamp-2 text-center mb-3 px-2'>
               {shop.name}

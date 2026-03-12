@@ -147,3 +147,56 @@ export const confirmWalletPaymentAPI = async (data: ConfirmWalletPaymentRequest)
   )
   return response
 }
+
+// ============ USER ORDERS (Đơn mua) ============
+
+export interface UserOrderItem {
+  id: string
+  productId: string
+  productVariantId: string
+  productName: string
+  variantImage: string
+  sku: string
+  quantity: number
+  finalPrice: number
+}
+
+export interface UserOrder {
+  id: string
+  shopId: string
+  shopName: string
+  status: string
+  paymentMethod: string
+  finalPrice: number
+  createdAt: string
+  orderItems: UserOrderItem[]
+}
+
+export interface CursorMeta {
+  nextCursor: string | null
+  hasMore: boolean
+  limit: number
+}
+
+export const getUserOrdersPaginatedAPI = async (
+  userId: string,
+  params: { status: string; cursor?: string; limit?: number }
+) => {
+  const searchParams = new URLSearchParams()
+  searchParams.set('status', params.status)
+  if (params.cursor) searchParams.set('cursor', params.cursor)
+  if (params.limit) searchParams.set('limit', String(params.limit))
+
+  const response = await http.get<ApiResponse<UserOrder[]> & { meta: CursorMeta }>(
+    `/api/v1/orders/users/${userId}?${searchParams.toString()}`
+  )
+  return response
+}
+
+export const cancelOrderAPI = async (orderId: string) => {
+  const response = await http.patch<ApiResponse<{ message: string }>>(
+    `/api/v1/orders/${orderId}/cancel`,
+    {}
+  )
+  return response
+}

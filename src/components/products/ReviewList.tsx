@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { format } from 'date-fns'
 import { ProductReview } from '~/zodSchema/product.schema'
+import { ReportReviewModal } from '~/components/products/ReportReviewModal'
 
 interface ReviewListProps {
   reviews: ProductReview[]
@@ -29,15 +30,31 @@ function StarRating({ rating }: { rating: number }) {
 interface ReviewItemProps {
   review: ProductReview
   onMediaClick: (media: { type: 'image' | 'video'; url: string }) => void
+  onReport: (reviewId: string) => void
 }
 
-function ReviewItem({ review, onMediaClick }: ReviewItemProps) {
+function ReviewItem({ review, onMediaClick, onReport }: ReviewItemProps) {
   const reviewTime = format(new Date(review.createdAt), 'yyyy-MM-dd HH:mm')
+  const [showMenu, setShowMenu] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  // Đóng menu khi click bên ngoài
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowMenu(false)
+      }
+    }
+    if (showMenu) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showMenu])
 
   return (
     <div className="border-b border-gray-200 py-6 last:border-0">
       <div className="flex gap-3">
-        {/* Avatar and Info... (keep existing) */}
+        {/* Avatar */}
         <div className="relative h-10 w-10 overflow-hidden rounded-full bg-gray-200">
           {review.user.avatar ? (
             <Image src={review.user.avatar} alt={review.user.username} fill className="object-cover" />
@@ -49,7 +66,39 @@ function ReviewItem({ review, onMediaClick }: ReviewItemProps) {
         </div>
 
         <div className="flex-1">
-          <div className="font-medium">{review.user.username}</div>
+          <div className="flex items-center justify-between">
+            <div className="font-medium">{review.user.username}</div>
+
+            {/* Nút ba chấm */}
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setShowMenu(!showMenu)}
+                className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              >
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                </svg>
+              </button>
+
+              {showMenu && (
+                <div className="absolute right-0 z-10 mt-1 w-32 rounded-md border border-gray-200 bg-white py-1 shadow-lg">
+                  <button
+                    onClick={() => {
+                      setShowMenu(false)
+                      onReport(review.id)
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-gray-50"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                    </svg>
+                    Báo cáo
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="mt-1 flex items-center gap-2">
             <StarRating rating={review.rating} />
           </div>
@@ -61,9 +110,9 @@ function ReviewItem({ review, onMediaClick }: ReviewItemProps) {
           <p className="mt-3 text-gray-700">{review.content}</p>
 
           {/* Media */}
-          {(review.images.length > 0 || review.video) && (
+          {((review.images && review.images.length > 0) || review.video) && (
             <div className="mt-3 flex gap-2">
-              {review.images.map((image, index) => (
+              {review.images?.map((image, index) => (
                 <div
                   key={index}
                   className="relative h-20 w-20 cursor-pointer overflow-hidden rounded-md border border-gray-200"
@@ -95,6 +144,7 @@ function ReviewItem({ review, onMediaClick }: ReviewItemProps) {
 
 export function ReviewList({ reviews }: ReviewListProps) {
   const [zoomedMedia, setZoomedMedia] = useState<{ type: 'image' | 'video'; url: string } | null>(null)
+  const [reportReviewId, setReportReviewId] = useState<string | null>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const handleZoomClick = (e: React.MouseEvent) => {
@@ -127,8 +177,17 @@ export function ReviewList({ reviews }: ReviewListProps) {
           key={review.id} 
           review={review} 
           onMediaClick={setZoomedMedia}
+          onReport={setReportReviewId}
         />
       ))}
+
+      {/* Report Modal */}
+      {reportReviewId && (
+        <ReportReviewModal
+          reviewId={reportReviewId}
+          onClose={() => setReportReviewId(null)}
+        />
+      )}
 
       {/* Zoom Modal */}
       {zoomedMedia && (

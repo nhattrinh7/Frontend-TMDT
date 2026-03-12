@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import Image from 'next/image'
 import {
   Table,
@@ -70,7 +70,7 @@ export default function ManageProductTable({
         </TableHeader>
         <TableBody>
           {products.map((product) => (
-            <>
+            <Fragment key={product.id}>
               <TableRow key={product.id}>
                 <TableCell>
                   <Button
@@ -92,6 +92,7 @@ export default function ManageProductTable({
                         src={product.mainImage}
                         alt={product.name}
                         fill
+                        sizes="48px"
                         className="object-cover"
                       />
                     </div>
@@ -123,6 +124,7 @@ export default function ManageProductTable({
                           src={product.shop.logo}
                           alt={product.shop.name}
                           fill
+                          sizes="24px"
                           className="object-cover"
                         />
                       </div>
@@ -208,7 +210,7 @@ export default function ManageProductTable({
                           <div className="flex gap-2 overflow-x-auto pb-2">
                             {product.galleryImage.map((img, idx) => (
                               <div key={idx} className="relative size-20 shrink-0 border rounded overflow-hidden">
-                                <Image src={img} alt="" fill className="object-cover" />
+                                <Image src={img} alt="" fill sizes="80px" className="object-cover" />
                               </div>
                             ))}
                           </div>
@@ -225,7 +227,7 @@ export default function ManageProductTable({
                   </TableCell>
                 </TableRow>
               )}
-            </>
+            </Fragment>
           ))}
         </TableBody>
       </Table>
