@@ -93,9 +93,9 @@ export default function MyOrders() {
   }
 
   // Hủy đơn hàng
-  const handleCancelOrder = async (orderId: string) => {
+  const handleCancelOrder = async (orderId: string, reason?: string) => {
     try {
-      await cancelOrderAPI(orderId)
+      await cancelOrderAPI(orderId, reason)
       // Xóa đơn hàng vừa hủy khỏi danh sách
       setOrders(prev => prev.filter((o) => o.id !== orderId))
       toast.success('Đã hủy đơn hàng thành công')

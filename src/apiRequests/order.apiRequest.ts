@@ -193,10 +193,10 @@ export const getUserOrdersPaginatedAPI = async (
   return response
 }
 
-export const cancelOrderAPI = async (orderId: string) => {
+export const cancelOrderAPI = async (orderId: string, reason?: string) => {
   const response = await http.patch<ApiResponse<{ message: string }>>(
     `/api/v1/orders/${orderId}/cancel`,
-    {}
+    { cancelReason: reason }
   )
   return response
 }
