@@ -281,5 +281,12 @@ export const acceptOrderAPI = async (orderId: string) => {
   return response
 }
 
+export const deliverOrderAPI = async (orderId: string) => {
+  const response = await http.patch<ApiResponse<{ message: string; success: boolean }>>(
+    `/api/v1/orders/${orderId}/dispatch-to-carrier`,
+  )
+  return response
+}
+
 // End file
 

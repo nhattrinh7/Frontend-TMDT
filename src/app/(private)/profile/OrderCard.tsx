@@ -80,7 +80,7 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
       <div className='px-5 py-4'>
         {/* Mã đơn hàng */}
         <p className='text-xs text-gray-400 mb-3'>
-          Mã đơn hàng: <span className='text-gray-600 font-mono'>{order.id.slice(0, 8).toUpperCase()}</span>
+          Mã đơn hàng: <span className='text-gray-600 font-mono'>{order.id}</span>
         </p>
 
         {/* Order Items */}
@@ -141,7 +141,7 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
                   <AlertDialogDescription className='text-red-50 mt-1 max-w-[95%]'>
                     Bạn đang yêu cầu hủy đơn hàng{' '}
                     <span className='font-bold text-white tracking-wide'>
-                      #{order.id.slice(0, 8).toUpperCase()}
+                      #{order.id}
                     </span>
                     . Vui lòng chọn lý do để chúng tôi cải thiện dịch vụ tốt hơn nhé!
                   </AlertDialogDescription>

@@ -55,73 +55,73 @@ export default function OrderDetailsDialog({ order }: OrderDetailsDialogProps) {
     <Dialog>
       <DialogTrigger asChild>
         <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-28 border-[#004643] text-[#004643] hover:bg-[#f0f9f8] shadow-sm"
+          variant='outline' 
+          size='sm' 
+          className='w-28 border-[#004643] text-[#004643] hover:bg-[#f0f9f8] shadow-sm'
         >
           Xem chi tiết
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-[#004643]">Chi tiết đơn hàng</DialogTitle>
+          <DialogTitle className='text-xl font-bold text-[#004643]'>Chi tiết đơn hàng</DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col gap-6 p-4">
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="flex flex-col gap-1">
-              <span className="text-muted-foreground">Mã đơn hàng:</span>
-              <span className="font-semibold">{order.id}</span>
+        <div className='flex flex-col gap-6 p-4'>
+          <div className='grid grid-cols-2 gap-4 text-sm'>
+            <div className='flex flex-col gap-1'>
+              <span className='text-muted-foreground'>Mã đơn hàng:</span>
+              <span className='font-semibold'>{order.id}</span>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-muted-foreground">Người mua:</span>
-              <span className="font-medium">{order.buyerUsername || 'Người dùng'}</span>
-            </div>
-          </div>
-
-          <Separator />
-
-          <div>
-            <h3 className="font-semibold text-[#004643] mb-3">Thông tin nhận hàng</h3>
-            <div className="grid grid-cols-1 gap-2 text-sm bg-muted/30 p-4 rounded-md">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Người nhận:</span>
-                <span className="font-medium">{order.receiverName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Số điện thoại:</span>
-                <span className="font-medium">{maskPhoneNumber(order.receiverPhoneNumber)}</span>
-              </div>
-              <div className="flex justify-between gap-4">
-                <span className="text-muted-foreground">Địa chỉ:</span>
-                <span className="font-medium text-right">{maskAddress(order.shippingAddress)}</span>
-              </div>
+            <div className='flex flex-col gap-1'>
+              <span className='text-muted-foreground'>Người mua:</span>
+              <span className='font-medium'>{order.buyerUsername || 'Người dùng'}</span>
             </div>
           </div>
 
           <Separator />
 
           <div>
-            <h3 className="font-semibold text-[#004643] mb-3">Sản phẩm ({order.orderItems.length})</h3>
-            <div className="flex flex-col gap-4">
+            <h3 className='font-semibold text-[#004643] mb-3'>Thông tin nhận hàng</h3>
+            <div className='grid grid-cols-1 gap-2 text-sm bg-muted/30 p-4 rounded-md'>
+              <div className='flex justify-between'>
+                <span className='text-muted-foreground'>Người nhận:</span>
+                <span className='font-medium'>{order.receiverName}</span>
+              </div>
+              <div className='flex justify-between'>
+                <span className='text-muted-foreground'>Số điện thoại:</span>
+                <span className='font-medium'>{maskPhoneNumber(order.receiverPhoneNumber)}</span>
+              </div>
+              <div className='flex justify-between gap-4'>
+                <span className='text-muted-foreground'>Địa chỉ:</span>
+                <span className='font-medium text-right'>{maskAddress(order.shippingAddress)}</span>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div>
+            <h3 className='font-semibold text-[#004643] mb-3'>Sản phẩm ({order.orderItems.length})</h3>
+            <div className='flex flex-col gap-4'>
               {order.orderItems.map((item) => (
-                <div key={item.id} className="flex gap-4 items-center bg-white border p-3 rounded-md">
-                  <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md border">
+                <div key={item.id} className='flex gap-4 items-center bg-white border p-3 rounded-md'>
+                  <div className='h-16 w-16 shrink-0 overflow-hidden rounded-md border'>
                     <Image 
                       src={item.variantImage} 
                       alt={item.productName} 
                       width={64} 
                       height={64} 
-                      className="h-full w-full object-cover"
+                      className='h-full w-full object-cover'
                       unoptimized
                     />
                   </div>
-                  <div className="flex-1 flex flex-col">
-                    <span className="font-medium line-clamp-2">{item.productName}</span>
-                    <span className="text-sm text-muted-foreground">Phân loại: {item.sku}</span>
-                    <span className="text-sm mt-1">SL: x{item.quantity}</span>
+                  <div className='flex-1 flex flex-col'>
+                    <span className='font-medium line-clamp-2'>{item.productName}</span>
+                    <span className='text-sm text-muted-foreground'>Phân loại: {item.sku}</span>
+                    <span className='text-sm mt-1'>SL: x{item.quantity}</span>
                   </div>
-                  <div className="text-right font-medium text-rose-500">
+                  <div className='text-right font-medium text-rose-500'>
                     {formatPrice(item.finalPrice)}
                   </div>
                 </div>
@@ -133,8 +133,8 @@ export default function OrderDetailsDialog({ order }: OrderDetailsDialogProps) {
           
           {order.status === 'CANCELLED' && order.cancelReason && (
             <div>
-              <h3 className="font-semibold text-rose-500 mb-2">Lý do hủy đơn</h3>
-              <div className="bg-rose-50 p-3 rounded-md text-sm border border-rose-100">
+              <h3 className='font-semibold text-rose-500 mb-2'>Lý do hủy đơn</h3>
+              <div className='bg-rose-50 p-3 rounded-md text-sm border border-rose-100'>
                 {order.cancelReason}
               </div>
             </div>
@@ -142,19 +142,19 @@ export default function OrderDetailsDialog({ order }: OrderDetailsDialogProps) {
 
           {order.status === 'RETURNED' && order.returnReason && (
             <div>
-              <h3 className="font-semibold text-orange-600 mb-2">Thông tin hoàn trả</h3>
-              <div className="bg-orange-50 p-3 rounded-md text-sm border border-orange-100 grid gap-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Lý do:</span>
+              <h3 className='font-semibold text-orange-600 mb-2'>Thông tin hoàn trả</h3>
+              <div className='bg-orange-50 p-3 rounded-md text-sm border border-orange-100 grid gap-2'>
+                <div className='flex justify-between'>
+                  <span className='text-muted-foreground'>Lý do:</span>
                   <span>{order.returnReason}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Phương án:</span>
-                  <span className="font-medium">Hoàn tiền ngay</span>
+                <div className='flex justify-between'>
+                  <span className='text-muted-foreground'>Phương án:</span>
+                  <span className='font-medium'>Hoàn tiền ngay</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Trạng thái:</span>
-                  <span className="font-medium text-green-600">Đã hoàn cho người mua</span>
+                <div className='flex justify-between'>
+                  <span className='text-muted-foreground'>Trạng thái:</span>
+                  <span className='font-medium text-green-600'>Đã hoàn cho người mua</span>
                 </div>
               </div>
             </div>
@@ -162,35 +162,35 @@ export default function OrderDetailsDialog({ order }: OrderDetailsDialogProps) {
 
 
           <div>
-            <h3 className="font-semibold text-[#004643] mb-3">Thông tin thanh toán</h3>
-            <div className="flex flex-col gap-2 text-sm bg-muted/30 p-4 rounded-md">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Tổng tiền hàng:</span>
+            <h3 className='font-semibold text-[#004643] mb-3'>Thông tin thanh toán</h3>
+            <div className='flex flex-col gap-2 text-sm bg-muted/30 p-4 rounded-md'>
+              <div className='flex justify-between'>
+                <span className='text-muted-foreground'>Tổng tiền hàng:</span>
                 <span>{formatPrice(order.subtotal)}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Phí vận chuyển:</span>
+              <div className='flex justify-between'>
+                <span className='text-muted-foreground'>Phí vận chuyển:</span>
                 <span>{formatPrice(order.shippingFee)}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Shop Voucher giảm:</span>
-                <span className="text-green-600">- {formatPrice(order.shopVoucherDiscount)}</span>
+              <div className='flex justify-between'>
+                <span className='text-muted-foreground'>Shop Voucher giảm:</span>
+                <span className='text-green-600'>- {formatPrice(order.shopVoucherDiscount)}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Platform Voucher giảm:</span>
-                <span className="text-green-600">- {formatPrice(order.szoneVoucherDiscount)}</span>
+              <div className='flex justify-between'>
+                <span className='text-muted-foreground'>Platform Voucher giảm:</span>
+                <span className='text-green-600'>- {formatPrice(order.szoneVoucherDiscount)}</span>
               </div>
-              <Separator className="my-2" />
-              <div className="flex justify-between font-bold text-base">
+              <Separator className='my-2' />
+              <div className='flex justify-between font-bold text-base'>
                 <span>Người mua thanh toán:</span>
-                <span className="text-rose-500">
+                <span className='text-rose-500'>
                   {formatPrice(typeof order.finalPrice === 'string' ? parseFloat(order.finalPrice) : order.finalPrice)}
                 </span>
               </div>
               
-              <div className="flex justify-between mt-2 pt-2 border-t">
-                <span className="text-muted-foreground">Phương thức:</span>
-                <span className="font-medium text-[#004643]">{getPaymentMethodLabel(order.paymentMethod)}</span>
+              <div className='flex justify-between mt-2 pt-2 border-t'>
+                <span className='text-muted-foreground'>Phương thức:</span>
+                <span className='font-medium text-[#004643]'>{getPaymentMethodLabel(order.paymentMethod)}</span>
               </div>
             </div>
           </div>
