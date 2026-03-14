@@ -1,8 +1,8 @@
 import type React from 'react'
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '~/components/ui/sidebar'
-import { AdminSidebar } from '~/app/components/admin-sidebar'
+import { AdminSidebar } from '~/components/sidebars/AdminSidebar'
 import { Separator } from '~/components/ui/separator'
-import { ChatSidebar } from '~/app/components/chat-sidebar'
+import { ChatSidebar } from '~/components/sidebars/ChatSidebar'
 
 export default function AdminLayout({
   children,

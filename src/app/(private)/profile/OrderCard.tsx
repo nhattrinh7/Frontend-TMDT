@@ -134,7 +134,7 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
               </AlertDialogTrigger>
               <AlertDialogContent className='sm:max-w-[425px] rounded-2xl overflow-hidden p-0 gap-0 border-0 shadow-2xl'>
                 {/* Header with gradient background */}
-                <AlertDialogHeader className='bg-gradient-to-r from-red-500 to-red-600 px-6 py-5 text-white'>
+                <AlertDialogHeader className='bg-linear-to-r from-red-500 to-red-600 px-6 py-5 text-white'>
                   <AlertDialogTitle className='text-xl font-bold text-white flex items-center gap-2'>
                     Xác nhận hủy đơn hàng
                   </AlertDialogTitle>
@@ -163,7 +163,7 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
                         onClick={() => setCancelReason(reason)}
                       >
                         <div className={`
-                          flex flex-shrink-0 items-center justify-center w-5 h-5 rounded-full border mr-3 transition-colors duration-200
+                          flex shrink-0 items-center justify-center w-5 h-5 rounded-full border mr-3 transition-colors duration-200
                           ${cancelReason === reason
                             ? 'border-red-500 bg-red-500'
                             : 'border-gray-300'

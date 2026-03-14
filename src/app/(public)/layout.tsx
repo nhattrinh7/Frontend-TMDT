@@ -1,5 +1,5 @@
 import Header from '~/app/(public)/Header'
-import { ChatWidget } from '~/app/components/chat-widget/ChatWidget'
+import { ChatWidget } from '~/components/chat/ChatWidget'
 
 export default function PublicLayout({
   children,

@@ -8,8 +8,8 @@ import { Avatar, AvatarFallback } from '~/components/ui/avatar'
 import { cn } from '~/lib/utils'
 import { useBoundStore } from '~/zustand/store'
 import { useChat } from '~/hooks/useChat'
-import { ConversationItem } from '~/app/components/chat-widget/ConversationItem'
-import { MessageItem, ReplyBar } from '~/app/components/chat-widget/MessageItem'
+import { ConversationItem } from '~/components/chat/ConversationItem'
+import { MessageItem, ReplyBar } from '~/components/chat/MessageItem'
 import type { ChatConversation, ChatMessage } from '~/apiRequests/chat.apiRequest'
 import {
   getConversationsAPI,

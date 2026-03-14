@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
 import './globals.css'
-import { ThemeProvider } from '~/components/theme-provider'
+import { ThemeProvider } from '~/components/ThemeProvider'
 import { Toaster } from 'sonner'
 
 const RobotoSans = Roboto({

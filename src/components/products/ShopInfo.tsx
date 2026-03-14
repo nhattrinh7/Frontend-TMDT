@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import { openChatWithShop } from '~/app/components/chat-widget/ChatWidget'
+import { openChatWithShop } from '~/components/chat/ChatWidget'
 
 interface ShopInfoProps {
   shop: {

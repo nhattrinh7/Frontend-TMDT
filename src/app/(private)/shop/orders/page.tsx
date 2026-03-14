@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { getShopByOwnerIdAPI } from '~/apiRequests/shop.apiRequest'
 import { useBoundStore } from '~/zustand/store'
+import OrderTabs from '~/components/shop/OrderTabs'
 
 
 export default function OrdersPage() {
@@ -22,6 +23,9 @@ export default function OrdersPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[#004643]">Quản lý đơn hàng</h1>
       </div>
+      
+      {/* Dynamic Order Tabs Component */}
+      <OrderTabs />
     </div>
   )
 }

@@ -422,32 +422,32 @@ function UpdateProductContent() {
               {/* Attributes Card */}
               {product.attributes &&
                 Object.keys(product.attributes).length > 0 && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Thuộc tính sản phẩm</CardTitle>
-                    </CardHeader>
-                    <CardContent className='space-y-4'>
-                      {Object.entries(
-                        product.attributes as Record<string, string>,
-                      ).map(([key]) => (
-                        <FormField
-                          key={key}
-                          control={form.control}
-                          name={`attributes.${key}`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{key}</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      ))}
-                    </CardContent>
-                  </Card>
-                )}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Thuộc tính sản phẩm</CardTitle>
+                  </CardHeader>
+                  <CardContent className='space-y-4'>
+                    {Object.entries(
+                      product.attributes as Record<string, string>,
+                    ).map(([key]) => (
+                      <FormField
+                        key={key}
+                        control={form.control}
+                        name={`attributes.${key}`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{key}</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Phân loại hàng */}
               <Card>

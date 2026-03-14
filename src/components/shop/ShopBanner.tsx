@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { MessageCircle } from 'lucide-react'
-import { openChatWithShop } from '~/app/components/chat-widget/ChatWidget'
+import { openChatWithShop } from '~/components/chat/ChatWidget'
 
 interface ShopBannerProps {
   shop: {

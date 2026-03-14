@@ -239,8 +239,6 @@ export default function CreateShopForm() {
     } 
   }
   
-  const selectedAddress = addresses.find(addr => addr.id === selectedAddressId)
-
   return (
     <div className="container max-w-4xl mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-8" style={{ color: '#004643' }}>
@@ -366,7 +364,7 @@ export default function CreateShopForm() {
                               {address.recipientPhoneNumber}
                             </div>
                             <div className="flex items-start gap-1 text-sm text-gray-600">
-                              <MapPin className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                              <MapPin className="w-3 h-3 mt-0.5 shrink-0" />
                               <span>{address.detail}, {address.ward}, {address.province}</span>
                             </div>
                           </div>
@@ -483,7 +481,7 @@ export default function CreateShopForm() {
       {isAddingAddress && (
         <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
           <div className='bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto'>
-            <div className='bg-gradient-to-r from-[#004643] to-[#005d58] p-6 flex justify-between items-center'>
+            <div className='bg-linear-to-r from-[#004643] to-[#005d58] p-6 flex justify-between items-center'>
               <h2 className='text-2xl font-bold text-white'>Thêm địa chỉ mới</h2>
               <button
                 onClick={() => setIsAddingAddress(false)}
@@ -596,7 +594,7 @@ export default function CreateShopForm() {
                 <button
                   type='button'
                   onClick={addAddressForm.handleSubmit(onSubmitAddAddress)}
-                  className='flex-1 px-6 py-3 bg-gradient-to-r from-[#004643] to-[#005d58] text-white rounded-lg font-semibold hover:shadow-lg transition-all'
+                  className='flex-1 px-6 py-3 bg-linear-to-r from-[#004643] to-[#005d58] text-white rounded-lg font-semibold hover:shadow-lg transition-all'
                 >
                   Thêm địa chỉ
                 </button>

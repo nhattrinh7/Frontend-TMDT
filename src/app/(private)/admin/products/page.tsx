@@ -111,8 +111,8 @@ export default function ManageProductsPage() {
     <div className="flex flex-col gap-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-           <h1 className="text-2xl font-bold text-[#004643]">Quản lý sản phẩm</h1>
-           <p className="text-sm text-muted-foreground mt-1">Danh sách các sản phẩm đang hoạt động và bị từ chối</p>
+          <h1 className="text-2xl font-bold text-[#004643]">Quản lý sản phẩm</h1>
+          <p className="text-sm text-muted-foreground mt-1">Danh sách các sản phẩm đang hoạt động và bị từ chối</p>
         </div>
       </div>
 
@@ -128,11 +128,11 @@ export default function ManageProductsPage() {
               {/* Optional: Show count if available, but tricky because we only have count for current tab often-times unless we pre-fetch.
                   For now, we can show count if we have it loaded.
                */}
-               {tabStates[tab.value].products.length > 0 && (
-                   <span className="ml-2 text-xs bg-muted px-1.5 py-0.5 rounded">
-                     {tabStates[tab.value].meta.total}
-                   </span>
-               )}
+              {tabStates[tab.value].products.length > 0 && (
+                <span className="ml-2 text-xs bg-muted px-1.5 py-0.5 rounded">
+                  {tabStates[tab.value].meta.total}
+                </span>
+              )}
             </TabsTrigger>
           ))}
         </TabsList>

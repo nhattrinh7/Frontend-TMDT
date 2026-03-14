@@ -150,6 +150,20 @@ export const confirmWalletPaymentAPI = async (data: ConfirmWalletPaymentRequest)
 
 // ============ USER ORDERS (Đơn mua) ============
 
+
+export interface CalculatePriceItem {
+  id: string
+  productId: string
+  productVariantId: string
+  name: string
+  price: number
+  quantity: number
+  image: string
+  sku: string
+}
+
+
+
 export interface UserOrderItem {
   id: string
   productId: string
@@ -169,9 +183,9 @@ export interface UserOrder {
   paymentMethod: string
   finalPrice: number
   createdAt: string
+  cancelReason?: string | null
   orderItems: UserOrderItem[]
 }
-
 export interface CursorMeta {
   nextCursor: string | null
   hasMore: boolean
@@ -200,3 +214,72 @@ export const cancelOrderAPI = async (orderId: string, reason?: string) => {
   )
   return response
 }
+
+// ============ SHOP ORDERS (Quản lý đơn hàng) ============
+
+export interface ShopOrderItem {
+  id: string
+  productId: string
+  productVariantId: string
+  productName: string
+  variantImage: string
+  sku: string
+  quantity: number
+  finalPrice: number
+}
+
+export interface ShopOrder {
+  id: string
+  shopId: string
+  shopName: string
+  buyerUsername: string
+  buyerAvatar: string | null
+  status: string
+  paymentMethod: string
+  finalPrice: string | number
+  shippingAddress: string
+  receiverName: string
+  receiverPhoneNumber: string
+  subtotal: number
+  shippingFee: number
+  szoneVoucherDiscount: number
+  shopVoucherDiscount: number
+  cancelReason?: string | null
+  returnReason?: string | null
+  createdAt: string
+  orderItems: ShopOrderItem[]
+}
+
+export interface OffsetMeta {
+  page: number
+  limit: number
+  totalPages: number
+  totalItems: number
+}
+
+export const getShopOrdersPaginatedAPI = async (
+  shopId: string,
+  params: { status: string; page?: number; limit?: number; search?: string }
+) => {
+  const searchParams = new URLSearchParams()
+  searchParams.set('status', params.status)
+  if (params.page) searchParams.set('page', String(params.page))
+  if (params.limit) searchParams.set('limit', String(params.limit))
+  if (params.search) searchParams.set('search', params.search)
+
+  const response = await http.get<
+    ApiResponse<{ items: ShopOrder[]; meta: OffsetMeta }>
+  >(`/api/v1/orders/shop/${shopId}?${searchParams.toString()}`)
+  
+  return response
+}
+
+export const acceptOrderAPI = async (orderId: string) => {
+  const response = await http.patch<ApiResponse<{ message: string; success: boolean }>>(
+    `/api/v1/orders/${orderId}/accept`,
+  )
+  return response
+}
+
+// End file
+

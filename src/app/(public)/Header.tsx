@@ -9,7 +9,7 @@ import { useBoundStore } from '~/zustand/store'
 import { getAccessTokenFromLocalStorage } from '~/lib/utils'
 import { checkUserHasShopAPI } from '~/apiRequests/shop.apiRequest'
 import { addSearchHistory } from '~/lib/search-history.util'
-import SearchHistoryDropdown from '~/app/components/search-history-dropdown'
+import SearchHistoryDropdown from '~/components/SearchHistoryDropdown'
 import { countCartItemsAPI } from '~/apiRequests/user.apiRequest'
 
 export default function Header() {
