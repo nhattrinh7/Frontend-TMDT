@@ -4,10 +4,10 @@ import { useState, useRef } from 'react'
 import Image from 'next/image'
 
 interface ProductImageGalleryProps {
-  mainImage: string
-  galleryImages: string[]
-  video: string | null
-  productName: string
+  mainImage: string;
+  galleryImages: string[];
+  video: string | null;
+  productName: string;
 }
 
 export function ProductImageGallery({
@@ -61,16 +61,16 @@ export function ProductImageGallery({
   }
 
   return (
-    <div className="space-y-3">
+    <div className='space-y-3'>
       {/* Ảnh chính hoặc video */}
-      <div 
-        className="relative aspect-square w-full cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white"
+      <div
+        className='relative aspect-square w-full cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-white'
         onClick={handleMainMediaClick}
       >
         {isVideo ? (
           <video
             src={selectedImage}
-            className="h-full w-full object-contain"
+            className='h-full w-full object-contain'
             muted // Muted by default in preview
           />
         ) : (
@@ -78,7 +78,7 @@ export function ProductImageGallery({
             src={selectedImage}
             alt={productName}
             fill
-            className="object-contain p-2"
+            className='object-contain p-2'
             priority
           />
         )}
@@ -87,41 +87,63 @@ export function ProductImageGallery({
 
       {/* Zoom Modal */}
       {isZoomed && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 p-4"
+        <div
+          className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 p-4'
           onClick={() => setIsZoomed(false)} // Click outside/background to close
         >
-          <div className="relative h-full w-full max-w-5xl" onClick={(e) => isVideo && e.stopPropagation()}>
+          <div
+            className='relative h-full w-full max-w-5xl'
+            onClick={(e) => isVideo && e.stopPropagation()}
+          >
             {/* Close button */}
-            <button 
-              className="absolute -right-4 -top-4 z-50 rounded-full bg-white p-2 text-black opacity-75 hover:opacity-100"
+            <button
+              className='absolute -right-4 -top-4 z-50 rounded-full bg-white p-2 text-black opacity-75 hover:opacity-100'
               onClick={(e) => {
                 e.stopPropagation()
                 setIsZoomed(false)
               }}
             >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className='h-6 w-6'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M6 18L18 6M6 6l12 12'
+                />
               </svg>
             </button>
 
             {isVideo ? (
-              <div className="flex h-full items-center justify-center" onClick={handleZoomClick}>
+              <div
+                className='flex h-full items-center justify-center'
+                onClick={handleZoomClick}
+              >
                 <video
                   ref={videoRef}
                   src={selectedImage}
-                  className="max-h-full max-w-full"
+                  className='max-h-full max-w-full'
                   autoPlay
                   controls={false} // Disable default controls to handle custom click
                 />
               </div>
             ) : (
-              <div className="relative h-full w-full" onClick={(e) => { e.stopPropagation(); setIsZoomed(false) }}>
+              <div
+                className='relative h-full w-full'
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setIsZoomed(false)
+                }}
+              >
                 <Image
                   src={selectedImage}
                   alt={productName}
                   fill
-                  className="object-contain"
+                  className='object-contain'
                 />
               </div>
             )}
@@ -131,25 +153,25 @@ export function ProductImageGallery({
 
       {/* Thumbnails */}
       {allMedia.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto">
+        <div className='flex gap-2 overflow-x-auto'>
           {allMedia.map((media, index) => (
             <button
               key={index}
               onClick={() => handleThumbnailClick(media)}
-              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-all ${
+              className={`relative h-20 w-20 lg:h-24 lg:w-24 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
                 selectedImage === media.url
-                  ? 'border-[#004643]'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? 'border-emerald-600'
+                  : 'border-slate-200 hover:border-slate-300'
               }`}
             >
               {media.type === 'video' ? (
-                <div className="flex h-full w-full items-center justify-center bg-gray-100">
+                <div className='flex h-full w-full items-center justify-center bg-slate-100'>
                   <svg
-                    className="h-6 w-6 text-gray-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
+                    className='h-6 w-6 text-slate-600'
+                    fill='currentColor'
+                    viewBox='0 0 20 20'
                   >
-                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                    <path d='M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z' />
                   </svg>
                 </div>
               ) : (
@@ -157,7 +179,7 @@ export function ProductImageGallery({
                   src={media.url}
                   alt={`${productName} ${index + 1}`}
                   fill
-                  className="object-cover"
+                  className='object-cover'
                 />
               )}
             </button>

@@ -32,6 +32,7 @@ const eslintConfig = [
       'space-before-blocks': ['warn', 'always'],
       'indent': ['warn', 2],
       'quotes': ['warn', 'single'],
+      'jsx-quotes': ['warn', 'prefer-single'],
     },
   },
 ]

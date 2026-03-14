@@ -103,35 +103,35 @@ export default function ProductTable({
     switch (activeTab) {
     case 'active':
       return (
-        <div className="flex items-center gap-1">
+        <div className='flex items-center gap-1'>
           <Link href={`/shop/products/update?id=${product.id}`}>
-            <Button variant="ghost" size="icon" title="Cập nhật">
-              <Pencil className="size-4" />
+            <Button variant='ghost' size='icon' title='Cập nhật'>
+              <Pencil className='size-4' />
             </Button>
           </Link>
           {onHide && (
             <Button
-              variant="ghost"
-              size="icon"
-              title="Ẩn sản phẩm"
+              variant='ghost'
+              size='icon'
+              title='Ẩn sản phẩm'
               onClick={() => onHide(product.id)}
             >
-              <EyeOff className="size-4" />
+              <EyeOff className='size-4' />
             </Button>
           )}
           <Link href={`/shop/products/view?id=${product.id}`}>
-            <Button variant="ghost" size="icon" title="Xem chi tiết">
-              <ExternalLink className="size-4" />
+            <Button variant='ghost' size='icon' title='Xem chi tiết'>
+              <ExternalLink className='size-4' />
             </Button>
           </Link>
           {onDelete && (
             <Button
-              variant="ghost"
-              size="icon"
-              title="Xóa sản phẩm"
+              variant='ghost'
+              size='icon'
+              title='Xóa sản phẩm'
               onClick={() => handleDeleteClick(product.id, product.name)}
             >
-              <Trash2 className="size-4 text-destructive" />
+              <Trash2 className='size-4 text-destructive' />
             </Button>
           )}
         </div>
@@ -139,50 +139,50 @@ export default function ProductTable({
     case 'rejected':
     case 'pending':
       return (
-        <div className="flex items-center gap-1">
+        <div className='flex items-center gap-1'>
           <Link href={`/shop/products/view?id=${product.id}`}>
-            <Button variant="ghost" size="icon" title="Xem chi tiết">
-              <ExternalLink className="size-4" />
+            <Button variant='ghost' size='icon' title='Xem chi tiết'>
+              <ExternalLink className='size-4' />
             </Button>
           </Link>
           {onDelete && (
             <Button
-              variant="ghost"
-              size="icon"
-              title="Xóa sản phẩm"
+              variant='ghost'
+              size='icon'
+              title='Xóa sản phẩm'
               onClick={() => handleDeleteClick(product.id, product.name)}
             >
-              <Trash2 className="size-4 text-destructive" />
+              <Trash2 className='size-4 text-destructive' />
             </Button>
           )}
         </div>
       )
     case 'hidden':
       return (
-        <div className="flex items-center gap-1">
+        <div className='flex items-center gap-1'>
           <Link href={`/shop/products/view?id=${product.id}`}>
-            <Button variant="ghost" size="icon" title="Xem chi tiết">
-              <ExternalLink className="size-4" />
+            <Button variant='ghost' size='icon' title='Xem chi tiết'>
+              <ExternalLink className='size-4' />
             </Button>
           </Link>
           {onUnhide && (
             <Button
-              variant="ghost"
-              size="icon"
-              title="Hiển thị đến người dùng"
+              variant='ghost'
+              size='icon'
+              title='Hiển thị đến người dùng'
               onClick={() => onUnhide(product.id)}
             >
-              <Eye className="size-4" />
+              <Eye className='size-4' />
             </Button>
           )}
           {onDelete && (
             <Button
-              variant="ghost"
-              size="icon"
-              title="Xóa sản phẩm"
+              variant='ghost'
+              size='icon'
+              title='Xóa sản phẩm'
               onClick={() => handleDeleteClick(product.id, product.name)}
             >
-              <Trash2 className="size-4 text-destructive" />
+              <Trash2 className='size-4 text-destructive' />
             </Button>
           )}
         </div>
@@ -197,49 +197,49 @@ export default function ProductTable({
     switch (activeTab) {
     case 'active':
       return (
-        <TableRow className="bg-muted/50">
-          <TableHead className="w-12"></TableHead>
-          <TableHead className="w-20">Ảnh</TableHead>
-          <TableHead className="min-w-[200px]">Tên sản phẩm</TableHead>
+        <TableRow className='bg-muted/50'>
+          <TableHead className='w-12'></TableHead>
+          <TableHead className='w-20'>Ảnh</TableHead>
+          <TableHead className='min-w-[200px]'>Tên sản phẩm</TableHead>
           <TableHead>Doanh số</TableHead>
           <TableHead>Giá</TableHead>
           <TableHead>Kho hàng</TableHead>
-          <TableHead className="w-32">Thao tác</TableHead>
+          <TableHead className='w-32'>Thao tác</TableHead>
         </TableRow>
       )
     case 'rejected':
       return (
-        <TableRow className="bg-muted/50">
-          <TableHead className="w-12"></TableHead>
-          <TableHead className="w-20">Ảnh</TableHead>
-          <TableHead className="min-w-[200px]">Tên sản phẩm</TableHead>
+        <TableRow className='bg-muted/50'>
+          <TableHead className='w-12'></TableHead>
+          <TableHead className='w-20'>Ảnh</TableHead>
+          <TableHead className='min-w-[200px]'>Tên sản phẩm</TableHead>
           <TableHead>Thời gian cập nhật</TableHead>
-          <TableHead className="min-w-[200px]">Lý do vi phạm</TableHead>
-          <TableHead className="w-24">Thao tác</TableHead>
+          <TableHead className='min-w-[200px]'>Lý do vi phạm</TableHead>
+          <TableHead className='w-24'>Thao tác</TableHead>
         </TableRow>
       )
     case 'pending':
       return (
-        <TableRow className="bg-muted/50">
-          <TableHead className="w-12"></TableHead>
-          <TableHead className="w-20">Ảnh</TableHead>
-          <TableHead className="min-w-[200px]">Tên sản phẩm</TableHead>
+        <TableRow className='bg-muted/50'>
+          <TableHead className='w-12'></TableHead>
+          <TableHead className='w-20'>Ảnh</TableHead>
+          <TableHead className='min-w-[200px]'>Tên sản phẩm</TableHead>
           <TableHead>Thời gian cập nhật</TableHead>
           <TableHead>Giá</TableHead>
           <TableHead>Kho hàng</TableHead>
-          <TableHead className="w-24">Thao tác</TableHead>
+          <TableHead className='w-24'>Thao tác</TableHead>
         </TableRow>
       )
     case 'hidden':
       return (
-        <TableRow className="bg-muted/50">
-          <TableHead className="w-12"></TableHead>
-          <TableHead className="w-20">Ảnh</TableHead>
-          <TableHead className="min-w-[200px]">Tên sản phẩm</TableHead>
+        <TableRow className='bg-muted/50'>
+          <TableHead className='w-12'></TableHead>
+          <TableHead className='w-20'>Ảnh</TableHead>
+          <TableHead className='min-w-[200px]'>Tên sản phẩm</TableHead>
           <TableHead>Doanh số</TableHead>
           <TableHead>Giá</TableHead>
           <TableHead>Kho hàng</TableHead>
-          <TableHead className="w-32">Thao tác</TableHead>
+          <TableHead className='w-32'>Thao tác</TableHead>
         </TableRow>
       )
     default:
@@ -259,39 +259,39 @@ export default function ProductTable({
           <TableCell>
             {hasVariants && (
               <Button
-                variant="ghost"
-                size="icon"
-                className="size-6"
+                variant='ghost'
+                size='icon'
+                className='size-6'
                 onClick={() => toggleExpand(product.id)}
               >
                 {isExpanded ? (
-                  <ChevronDown className="size-4" />
+                  <ChevronDown className='size-4' />
                 ) : (
-                  <ChevronRight className="size-4" />
+                  <ChevronRight className='size-4' />
                 )}
               </Button>
             )}
           </TableCell>
           <TableCell>
-            <div className="relative size-14 overflow-hidden rounded-md border">
+            <div className='relative size-14 overflow-hidden rounded-md border'>
               <Image
                 src={product.mainImage}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className='object-cover'
               />
             </div>
           </TableCell>
           <TableCell>
-            <div className="space-y-1">
-              <p className="line-clamp-2 font-medium">{product.name}</p>
-              <p className="text-sm text-muted-foreground">
+            <div className='space-y-1'>
+              <p className='line-clamp-2 font-medium'>{product.name}</p>
+              <p className='text-sm text-muted-foreground'>
                 {summary.skuCount} SKU
               </p>
             </div>
           </TableCell>
-          <TableCell className="font-medium">{summary.totalSold}</TableCell>
-          <TableCell className="font-medium">{summary.priceRange}</TableCell>
+          <TableCell className='font-medium'>{summary.totalSold}</TableCell>
+          <TableCell className='font-medium'>{summary.priceRange}</TableCell>
           <TableCell>{summary.totalStock}</TableCell>
           <TableCell>{renderActions(product)}</TableCell>
         </>
@@ -302,42 +302,42 @@ export default function ProductTable({
           <TableCell>
             {hasVariants && (
               <Button
-                variant="ghost"
-                size="icon"
-                className="size-6"
+                variant='ghost'
+                size='icon'
+                className='size-6'
                 onClick={() => toggleExpand(product.id)}
               >
                 {isExpanded ? (
-                  <ChevronDown className="size-4" />
+                  <ChevronDown className='size-4' />
                 ) : (
-                  <ChevronRight className="size-4" />
+                  <ChevronRight className='size-4' />
                 )}
               </Button>
             )}
           </TableCell>
           <TableCell>
-            <div className="relative size-14 overflow-hidden rounded-md border">
+            <div className='relative size-14 overflow-hidden rounded-md border'>
               <Image
                 src={product.mainImage}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className='object-cover'
               />
             </div>
           </TableCell>
           <TableCell>
-            <div className="space-y-1">
-              <p className="line-clamp-2 font-medium">{product.name}</p>
-              <p className="text-sm text-muted-foreground">
+            <div className='space-y-1'>
+              <p className='line-clamp-2 font-medium'>{product.name}</p>
+              <p className='text-sm text-muted-foreground'>
                 {summary.skuCount} SKU
               </p>
             </div>
           </TableCell>
-          <TableCell className="text-sm text-muted-foreground">
+          <TableCell className='text-sm text-muted-foreground'>
             {formatDate(product.updatedAt)}
           </TableCell>
           <TableCell>
-            <p className="text-sm text-destructive">
+            <p className='text-sm text-destructive'>
               {product.rejectReason || 'Không có lý do'}
             </p>
           </TableCell>
@@ -350,41 +350,41 @@ export default function ProductTable({
           <TableCell>
             {hasVariants && (
               <Button
-                variant="ghost"
-                size="icon"
-                className="size-6"
+                variant='ghost'
+                size='icon'
+                className='size-6'
                 onClick={() => toggleExpand(product.id)}
               >
                 {isExpanded ? (
-                  <ChevronDown className="size-4" />
+                  <ChevronDown className='size-4' />
                 ) : (
-                  <ChevronRight className="size-4" />
+                  <ChevronRight className='size-4' />
                 )}
               </Button>
             )}
           </TableCell>
           <TableCell>
-            <div className="relative size-14 overflow-hidden rounded-md border">
+            <div className='relative size-14 overflow-hidden rounded-md border'>
               <Image
                 src={product.mainImage}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className='object-cover'
               />
             </div>
           </TableCell>
           <TableCell>
-            <div className="space-y-1">
-              <p className="line-clamp-2 font-medium">{product.name}</p>
-              <p className="text-sm text-muted-foreground">
+            <div className='space-y-1'>
+              <p className='line-clamp-2 font-medium'>{product.name}</p>
+              <p className='text-sm text-muted-foreground'>
                 {summary.skuCount} SKU
               </p>
             </div>
           </TableCell>
-          <TableCell className="text-sm text-muted-foreground">
+          <TableCell className='text-sm text-muted-foreground'>
             {formatDate(product.updatedAt)}
           </TableCell>
-          <TableCell className="font-medium">{summary.priceRange}</TableCell>
+          <TableCell className='font-medium'>{summary.priceRange}</TableCell>
           <TableCell>{summary.totalStock}</TableCell>
           <TableCell>{renderActions(product)}</TableCell>
         </>
@@ -395,39 +395,39 @@ export default function ProductTable({
           <TableCell>
             {hasVariants && (
               <Button
-                variant="ghost"
-                size="icon"
-                className="size-6"
+                variant='ghost'
+                size='icon'
+                className='size-6'
                 onClick={() => toggleExpand(product.id)}
               >
                 {isExpanded ? (
-                  <ChevronDown className="size-4" />
+                  <ChevronDown className='size-4' />
                 ) : (
-                  <ChevronRight className="size-4" />
+                  <ChevronRight className='size-4' />
                 )}
               </Button>
             )}
           </TableCell>
           <TableCell>
-            <div className="relative size-14 overflow-hidden rounded-md border">
+            <div className='relative size-14 overflow-hidden rounded-md border'>
               <Image
                 src={product.mainImage}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className='object-cover'
               />
             </div>
           </TableCell>
           <TableCell>
-            <div className="space-y-1">
-              <p className="line-clamp-2 font-medium">{product.name}</p>
-              <p className="text-sm text-muted-foreground">
+            <div className='space-y-1'>
+              <p className='line-clamp-2 font-medium'>{product.name}</p>
+              <p className='text-sm text-muted-foreground'>
                 {summary.skuCount} SKU
               </p>
             </div>
           </TableCell>
-          <TableCell className="font-medium">{summary.totalSold}</TableCell>
-          <TableCell className="font-medium">{summary.priceRange}</TableCell>
+          <TableCell className='font-medium'>{summary.totalSold}</TableCell>
+          <TableCell className='font-medium'>{summary.priceRange}</TableCell>
           <TableCell>{summary.totalStock}</TableCell>
           <TableCell>{renderActions(product)}</TableCell>
         </>
@@ -447,27 +447,27 @@ export default function ProductTable({
           <TableCell></TableCell>
           <TableCell>
             {variant.image ? (
-              <div className="relative size-10 overflow-hidden rounded-md border">
+              <div className='relative size-10 overflow-hidden rounded-md border'>
                 <Image
                   src={variant.image}
                   alt={variant.sku}
                   fill
-                  className="object-cover"
+                  className='object-cover'
                 />
               </div>
             ) : (
-              <div className="flex size-10 items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground">
+              <div className='flex size-10 items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground'>
                 N/A
               </div>
             )}
           </TableCell>
           <TableCell>
-            <p className="text-sm text-muted-foreground">
+            <p className='text-sm text-muted-foreground'>
               SKU: {variant.sku}
             </p>
           </TableCell>
-          <TableCell className="font-medium">{variant.soldQuantity || 0}</TableCell>
-          <TableCell className="font-medium">
+          <TableCell className='font-medium'>{variant.soldQuantity || 0}</TableCell>
+          <TableCell className='font-medium'>
             {formatPrice(variant.price)}
           </TableCell>
           <TableCell>{variant.stock || 0}</TableCell>
@@ -480,22 +480,22 @@ export default function ProductTable({
           <TableCell></TableCell>
           <TableCell>
             {variant.image ? (
-              <div className="relative size-10 overflow-hidden rounded-md border">
+              <div className='relative size-10 overflow-hidden rounded-md border'>
                 <Image
                   src={variant.image}
                   alt={variant.sku}
                   fill
-                  className="object-cover"
+                  className='object-cover'
                 />
               </div>
             ) : (
-              <div className="flex size-10 items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground">
+              <div className='flex size-10 items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground'>
                 N/A
               </div>
             )}
           </TableCell>
           <TableCell>
-            <p className="text-sm text-muted-foreground">
+            <p className='text-sm text-muted-foreground'>
               SKU: {variant.sku}
             </p>
           </TableCell>
@@ -510,27 +510,27 @@ export default function ProductTable({
           <TableCell></TableCell>
           <TableCell>
             {variant.image ? (
-              <div className="relative size-10 overflow-hidden rounded-md border">
+              <div className='relative size-10 overflow-hidden rounded-md border'>
                 <Image
                   src={variant.image}
                   alt={variant.sku}
                   fill
-                  className="object-cover"
+                  className='object-cover'
                 />
               </div>
             ) : (
-              <div className="flex size-10 items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground">
+              <div className='flex size-10 items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground'>
                 N/A
               </div>
             )}
           </TableCell>
           <TableCell>
-            <p className="text-sm text-muted-foreground">
+            <p className='text-sm text-muted-foreground'>
               SKU: {variant.sku}
             </p>
           </TableCell>
           <TableCell></TableCell>
-          <TableCell className="font-medium">
+          <TableCell className='font-medium'>
             {formatPrice(variant.price)}
           </TableCell>
           <TableCell>{variant.stock || 0}</TableCell>
@@ -544,23 +544,23 @@ export default function ProductTable({
 
   if (isLoading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Đang tải...</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Đang tải...</div>
       </div>
     )
   }
 
   if (products.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Không có sản phẩm nào</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Không có sản phẩm nào</div>
       </div>
     )
   }
 
   return (
     <>
-      <div className="rounded-lg border">
+      <div className='rounded-lg border'>
         <Table>
           <TableHeader>
             {renderTableHeader()}
@@ -573,7 +573,7 @@ export default function ProductTable({
               return (
                 <Fragment key={product.id}>
                   {/* Product Row */}
-                  <TableRow className="hover:bg-muted/30">
+                  <TableRow className='hover:bg-muted/30'>
                     {renderProductRow(product, summary)}
                   </TableRow>
 
@@ -582,7 +582,7 @@ export default function ProductTable({
                     product.variants?.map((variant) => (
                       <TableRow
                         key={variant.id}
-                        className="bg-muted/20 hover:bg-muted/40"
+                        className='bg-muted/20 hover:bg-muted/40'
                       >
                         {renderVariantRow(variant)}
                       </TableRow>

@@ -1,7 +1,7 @@
 'use client'
 
 interface ProductAttributesDisplayProps {
-  attributes: Record<string, string>
+  attributes: Record<string, string>;
 }
 
 export function ProductAttributesDisplay({
@@ -12,13 +12,20 @@ export function ProductAttributesDisplay({
   if (entries.length === 0) return null
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6">
-      <h2 className="mb-6 text-2xl font-bold text-gray-900">Chi Tiết Sản Phẩm</h2>
-      <div className="space-y-3">
+    <div className='bg-white rounded-3xl border border-slate-200 p-8 shadow-sm'>
+      <h2 className='text-xl lg:text-2xl font-bold bg-slate-50 -mx-8 -mt-8 px-8 py-6 border-b border-slate-200 rounded-t-3xl mb-8 uppercase tracking-wide text-slate-900'>
+        Chi Tiết Sản Phẩm
+      </h2>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12 text-base'>
         {entries.map(([key, value]) => (
-          <div key={key} className="flex border-b border-gray-100 pb-3 last:border-0">
-            <div className="w-1/3 text-gray-600">{key}</div>
-            <div className="w-2/3 font-semibold text-gray-900">{value}</div>
+          <div
+            key={key}
+            className='flex border-b border-slate-50 pb-3 md:pb-0 md:border-none'
+          >
+            <span className='w-48 text-slate-500 shrink-0'>{key}</span>
+            <span className='font-medium text-slate-900 text-left'>
+              {value}
+            </span>
           </div>
         ))}
       </div>

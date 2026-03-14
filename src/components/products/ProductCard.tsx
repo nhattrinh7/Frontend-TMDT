@@ -20,7 +20,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/product/${product.id}`}
-      className='bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow overflow-hidden group flex flex-col'
+      className='bg-white rounded-4xl shadow-sm border border-slate-200 hover:shadow-2xl hover:border-emerald-500/40 transition-all duration-300 overflow-hidden group flex flex-col h-full'
     >
       <div className='relative w-full aspect-square bg-gray-100'>
         <Image
@@ -31,40 +31,42 @@ export default function ProductCard({ product }: ProductCardProps) {
         />
       </div>
 
-      <div className='p-3 flex flex-col flex-1'>
-        <h3 className='text-base font-semibold text-gray-800 line-clamp-2 mb-4'>
+      <div className='p-4 lg:p-5 flex flex-col flex-1'>
+        <h3 className='text-lg font-bold text-slate-800 line-clamp-2 mb-2 group-hover:text-emerald-700 transition-colors leading-snug'>
           {product.name}
         </h3>
 
-        <div>
+        <div className='mt-auto pt-3'>
           {/* Rating and Buy Count */}
-          <div className='flex items-center gap-1 mb-2'>
-            <Star className='w-4 h-4 fill-yellow-400 text-yellow-400' />
-            <span className='text-sm font-semibold text-gray-700'>
-              {product.ratingAvg > 0 ? product.ratingAvg.toFixed(1) : '0'}
-            </span>
-            <span className='text-sm text-gray-500 mx-1'>|</span>
-            <span className='text-sm text-gray-500'>
+          <div className='flex items-center gap-2 mb-3'>
+            <div className='flex items-center gap-1.5 bg-amber-50 px-2 py-1 rounded-xl w-max'>
+              <Star className='w-4 h-4 fill-amber-400 text-amber-400' />
+              <span className='text-sm font-bold text-amber-700'>
+                {product.ratingAvg > 0 ? product.ratingAvg.toFixed(1) : '0.0'}
+              </span>
+            </div>
+            <span className='text-slate-300 text-sm'>•</span>
+            <span className='text-sm font-medium text-slate-500'>
               Đã bán {product.buy_count}
             </span>
           </div>
 
           {/* Price */}
-          <div className='flex items-baseline gap-1'>
+          <div className='flex items-baseline gap-2'>
             {product.price.min === product.price.max ? (
-              <p className='text-[#FF6B35] font-bold text-lg'>
+              <p className='text-emerald-600 font-semibold text-xl lg:text-2xl tracking-tight'>
                 {formatPrice(product.price.min)}
               </p>
             ) : (
-              <>
-                <p className='text-[#FF6B35] font-bold text-lg'>
+              <div className='flex flex-wrap items-center gap-x-2'>
+                <p className='text-emerald-600 font-semibold text-xl lg:text-2xl tracking-tight'>
                   {formatPrice(product.price.min)}
                 </p>
-                <span className='text-xs text-gray-500'>-</span>
-                <p className='text-[#FF6B35] font-bold text-lg'>
+                <span className='text-slate-400 text-base'>-</span>
+                <p className='text-emerald-600 font-semibold text-xl lg:text-2xl tracking-tight'>
                   {formatPrice(product.price.max)}
                 </p>
-              </>
+              </div>
             )}
           </div>
         </div>

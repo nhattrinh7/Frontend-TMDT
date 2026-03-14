@@ -36,7 +36,7 @@ export default function ProductAttributes({
 
   if (!category || attributes.length === 0) {
     return (
-      <div className="text-sm text-muted-foreground py-4 text-center border rounded-lg bg-muted/30">
+      <div className='text-sm text-muted-foreground py-4 text-center border rounded-lg bg-muted/30'>
         {category
           ? 'Ngành hàng này không có thuộc tính đặc biệt'
           : 'Vui lòng chọn ngành hàng để hiển thị các thuộc tính'}
@@ -45,10 +45,10 @@ export default function ProductAttributes({
   }
 
   return (
-    <div className="space-y-4">
-      <h3 className="font-medium text-sm">Thuộc tính ngành hàng</h3>
+    <div className='space-y-4'>
+      <h3 className='font-medium text-sm'>Thuộc tính ngành hàng</h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         {attributes.map((attr, index) => (
           <FormField
             key={`${attr.name}-${index}`}
@@ -58,7 +58,7 @@ export default function ProductAttributes({
               <FormItem>
                 <FormLabel>
                   {attr.name}
-                  {attr.required && <span className="text-destructive ml-1">*</span>}
+                  {attr.required && <span className='text-destructive ml-1'>*</span>}
                 </FormLabel>
                 <FormControl>
                   <Input

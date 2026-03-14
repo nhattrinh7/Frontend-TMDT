@@ -72,7 +72,7 @@ export default function ProductPagination({
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            href="#"
+            href='#'
             onClick={(e) => {
               e.preventDefault()
               if (page > 1) onPageChange(page - 1)
@@ -89,13 +89,13 @@ export default function ProductPagination({
           ) : (
             <PaginationItem key={pageNum}>
               <PaginationLink
-                href="#"
+                href='#'
                 onClick={(e) => {
                   e.preventDefault()
                   onPageChange(pageNum)
                 }}
                 isActive={pageNum === page}
-                className="cursor-pointer"
+                className='cursor-pointer'
               >
                 {pageNum}
               </PaginationLink>
@@ -105,7 +105,7 @@ export default function ProductPagination({
 
         <PaginationItem>
           <PaginationNext
-            href="#"
+            href='#'
             onClick={(e) => {
               e.preventDefault()
               if (page < totalPages) onPageChange(page + 1)

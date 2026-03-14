@@ -31,32 +31,32 @@ export function QuantitySelector({
   }
 
   return (
-    <div className="flex items-center gap-4">
-      <div className="flex items-center gap-0">
+    <div className='flex items-center gap-4'>
+      <div className='flex items-center border border-slate-200 rounded-md overflow-hidden'>
         <button
           onClick={handleDecrease}
           disabled={quantity <= 1}
-          className="flex h-12 w-12 items-center justify-center border border-r-0 border-gray-300 text-lg hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className='flex h-10 w-10 items-center justify-center border-r border-slate-200 bg-slate-50 hover:bg-slate-100 text-lg disabled:cursor-not-allowed disabled:opacity-50'
         >
           −
         </button>
         <input
-          type="number"
+          type='number'
           value={quantity}
           onChange={handleInputChange}
           min={1}
           max={maxQuantity}
-          className="h-12 w-20 border border-gray-300 text-center text-base [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className='h-10 w-16 border-none text-center text-sm bg-transparent focus:ring-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
         />
         <button
           onClick={handleIncrease}
           disabled={quantity >= maxQuantity}
-          className="flex h-12 w-12 items-center justify-center border border-l-0 border-gray-300 text-lg hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className='flex h-10 w-10 items-center justify-center border-l border-slate-200 bg-slate-50 hover:bg-slate-100 text-lg disabled:cursor-not-allowed disabled:opacity-50'
         >
           +
         </button>
       </div>
-      <span className="text-base text-gray-600">
+      <span className='text-xs text-slate-400'>
         {maxQuantity} sản phẩm có sẵn
       </span>
     </div>

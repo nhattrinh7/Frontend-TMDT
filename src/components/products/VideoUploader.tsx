@@ -70,38 +70,38 @@ export default function VideoUploader({
     <div className={cn('space-y-2', className)}>
       <input
         ref={inputRef}
-        type="file"
-        accept="video/*"
+        type='file'
+        accept='video/*'
         onChange={handleFileChange}
         disabled={disabled || isUploading}
-        className="hidden"
+        className='hidden'
       />
 
       {value ? (
         // Preview video đã upload
-        <div className="relative w-64 group">
+        <div className='relative w-64 group'>
           <video
             src={value}
             controls
-            className="w-full rounded-lg border"
+            className='w-full rounded-lg border'
             style={{ maxHeight: '200px' }}
           />
           {!disabled && (
             <Button
-              type="button"
-              variant="destructive"
-              size="icon"
-              className="absolute -top-2 -right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+              type='button'
+              variant='destructive'
+              size='icon'
+              className='absolute -top-2 -right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity'
               onClick={handleRemove}
             >
-              <X className="h-4 w-4" />
+              <X className='h-4 w-4' />
             </Button>
           )}
         </div>
       ) : (
         // Upload button
         <button
-          type="button"
+          type='button'
           onClick={handleClick}
           disabled={disabled || isUploading}
           className={cn(
@@ -115,20 +115,20 @@ export default function VideoUploader({
         >
           {isUploading ? (
             <>
-              <Loader2 className="h-8 w-8 animate-spin" />
-              <span className="text-sm">Đang upload...</span>
+              <Loader2 className='h-8 w-8 animate-spin' />
+              <span className='text-sm'>Đang upload...</span>
             </>
           ) : (
             <>
-              <VideoIcon className="h-8 w-8" />
-              <span className="text-sm">Thêm video (tùy chọn)</span>
-              <span className="text-xs">Tối đa 10MB</span>
+              <VideoIcon className='h-8 w-8' />
+              <span className='text-sm'>Thêm video (tùy chọn)</span>
+              <span className='text-xs'>Tối đa 10MB</span>
             </>
           )}
         </button>
       )}
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className='text-sm text-destructive'>{error}</p>}
     </div>
   )
 }

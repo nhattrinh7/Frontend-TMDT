@@ -1,10 +1,10 @@
 'use client'
 
 interface ReviewFiltersProps {
-  selectedRating: number | null
-  hasMedia: boolean
-  onRatingChange: (rating: number | null) => void
-  onHasMediaChange: (hasMedia: boolean) => void
+  selectedRating: number | null;
+  hasMedia: boolean;
+  onRatingChange: (rating: number | null) => void;
+  onHasMediaChange: (hasMedia: boolean) => void;
 }
 
 export function ReviewFilters({
@@ -23,17 +23,17 @@ export function ReviewFilters({
   ]
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       {/* Rating filters */}
-      <div className="flex flex-wrap gap-2">
+      <div className='flex flex-wrap gap-2'>
         {ratingOptions.map((option) => (
           <button
             key={option.label}
             onClick={() => onRatingChange(option.value)}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
               selectedRating === option.value
-                ? 'bg-[#004643] text-white'
-                : 'border border-gray-300 bg-white text-gray-700 hover:border-[#004643]'
+                ? 'bg-emerald-600 text-white'
+                : 'border border-slate-300 bg-white text-slate-700 hover:border-emerald-600'
             }`}
           >
             {option.label}
@@ -42,15 +42,18 @@ export function ReviewFilters({
       </div>
 
       {/* Media filter */}
-      <div className="flex items-center gap-2">
+      <div className='flex items-center gap-2'>
         <input
-          type="checkbox"
-          id="hasMedia"
+          type='checkbox'
+          id='hasMedia'
           checked={hasMedia}
           onChange={(e) => onHasMediaChange(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300 text-[#004643] focus:ring-[#004643]"
+          className='h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-600'
         />
-        <label htmlFor="hasMedia" className="text-sm text-gray-700 cursor-pointer">
+        <label
+          htmlFor='hasMedia'
+          className='text-sm text-slate-700 cursor-pointer hover:text-emerald-600 transition-colors'
+        >
           Có hình ảnh / video
         </label>
       </div>

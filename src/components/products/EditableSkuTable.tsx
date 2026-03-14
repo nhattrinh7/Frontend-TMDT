@@ -51,21 +51,21 @@ export default function EditableSkuTable({ form }: EditableSkuTableProps) {
 
   if (fields.length === 0) {
     return (
-      <div className="flex h-32 items-center justify-center rounded-lg border text-muted-foreground">
+      <div className='flex h-32 items-center justify-center rounded-lg border text-muted-foreground'>
         Không có SKU nào
       </div>
     )
   }
 
   return (
-    <div className="rounded-lg border">
+    <div className='rounded-lg border'>
       <Table>
         <TableHeader>
-          <TableRow className="bg-muted/50">
-            <TableHead className="w-20">Ảnh</TableHead>
+          <TableRow className='bg-muted/50'>
+            <TableHead className='w-20'>Ảnh</TableHead>
             <TableHead>SKU</TableHead>
-            <TableHead className="w-40">Giá (VNĐ)</TableHead>
-            <TableHead className="w-32">Kho</TableHead>
+            <TableHead className='w-40'>Giá (VNĐ)</TableHead>
+            <TableHead className='w-32'>Kho</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -73,27 +73,27 @@ export default function EditableSkuTable({ form }: EditableSkuTableProps) {
             <TableRow key={field.id}>
               {/* Image */}
               <TableCell>
-                <label className="relative block size-14 cursor-pointer overflow-hidden rounded-md border hover:border-primary">
+                <label className='relative block size-14 cursor-pointer overflow-hidden rounded-md border hover:border-primary'>
                   {form.watch(`variants.${index}.image`) ? (
                     <Image
                       src={form.watch(`variants.${index}.image`) || ''}
                       alt={field.sku}
                       fill
-                      className="object-cover"
+                      className='object-cover'
                     />
                   ) : (
-                    <div className="flex size-full items-center justify-center bg-muted">
+                    <div className='flex size-full items-center justify-center bg-muted'>
                       {uploadingIndex === index ? (
-                        <span className="text-xs">...</span>
+                        <span className='text-xs'>...</span>
                       ) : (
-                        <ImagePlus className="size-4 text-muted-foreground" />
+                        <ImagePlus className='size-4 text-muted-foreground' />
                       )}
                     </div>
                   )}
                   <input
-                    type="file"
-                    accept="image/*"
-                    className="sr-only"
+                    type='file'
+                    accept='image/*'
+                    className='sr-only'
                     onChange={(e) => {
                       const file = e.target.files?.[0]
                       if (file) handleImageUpload(index, file)
@@ -105,7 +105,7 @@ export default function EditableSkuTable({ form }: EditableSkuTableProps) {
 
               {/* SKU (readonly) */}
               <TableCell>
-                <span className="font-mono text-sm">{field.sku}</span>
+                <span className='font-mono text-sm'>{field.sku}</span>
               </TableCell>
 
               {/* Price */}
@@ -117,7 +117,7 @@ export default function EditableSkuTable({ form }: EditableSkuTableProps) {
                     <FormItem>
                       <FormControl>
                         <Input
-                          type="number"
+                          type='number'
                           min={0}
                           value={priceField.value || ''}
                           onChange={(e) => {
@@ -144,7 +144,7 @@ export default function EditableSkuTable({ form }: EditableSkuTableProps) {
                     <FormItem>
                       <FormControl>
                         <Input
-                          type="number"
+                          type='number'
                           min={0}
                           value={stockField.value || ''}
                           onChange={(e) => {

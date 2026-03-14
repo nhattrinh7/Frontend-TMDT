@@ -100,30 +100,32 @@ function SearchContent() {
 
   return (
     <div className='min-h-screen bg-gray-50'>
-      <div className='max-w-400 mx-auto px-4 lg:px-6 py-6'>
+      <div className='max-w-[1440px] mx-auto px-6 lg:px-12 xl:px-16 py-8 lg:py-16'>
         {/* Search Query Display */}
-        <div className='mb-6'>
-          <h1 className='text-2xl font-bold text-gray-800'>
+        <div className='mb-10'>
+          <h1 className='text-3xl lg:text-4xl font-bold text-gray-800 tracking-tight'>
             Kết quả tìm kiếm cho: <span className='text-[#004643]'>&quot;{currentFilters.search}&quot;</span>
           </h1>
           {searchResults && (
-            <p className='text-sm text-gray-600 mt-2'>
-              Tìm thấy {searchResults.products.meta.total} sản phẩm và {searchResults.shops.meta.total} cửa hàng
+            <p className='text-lg text-gray-600 mt-4'>
+              Tìm thấy <span className='font-semibold text-gray-900'>{searchResults.products.meta.total}</span> sản phẩm và <span className='font-semibold text-gray-900'>{searchResults.shops.meta.total}</span> cửa hàng
             </p>
           )}
         </div>
 
-        <div className='flex gap-6'>
+        <div className='flex flex-col lg:flex-row gap-8 lg:gap-12 xl:gap-16'>
           {/* Sidebar */}
-          <SearchSidebar
-            currentFilters={{
-              sort: currentFilters.sort,
-              minPrice: currentFilters.minPrice,
-              maxPrice: currentFilters.maxPrice,
-              minRating: currentFilters.minRating,
-            }}
-            onFilterChange={handleFilterChange}
-          />
+          <div className='w-full lg:w-80 xl:w-[360px] shrink-0'>
+            <SearchSidebar
+              currentFilters={{
+                sort: currentFilters.sort,
+                minPrice: currentFilters.minPrice,
+                maxPrice: currentFilters.maxPrice,
+                minRating: currentFilters.minRating,
+              }}
+              onFilterChange={handleFilterChange}
+            />
+          </div>
 
           {/* Main Content */}
           <div className='flex-1 min-w-0'>
@@ -144,8 +146,10 @@ function SearchContent() {
                 />
 
                 {/* Product Results */}
-                <div>
-                  <h2 className='text-xl font-bold text-gray-800 mb-4'>Sản phẩm</h2>
+                <div className='mt-8 lg:mt-12'>
+                  <h2 className='text-2xl font-bold text-gray-800 mb-6'>
+                    Sản phẩm
+                  </h2>
                   <ProductResults products={searchResults.products.items} />
 
                   {/* Pagination */}

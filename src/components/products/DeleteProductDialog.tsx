@@ -30,7 +30,7 @@ export default function DeleteProductDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Xác nhận xóa sản phẩm</AlertDialogTitle>
           <AlertDialogDescription>
-            Bạn có chắc chắn muốn xóa sản phẩm <span className="font-semibold text-foreground">{productName}</span> không?
+            Bạn có chắc chắn muốn xóa sản phẩm <span className='font-semibold text-foreground'>{productName}</span> không?
             Hành động này không thể hoàn tác.
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -38,7 +38,7 @@ export default function DeleteProductDialog({
           <AlertDialogCancel>Hủy</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
-            className="bg-destructive hover:bg-destructive/90"
+            className='bg-destructive hover:bg-destructive/90'
           >
             Xóa
           </AlertDialogAction>
