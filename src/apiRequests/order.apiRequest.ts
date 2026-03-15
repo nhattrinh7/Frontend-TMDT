@@ -36,6 +36,7 @@ export interface CalculatePriceSummary {
   shippingFee: number
   shopsVoucherDiscount: number
   szoneVoucherDiscount: number
+  goodsPrice: number
   finalPrice: number
 }
 
@@ -181,6 +182,7 @@ export interface UserOrder {
   shopName: string
   status: string
   paymentMethod: string
+  goodsPrice: number
   finalPrice: number
   createdAt: string
   cancelReason?: string | null
@@ -236,6 +238,7 @@ export interface ShopOrder {
   buyerAvatar: string | null
   status: string
   paymentMethod: string
+  goodsPrice: number
   finalPrice: string | number
   shippingAddress: string
   receiverName: string

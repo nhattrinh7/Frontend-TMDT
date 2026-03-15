@@ -156,7 +156,9 @@ export default function OrderTable({ status }: OrderTableProps) {
                         ))}
                       </div>
                     </td>
-                    <td className='p-4 align-top text-right font-semibold text-rose-500'>
+
+                    {/* Cột giá */}
+                    <td className='p-4 align-middle text-right font-bold text-lg text-rose-500'>
                       {formatPrice(typeof order.finalPrice === 'string' ? parseFloat(order.finalPrice) : order.finalPrice)}
                     </td>
                     
@@ -182,20 +184,24 @@ export default function OrderTable({ status }: OrderTableProps) {
                       </>
                     )}
 
+                    {/* Cột thao tác */}
                     <td className='p-4 align-top text-center'>
                       <div className='flex flex-col items-center gap-2'>
+                        {/* Nút xác nhận */}
                         {status === 'AWAITING_CONFIRMATION' && (
                           <ConfirmOrderDialog 
                             orderId={order.id} 
                             fetchData={fetchOrders} 
                           />
                         )}
+                        {/* Nút Đã giao cho bên vận chuyển */}
                         {status === 'PREPARING' && (
                           <DeliverOrderDialog 
                             orderId={order.id} 
                             fetchData={fetchOrders} 
                           />
                         )}
+                        {/* Nút xem chi tiết */}
                         <OrderDetailsDialog order={order} />
                       </div>
                     </td>

@@ -17,10 +17,16 @@ export default function ProductCard({ product }: ProductCardProps) {
     }).format(price)
   }
 
+  const formatCount = (count: number) => {
+    if (count >= 1000000) return `${(count / 1000000).toFixed(1).replace('.0', '')}M+`
+    if (count >= 1000) return `${(count / 1000).toFixed(1).replace('.0', '')}k+`
+    return count.toString()
+  }
+
   return (
     <Link
       href={`/product/${product.id}`}
-      className='bg-white rounded-4xl shadow-sm border border-slate-200 hover:shadow-2xl hover:border-emerald-500/40 transition-all duration-300 overflow-hidden group flex flex-col h-full'
+      className='bg-white rounded-md shadow-sm border border-slate-200 hover:shadow-2xl hover:border-emerald-500/40 transition-all duration-300 overflow-hidden group flex flex-col h-full'
     >
       <div className='relative w-full aspect-square bg-gray-100'>
         <Image
@@ -31,12 +37,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         />
       </div>
 
-      <div className='p-4 lg:p-5 flex flex-col flex-1'>
-        <h3 className='text-lg font-bold text-slate-800 line-clamp-2 mb-2 group-hover:text-emerald-700 transition-colors leading-snug'>
+      <div className='p-2 flex flex-col flex-1'>
+        <h3 className='text-sm font-semibold text-slate-900 line-clamp-2 mb-1 group-hover:text-emerald-700 transition-colors leading-snug'>
           {product.name}
         </h3>
 
-        <div className='mt-auto pt-3'>
+        <div className='mt-auto pt-1'>
           {/* Rating and Buy Count */}
           <div className='flex items-center gap-2 mb-3'>
             <div className='flex items-center gap-1.5 bg-amber-50 px-2 py-1 rounded-xl w-max'>
@@ -46,24 +52,24 @@ export default function ProductCard({ product }: ProductCardProps) {
               </span>
             </div>
             <span className='text-slate-300 text-sm'>•</span>
-            <span className='text-sm font-medium text-slate-500'>
-              Đã bán {product.buy_count}
+            <span className='text-xs font-medium text-slate-700'>
+              Đã bán {formatCount(product.buy_count)}
             </span>
           </div>
 
           {/* Price */}
-          <div className='flex items-baseline gap-2'>
+          <div className='flex items-baseline gap-1 mt-1.5'>
             {product.price.min === product.price.max ? (
-              <p className='text-emerald-600 font-semibold text-xl lg:text-2xl tracking-tight'>
+              <p className='text-emerald-700 font-bold text-base lg:text-lg tracking-tight'>
                 {formatPrice(product.price.min)}
               </p>
             ) : (
-              <div className='flex flex-wrap items-center gap-x-2'>
-                <p className='text-emerald-600 font-semibold text-xl lg:text-2xl tracking-tight'>
+              <div className='flex flex-wrap items-center gap-x-1'>
+                <p className='text-emerald-700 font-bold text-base lg:text-lg tracking-tight'>
                   {formatPrice(product.price.min)}
                 </p>
-                <span className='text-slate-400 text-base'>-</span>
-                <p className='text-emerald-600 font-semibold text-xl lg:text-2xl tracking-tight'>
+                <span className='text-slate-500 text-sm'>-</span>
+                <p className='text-emerald-700 font-bold text-base lg:text-lg tracking-tight'>
                   {formatPrice(product.price.max)}
                 </p>
               </div>

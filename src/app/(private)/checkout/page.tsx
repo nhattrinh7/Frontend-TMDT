@@ -130,7 +130,6 @@ export default function CheckoutPage() {
         setIsCalculating(false)
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [buildItemsByShop, shopVouchers, szoneVoucherId]
   )
 
@@ -222,7 +221,7 @@ export default function CheckoutPage() {
   }
 
   /**
-   * Handler chính khi nhấn "Đặt Hàng"
+   * Handler chính khi nhấn 'Đặt Hàng'
    */
   const handlePlaceOrder = async () => {
     // Validate
@@ -325,12 +324,12 @@ export default function CheckoutPage() {
     return (
       <>
         <Header />
-        <div className="container mx-auto max-w-4xl px-6 py-12">
-          <div className="text-center">
-            <p className="text-slate-500">Không có sản phẩm nào được chọn</p>
+        <div className='container mx-auto max-w-4xl px-6 py-12'>
+          <div className='text-center'>
+            <p className='text-slate-500'>Không có sản phẩm nào được chọn</p>
             <button
               onClick={() => router.push('/cart')}
-              className="mt-4 rounded-lg bg-emerald-700 px-6 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
+              className='mt-4 rounded-lg bg-emerald-700 px-6 py-2 text-sm font-semibold text-white hover:bg-emerald-800'
             >
               Quay lại giỏ hàng
             </button>
@@ -343,20 +342,20 @@ export default function CheckoutPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gray-50 pb-12">
-        <div className="container mx-auto max-w-4xl px-6 py-6">
+      <div className='min-h-screen bg-gray-50 pb-12'>
+        <div className='container mx-auto max-w-4xl px-6 py-6'>
           {/* Page Header */}
-          <div className="mb-6 flex items-center gap-3">
+          <div className='mb-6 flex items-center gap-3'>
             <button
               onClick={() => router.push('/cart')}
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700"
+              className='flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700'
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className='h-5 w-5' />
             </button>
-            <h1 className="text-2xl font-bold text-slate-900">Thanh Toán</h1>
+            <h1 className='text-2xl font-bold text-slate-900'>Thanh Toán</h1>
           </div>
 
-          <div className="space-y-4">
+          <div className='space-y-4'>
             {/* 1. Địa chỉ */}
             <AddressSection
               selectedAddress={selectedAddress}

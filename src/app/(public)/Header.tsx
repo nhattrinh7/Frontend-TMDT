@@ -197,11 +197,11 @@ export default function Header() {
 
       {/* Main Header */}
       <div className='flex items-center justify-center'>
-        <div className='w-full max-w-400 px-4 lg:px-6 py-4 lg:py-5'>
+        <div className='w-full max-w-400 px-4 lg:px-6 py-2 lg:py-3'>
           <div className='flex items-center justify-between gap-3 lg:gap-6'>
             {/* Logo */}
             <Link href='/' className='flex items-center gap-2 lg:gap-3 shrink-0 hover:opacity-90 transition-opacity cursor-pointer'>
-              <div className='relative w-14 h-14 lg:w-20 lg:h-20'>
+              <div className='relative w-12 h-12 lg:w-16 lg:h-16'>
                 <Image
                   src='/images/logo_4x.png'
                   alt='Szone Logo'
@@ -210,7 +210,7 @@ export default function Header() {
                   priority
                 />
               </div>
-              <span className='text-white font-bold text-2xl lg:text-4xl tracking-tight select-none'>
+              <span className='text-white font-bold text-2xl lg:text-3xl tracking-tight select-none'>
                 Szone
               </span>
             </Link>
@@ -226,11 +226,11 @@ export default function Header() {
                   onChange={(e) => setSearchValue(e.target.value)}
                   onFocus={() => setShowHistory(true)}
                   onKeyDown={handleKeyDown}
-                  className='flex-1 px-5 py-3 lg:py-3.5 text-sm lg:text-base text-gray-700 focus:outline-none placeholder:text-gray-400'
+                  className='flex-1 px-5 py-2 lg:py-2.5 text-sm lg:text-base text-gray-700 focus:outline-none placeholder:text-gray-400'
                 />
                 <button 
                   onClick={handleSearch}
-                  className='bg-linear-to-r from-[#FF6B35] to-[#FF5722] hover:from-[#FF5722] hover:to-[#FF4500] text-white px-6 lg:px-8 py-3 lg:py-3.5 flex items-center justify-center transition-all'
+                  className='bg-linear-to-r from-[#FF6B35] to-[#FF5722] hover:from-[#FF5722] hover:to-[#FF4500] text-white px-6 lg:px-8 py-2 lg:py-2.5 flex items-center justify-center transition-all'
                 >
                   <Search className='w-5 h-5 lg:w-6 lg:h-6' />
                 </button>
@@ -245,7 +245,7 @@ export default function Header() {
 
             {/* Cart */}
             <Link href='/cart' className='relative shrink-0 p-2 hover:bg-white/10 rounded-lg transition-all group'>
-              <ShoppingCart className='w-7 h-7 lg:w-8 lg:h-8 text-white group-hover:scale-110 transition-transform' />
+              <ShoppingCart className='w-6 h-6 lg:w-7 lg:h-7 text-white group-hover:scale-110 transition-transform' />
               {cartItemsCount > 0 && (
                 <span className='absolute -top-1 -right-1 bg-linear-to-r from-red-500 to-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-md'>
                   {cartItemsCount}
@@ -255,7 +255,7 @@ export default function Header() {
           </div>
 
           {/* Search Bar - Mobile */}
-          <div className='md:hidden mt-3'>
+          <div className='md:hidden mt-2'>
             <div className='flex items-stretch bg-white rounded-lg overflow-hidden shadow-md'>
               <input
                 type='text'
@@ -263,11 +263,11 @@ export default function Header() {
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className='flex-1 px-4 py-3 text-base text-gray-700 focus:outline-none placeholder:text-gray-400'
+                className='flex-1 px-4 py-2 text-base text-gray-700 focus:outline-none placeholder:text-gray-400'
               />
               <button 
                 onClick={handleSearch}
-                className='bg-linear-to-r from-[#FF6B35] to-[#FF5722] text-white px-5 py-3 flex items-center justify-center'
+                className='bg-linear-to-r from-[#FF6B35] to-[#FF5722] text-white px-5 py-2 flex items-center justify-center'
               >
                 <Search className='w-6 h-6' />
               </button>

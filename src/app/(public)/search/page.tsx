@@ -100,10 +100,10 @@ function SearchContent() {
 
   return (
     <div className='min-h-screen bg-gray-50'>
-      <div className='max-w-[1440px] mx-auto px-6 lg:px-12 xl:px-16 py-8 lg:py-16'>
+      <div className='max-w-400 mx-auto px-4 lg:px-6 py-4 lg:py-6'>
         {/* Search Query Display */}
-        <div className='mb-10'>
-          <h1 className='text-3xl lg:text-4xl font-bold text-gray-800 tracking-tight'>
+        <div className='mb-6'>
+          <h1 className='text-lg lg:text-xl font-bold text-gray-800 tracking-tight'>
             Kết quả tìm kiếm cho: <span className='text-[#004643]'>&quot;{currentFilters.search}&quot;</span>
           </h1>
           {searchResults && (
@@ -113,9 +113,9 @@ function SearchContent() {
           )}
         </div>
 
-        <div className='flex flex-col lg:flex-row gap-8 lg:gap-12 xl:gap-16'>
+        <div className='flex flex-col lg:flex-row gap-4 lg:gap-6'>
           {/* Sidebar */}
-          <div className='w-full lg:w-80 xl:w-[360px] shrink-0'>
+          <div className='w-full lg:w-52 xl:w-60 shrink-0'>
             <SearchSidebar
               currentFilters={{
                 sort: currentFilters.sort,

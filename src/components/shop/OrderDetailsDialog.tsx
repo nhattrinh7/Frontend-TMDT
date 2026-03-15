@@ -181,6 +181,10 @@ export default function OrderDetailsDialog({ order }: OrderDetailsDialogProps) {
                 <span className='text-green-600'>- {formatPrice(order.szoneVoucherDiscount)}</span>
               </div>
               <Separator className='my-2' />
+              <div className='flex justify-between text-sm'>
+                <span className='text-muted-foreground'>Tiền hàng (sau giảm giá):</span>
+                <span className='font-medium'>{formatPrice(typeof order.goodsPrice === 'number' ? order.goodsPrice : 0)}</span>
+              </div>
               <div className='flex justify-between font-bold text-base'>
                 <span>Người mua thanh toán:</span>
                 <span className='text-rose-500'>
