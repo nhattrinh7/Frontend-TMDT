@@ -174,6 +174,11 @@ export interface UserOrderItem {
   sku: string
   quantity: number
   finalPrice: number
+  isReviewed?: boolean
+  returnReason?: string | null
+  returnStatus?: 'NONE' | 'REFUNDED'
+  returnRequestedAt?: string | null
+  returnResolvedAt?: string | null
 }
 
 export interface UserOrder {
@@ -196,10 +201,11 @@ export interface CursorMeta {
 
 export const getUserOrdersPaginatedAPI = async (
   userId: string,
-  params: { status: string; cursor?: string; limit?: number }
+  params: { status: string; returnStatus?: string; cursor?: string; limit?: number }
 ) => {
   const searchParams = new URLSearchParams()
   searchParams.set('status', params.status)
+  if (params.returnStatus) searchParams.set('returnStatus', params.returnStatus)
   if (params.cursor) searchParams.set('cursor', params.cursor)
   if (params.limit) searchParams.set('limit', String(params.limit))
 
@@ -228,6 +234,10 @@ export interface ShopOrderItem {
   sku: string
   quantity: number
   finalPrice: number
+  returnReason?: string | null
+  returnStatus?: 'NONE' | 'REFUNDED'
+  returnRequestedAt?: string | null
+  returnResolvedAt?: string | null
 }
 
 export interface ShopOrder {
@@ -248,7 +258,6 @@ export interface ShopOrder {
   szoneVoucherDiscount: number
   shopVoucherDiscount: number
   cancelReason?: string | null
-  returnReason?: string | null
   createdAt: string
   orderItems: ShopOrderItem[]
 }
@@ -262,10 +271,11 @@ export interface OffsetMeta {
 
 export const getShopOrdersPaginatedAPI = async (
   shopId: string,
-  params: { status: string; page?: number; limit?: number; search?: string }
+  params: { status: string; page?: number; limit?: number; search?: string; returnStatus?: string }
 ) => {
   const searchParams = new URLSearchParams()
   searchParams.set('status', params.status)
+  if (params.returnStatus) searchParams.set('returnStatus', params.returnStatus)
   if (params.page) searchParams.set('page', String(params.page))
   if (params.limit) searchParams.set('limit', String(params.limit))
   if (params.search) searchParams.set('search', params.search)
@@ -291,5 +301,77 @@ export const deliverOrderAPI = async (orderId: string) => {
   return response
 }
 
-// End file
+// ============ ADMIN ORDERS (Quản lý đơn hàng admin) ============
 
+export interface AdminOrderItem {
+  id: string
+  productId: string
+  productVariantId: string
+  productName: string
+  variantImage: string
+  sku: string
+  quantity: number
+  finalPrice: number
+  returnReason?: string | null
+  returnStatus?: 'NONE' | 'REFUNDED'
+  returnRequestedAt?: string | null
+  returnResolvedAt?: string | null
+}
+
+export interface AdminOrder {
+  id: string
+  userId: string
+  shopId: string
+  buyerUsername: string
+  buyerAvatar: string | null
+  review?: string | null
+  status: string
+  paymentMethod: string
+  goodsPrice: number
+  finalPrice: number | string
+  shippingAddress: string
+  receiverName: string
+  receiverPhoneNumber: string
+  subtotal: number
+  shippingFee: number
+  szoneVoucherDiscount: number
+  shopVoucherDiscount: number
+  cancelReason?: string | null
+  createdAt: string
+  orderItems: AdminOrderItem[]
+}
+
+export interface AdminOrdersPaginatedResponse {
+  items: AdminOrder[]
+  meta: OffsetMeta
+}
+
+export const getAdminOrdersPaginatedAPI = async (
+  params: { status: string; page?: number; limit?: number; search?: string; returnStatus?: string }
+) => {
+  const searchParams = new URLSearchParams()
+  searchParams.set('status', params.status)
+  if (params.returnStatus) searchParams.set('returnStatus', params.returnStatus)
+  if (params.page) searchParams.set('page', String(params.page))
+  if (params.limit) searchParams.set('limit', String(params.limit))
+  if (params.search) searchParams.set('search', params.search)
+
+  const response = await http.get<ApiResponse<AdminOrdersPaginatedResponse>>(
+    `/api/v1/orders?${searchParams.toString()}`
+  )
+
+  return response
+}
+
+export const requestReturnOrderItemAPI = async (
+  orderItemId: string,
+  returnReason: string
+) => {
+  const response = await http.patch<ApiResponse<{ message: string }>>(
+    `/api/v1/orders/items/${orderItemId}/return-request`,
+    { returnReason }
+  )
+  return response
+}
+
+// End file

@@ -1,4 +1,4 @@
-import http from '~/config/http'
+﻿import http from '~/config/http'
 import { ApiResponse } from '~/interface/response.interface'
 import {
   UploadMediaResponse,
@@ -12,7 +12,7 @@ import {
   ProductReviewsPaginatedResponse,
 } from '~/zodSchema/product.schema'
 
-// Upload ảnh cho sản phẩm, ảnh gì cũng dùng api này, cũng chỉ là gửi ảnh lên để lấy về url thôi
+// Upload áº£nh cho sáº£n pháº©m, áº£nh gÃ¬ cÅ©ng dÃ¹ng api nÃ y, cÅ©ng chá»‰ lÃ  gá»­i áº£nh lÃªn Ä‘á»ƒ láº¥y vá» url thÃ´i
 export const uploadImageAPI = async (file: File) => {
   const formData = new FormData()
   formData.append('product-image', file)
@@ -24,7 +24,7 @@ export const uploadImageAPI = async (file: File) => {
   return response.data
 }
 
-// Upload video cho sản phẩm
+// Upload video cho sáº£n pháº©m
 export const uploadVideoAPI = async (file: File) => {
   const formData = new FormData()
   formData.append('product-video', file)
@@ -36,7 +36,7 @@ export const uploadVideoAPI = async (file: File) => {
   return response.data
 }
 
-// Tạo sản phẩm mới
+// Táº¡o sáº£n pháº©m má»›i
 export const createProductAPI = async (data: CreateProductBody) => {
   const response = await http.post<ApiResponse<Product>>(
     '/api/v1/products',
@@ -45,7 +45,7 @@ export const createProductAPI = async (data: CreateProductBody) => {
   return response.data
 }
 
-// ========== APIs cho trang Quản lý sản phẩm ==========
+// ========== APIs cho trang Quáº£n lÃ½ sáº£n pháº©m ==========
 
 export type GetProductsPaginatedParams = {
   page?: number
@@ -56,7 +56,7 @@ export type GetProductsPaginatedParams = {
   shopId: string
 }
 
-// Lấy danh sách sản phẩm với pagination và filter
+// Láº¥y danh sÃ¡ch sáº£n pháº©m vá»›i pagination vÃ  filter
 export const getShopProductsPaginatedAPI = async (params: GetProductsPaginatedParams) => {
   const searchParams = new URLSearchParams()
   
@@ -73,7 +73,7 @@ export const getShopProductsPaginatedAPI = async (params: GetProductsPaginatedPa
   return response.data
 }
 
-// Lấy chi tiết sản phẩm theo ID
+// Láº¥y chi tiáº¿t sáº£n pháº©m theo ID
 export const getProductByIdAPI = async (productId: string) => {
   const response = await http.get<ApiResponse<ProductDetail>>(
     `/api/v1/products/${productId}`
@@ -81,7 +81,7 @@ export const getProductByIdAPI = async (productId: string) => {
   return response.data
 }
 
-// Ẩn sản phẩm
+// áº¨n sáº£n pháº©m
 export const hideProductAPI = async (productId: string) => {
   const response = await http.patch<ApiResponse<Product>>(
     `/api/v1/products/${productId}/hide`
@@ -89,7 +89,7 @@ export const hideProductAPI = async (productId: string) => {
   return response.data
 }
 
-// Hiển thị sản phẩm
+// Hiá»ƒn thá»‹ sáº£n pháº©m
 export const unhideProductAPI = async (productId: string) => {
   const response = await http.patch<ApiResponse<Product>>(
     `/api/v1/products/${productId}/unhide`
@@ -97,7 +97,7 @@ export const unhideProductAPI = async (productId: string) => {
   return response.data
 }
 
-// Cập nhật sản phẩm
+// Cáº­p nháº­t sáº£n pháº©m
 export const updateProductAPI = async (productId: string, data: UpdateProductInput) => {
   const response = await http.put<ApiResponse<void>>(
     `/api/v1/products/${productId}`,
@@ -106,7 +106,7 @@ export const updateProductAPI = async (productId: string, data: UpdateProductInp
   return response.data
 }
 
-// Xóa mềm sản phẩm
+// XÃ³a má»m sáº£n pháº©m
 export const softDeleteProductAPI = async (productId: string) => {
   const response = await http.delete<ApiResponse<void>>(
     `/api/v1/products/${productId}/soft-delete`
@@ -114,7 +114,7 @@ export const softDeleteProductAPI = async (productId: string) => {
   return response.data
 }
 
-// ========== APIs cho Admin duyệt sản phẩm ==========
+// ========== APIs cho Admin duyá»‡t sáº£n pháº©m ==========
 
 export type GetAdminProductsPaginatedParams = {
   page?: number
@@ -123,7 +123,7 @@ export type GetAdminProductsPaginatedParams = {
   approveStatus?: 'PENDING' | 'ACCEPTED' | 'REJECTED'
 }
 
-// Lấy danh sách sản phẩm cho admin (không cần shopId)
+// Láº¥y danh sÃ¡ch sáº£n pháº©m cho admin (khÃ´ng cáº§n shopId)
 export const getProductsPaginatedAPI = async (params: GetAdminProductsPaginatedParams) => {
   const searchParams = new URLSearchParams()
   
@@ -139,7 +139,7 @@ export const getProductsPaginatedAPI = async (params: GetAdminProductsPaginatedP
   return response.data
 }
 
-// Duyệt sản phẩm
+// Duyá»‡t sáº£n pháº©m
 export const approveProductAPI = async (productId: string) => {
   const response = await http.patch<ApiResponse<void>>(
     `/api/v1/products/${productId}/approve`
@@ -147,7 +147,7 @@ export const approveProductAPI = async (productId: string) => {
   return response
 }
 
-// Từ chối sản phẩm
+// Tá»« chá»‘i sáº£n pháº©m
 export const rejectProductAPI = async (productId: string, rejectReason: string) => {
   const response = await http.patch<ApiResponse<void>>(
     `/api/v1/products/${productId}/reject`,
@@ -156,9 +156,9 @@ export const rejectProductAPI = async (productId: string, rejectReason: string) 
   return response
 }
 
-// ========== APIs cho trang Chi tiết sản phẩm (Public) ==========
+// ========== APIs cho trang Chi tiáº¿t sáº£n pháº©m (Public) ==========
 
-// Lấy thông tin sản phẩm để bán (public)
+// Láº¥y thÃ´ng tin sáº£n pháº©m Ä‘á»ƒ bÃ¡n (public)
 export const getProductToSoldAPI = async (productId: string) => {
   const response = await http.get<ApiResponse<ProductToSold>>(
     `/api/v1/products/${productId}/to-sold`
@@ -166,7 +166,7 @@ export const getProductToSoldAPI = async (productId: string) => {
   return response.data
 }
 
-// Lấy reviews của sản phẩm với pagination
+// Láº¥y reviews cá»§a sáº£n pháº©m vá»›i pagination
 export type GetProductReviewsParams = {
   productId: string
   page?: number
@@ -190,7 +190,7 @@ export const getProductReviewsPaginatedAPI = async (params: GetProductReviewsPar
   return response.data
 }
 
-// Báo cáo review vi phạm
+// BÃ¡o cÃ¡o review vi pháº¡m
 export const reportReviewAPI = async (reviewId: string, body: { reason: string; description?: string }) => {
   const response = await http.post<ApiResponse<void>>(
     `/api/v1/reviews/${reviewId}/report`,
@@ -198,3 +198,22 @@ export const reportReviewAPI = async (reviewId: string, body: { reason: string; 
   )
   return response.data
 }
+
+// Tạo review cho sản phẩm
+export type CreateProductReviewBody = {
+  orderId: string
+  sku: string
+  rating: 1 | 2 | 3 | 4 | 5
+  content?: string
+  images?: string[]
+  video?: string
+}
+
+export const createProductReviewAPI = async (productId: string, body: CreateProductReviewBody) => {
+  const response = await http.post<ApiResponse<void>>(
+    `/api/v1/products/${productId}/reviews`,
+    body
+  )
+  return response.data
+}
+

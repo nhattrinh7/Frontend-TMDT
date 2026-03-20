@@ -27,18 +27,35 @@ export default function OrderTable({ status }: OrderTableProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
 
+  const buildQueryParams = () => {
+    if (status === 'RETURNED') {
+      return { status: 'DELIVERY_COMPLETED', returnStatus: 'REFUNDED' }
+    }
+    return { status }
+  }
+
+  const filterReturnedOrders = (items: ShopOrder[]) => {
+    if (status !== 'RETURNED') return items
+    return items
+      .map((order) => ({
+        ...order,
+        orderItems: order.orderItems.filter((item) => item.returnStatus === 'REFUNDED'),
+      }))
+      .filter((order) => order.orderItems.length > 0)
+  }
+
   // Fetch data
   const fetchOrders = async () => {
     if (!shop) return
     try {
       const res = await getShopOrdersPaginatedAPI(shop.id, {
-        status,
+        ...buildQueryParams(),
         page,
         limit: 5,
         search: debouncedSearchTerm || undefined,
       })
       if (res.data) {
-        setOrders(res.data.items)
+        setOrders(filterReturnedOrders(res.data.items))
         setTotalPages(res.data.meta.totalPages)
       }
     } catch (error) {
@@ -56,13 +73,13 @@ export default function OrderTable({ status }: OrderTableProps) {
       if (!shop) return
       try {
         const res = await getShopOrdersPaginatedAPI(shop.id, {
-          status,
+          ...buildQueryParams(),
           page,
           limit: 5,
           search: debouncedSearchTerm || undefined,
         })
         if (res.data) {
-          setOrders(res.data.items)
+          setOrders(filterReturnedOrders(res.data.items))
           setTotalPages(res.data.meta.totalPages)
         }
       } catch (error) {
@@ -76,6 +93,15 @@ export default function OrderTable({ status }: OrderTableProps) {
   const hasReviewColumn = status === 'DELIVERY_COMPLETED'
   const hasCancelReasonColumn = status === 'CANCELLED'
   const hasReturnReasonColumn = status === 'RETURNED'
+
+  const getReturnStatusLabel = (returnStatus?: string) => {
+    switch (returnStatus) {
+    case 'REFUNDED':
+      return { label: 'Đã hoàn cho người mua', className: 'text-green-600' }
+    default:
+      return { label: 'Chưa yêu cầu', className: 'text-muted-foreground' }
+    }
+  }
 
   return (
     <div className='flex flex-col gap-4'>
@@ -176,11 +202,34 @@ export default function OrderTable({ status }: OrderTableProps) {
 
                     {hasReturnReasonColumn && (
                       <>
-                        <td className='p-4 align-top max-w-[150px] truncate' title={order.returnReason || 'Không có lý do'}>
-                          {order.returnReason || 'Không có lý do'}
+                        <td className='p-4 align-top max-w-[180px]'>
+                          <div className='flex flex-col gap-1'>
+                            {order.orderItems.map((item) => (
+                              <div key={item.id} className='truncate' title={item.returnReason || 'Không có lý do'}>
+                                {item.returnReason || 'Không có lý do'}
+                              </div>
+                            ))}
+                          </div>
                         </td>
-                        <td className='p-4 align-top whitespace-nowrap'>Hoàn tiền ngay</td>
-                        <td className='p-4 align-top text-green-600 whitespace-nowrap'>Đã hoàn cho người mua</td>
+                        <td className='p-4 align-top whitespace-nowrap'>
+                          <div className='flex flex-col gap-1'>
+                            {order.orderItems.map((item) => (
+                              <div key={item.id}>Hoàn tiền ngay</div>
+                            ))}
+                          </div>
+                        </td>
+                        <td className='p-4 align-top whitespace-nowrap'>
+                          <div className='flex flex-col gap-1'>
+                            {order.orderItems.map((item) => {
+                              const statusMeta = getReturnStatusLabel(item.returnStatus)
+                              return (
+                                <div key={item.id} className={statusMeta.className}>
+                                  {statusMeta.label}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </td>
                       </>
                     )}
 

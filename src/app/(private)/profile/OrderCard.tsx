@@ -1,10 +1,14 @@
-'use client'
+﻿'use client'
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Store, ExternalLink, Loader2 } from 'lucide-react'
-import { useState } from 'react'
-import type { UserOrder } from '~/apiRequests/order.apiRequest'
+import { Store, ExternalLink, Loader2, Star } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
+import { requestReturnOrderItemAPI, type UserOrder } from '~/apiRequests/order.apiRequest'
+import { createProductReviewAPI, uploadImageAPI, uploadVideoAPI } from '~/apiRequests/product.apiRequest'
+import GalleryUploader from '~/components/products/GalleryUploader'
+import VideoUploader from '~/components/products/VideoUploader'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,6 +20,25 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '~/components/ui/alert-dialog'
+import { Button } from '~/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '~/components/ui/dialog'
+import { Label } from '~/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
+import { Textarea } from '~/components/ui/textarea'
+import { cn } from '~/lib/utils'
 
 interface OrderCardProps {
   order: UserOrder
@@ -30,6 +53,23 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
   const [isCancelling, setIsCancelling] = useState(false)
   const [cancelReason, setCancelReason] = useState<string>('')
   const [customReason, setCustomReason] = useState('')
+  const [isReviewOpen, setIsReviewOpen] = useState(false)
+  const [selectedItemId, setSelectedItemId] = useState(order.orderItems[0]?.id ?? '')
+  const [rating, setRating] = useState<0 | 1 | 2 | 3 | 4 | 5>(0)
+  const [content, setContent] = useState('')
+  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false)
+  const [uploadingCount, setUploadingCount] = useState(0)
+  const [isReturnOpen, setIsReturnOpen] = useState(false)
+  const [selectedReturnItemId, setSelectedReturnItemId] = useState(order.orderItems[0]?.id ?? '')
+  const [returnReason, setReturnReason] = useState<string>('')
+  const [customReturnReason, setCustomReturnReason] = useState('')
+  const [isSubmittingReturn, setIsSubmittingReturn] = useState(false)
+  const [returnStatusOverrides, setReturnStatusOverrides] = useState<Record<string, string>>({})
+  const [reviewedItemIds, setReviewedItemIds] = useState<string[]>(
+    () => order.orderItems.filter((item) => item.isReviewed).map((item) => item.id)
+  )
 
   const CANCEL_REASONS = [
     'Muốn thay đổi địa chỉ giao hàng',
@@ -39,9 +79,51 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
     'Khác',
   ]
 
+  const RETURN_REASONS = [
+    'Sản phẩm bị lỗi/không hoạt động',
+    'Sản phẩm không đúng mô tả',
+    'Giao sai sản phẩm/phân loại',
+    'Thiếu phụ kiện/thiếu hàng',
+    'Khác',
+  ]
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
   }
+
+  const getReturnStatusMeta = (status?: string) => {
+    switch (status) {
+    case 'REFUNDED':
+      return { label: 'Đã hoàn cho người mua', className: 'text-green-600' }
+    default:
+      return { label: 'Chưa yêu cầu', className: 'text-muted-foreground' }
+    }
+  }
+
+  const selectedItem = useMemo(
+    () => order.orderItems.find((item) => item.id === selectedItemId) ?? order.orderItems[0],
+    [order.orderItems, selectedItemId]
+  )
+
+  useEffect(() => {
+    if (!isReviewOpen) return
+    setSelectedItemId((prev) => prev || (order.orderItems[0]?.id ?? ''))
+    setRating(0)
+    setContent('')
+    setImageUrls([])
+    setVideoUrl(null)
+  }, [isReviewOpen, order.id, order.orderItems])
+
+  useEffect(() => {
+    if (!isReturnOpen) return
+    setSelectedReturnItemId((prev) => prev || (order.orderItems[0]?.id ?? ''))
+    setReturnReason('')
+    setCustomReturnReason('')
+  }, [isReturnOpen, order.id, order.orderItems])
+
+  useEffect(() => {
+    setReviewedItemIds(order.orderItems.filter((item) => item.isReviewed).map((item) => item.id))
+  }, [order.id, order.orderItems])
 
   const handleConfirmCancel = async () => {
     if (cancelReason === 'Khác' && !customReason.trim()) {
@@ -55,6 +137,130 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
     } finally {
       setIsCancelling(false)
     }
+  }
+
+  const handleUploadImage = async (file: File) => {
+    setUploadingCount((prev) => prev + 1)
+    try {
+      const response = await uploadImageAPI(file)
+      const url = response?.url
+      if (!url) throw new Error('Missing image url')
+      return url
+    } finally {
+      setUploadingCount((prev) => prev - 1)
+    }
+  }
+
+  const handleUploadVideo = async (file: File) => {
+    setUploadingCount((prev) => prev + 1)
+    try {
+      const response = await uploadVideoAPI(file)
+      const url = response?.url
+      if (!url) throw new Error('Missing video url')
+      return url
+    } finally {
+      setUploadingCount((prev) => prev - 1)
+    }
+  }
+
+  const handleSubmitReview = async () => {
+    if (!selectedItem) {
+      toast.error('Không tìm thấy sản phẩm cần đánh giá')
+      return
+    }
+
+    if (reviewedItemIds.includes(selectedItem.id) || selectedItem.isReviewed) {
+      toast.error('Sản phẩm này đã được đánh giá')
+      return
+    }
+
+    if (rating === 0) {
+      toast.error('Vui lòng chọn số sao đánh giá')
+      return
+    }
+
+    if (content.trim().length > 300) {
+      toast.error('Nội dung đánh giá tối đa 300 ký tự')
+      return
+    }
+
+    if (uploadingCount > 0) {
+      toast.error('Đang tải media, vui lòng đợi hoàn tất')
+      return
+    }
+
+    setIsSubmittingReview(true)
+    try {
+      const payload = {
+        orderId: order.id,
+        sku: selectedItem.sku,
+        rating: rating as 1 | 2 | 3 | 4 | 5,
+        content: content.trim() ? content.trim() : undefined,
+        images: imageUrls.length > 0 ? imageUrls : undefined,
+        video: videoUrl ?? undefined,
+      }
+
+      await createProductReviewAPI(selectedItem.productId, payload)
+      toast.success('Đã gửi đánh giá thành công')
+      setReviewedItemIds((prev) =>
+        prev.includes(selectedItem.id) ? prev : [...prev, selectedItem.id]
+      )
+      setIsReviewOpen(false)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Gửi đánh giá thất bại')
+    } finally {
+      setIsSubmittingReview(false)
+    }
+  }
+
+  const handleSubmitReturn = async () => {
+    const selectedReturnItem = order.orderItems.find((item) => item.id === selectedReturnItemId)
+    if (!selectedReturnItem) {
+      toast.error('Không tìm thấy sản phẩm cần trả hàng')
+      return
+    }
+
+    if (returnReason === 'Khác' && !customReturnReason.trim()) {
+      toast.error('Vui lòng nhập lý do cụ thể')
+      return
+    }
+
+    const finalReason = returnReason === 'Khác' ? customReturnReason.trim() : returnReason
+    if (!finalReason) {
+      toast.error('Vui lòng chọn lý do trả hàng')
+      return
+    }
+
+    setIsSubmittingReturn(true)
+    try {
+      await requestReturnOrderItemAPI(selectedReturnItem.id, finalReason)
+      toast.success('Đã gửi yêu cầu trả hàng')
+      setReturnStatusOverrides((prev) => ({
+        ...prev,
+        [selectedReturnItem.id]: 'REFUNDED',
+      }))
+      setIsReturnOpen(false)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Gửi yêu cầu trả hàng thất bại')
+    } finally {
+      setIsSubmittingReturn(false)
+    }
+  }
+
+  const openReviewForItem = (itemId: string) => {
+    if (reviewedItemIds.includes(itemId)) {
+      toast.error('Sản phẩm này đã được đánh giá')
+      return
+    }
+    setSelectedItemId(itemId)
+    setIsReviewOpen(true)
+  }
+
+  const openReturnForItem = (itemId: string) => {
+    setSelectedReturnItemId(itemId)
+    setIsReturnOpen(true)
   }
 
   return (
@@ -85,32 +291,68 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
 
         {/* Order Items */}
         <div className='space-y-3'>
-          {order.orderItems.map((item) => (
-            <div key={item.id} className='flex items-center gap-4'>
-              {/* Variant Image */}
-              <div className='relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 shrink-0 bg-gray-50'>
-                <Image
-                  src={item.variantImage}
-                  alt={item.productName}
-                  fill
-                  className='object-cover'
-                  sizes='64px'
-                />
-              </div>
+          {order.orderItems.map((item) => {
+            const itemReturnStatus = returnStatusOverrides[item.id] ?? item.returnStatus
+            const returnStatusMeta = getReturnStatusMeta(itemReturnStatus)
+            const canRequestReturn = showReviewButton && (itemReturnStatus === undefined || itemReturnStatus === 'NONE')
 
-              {/* Item Info */}
-              <div className='flex-1 min-w-0'>
-                <p className='text-sm font-medium text-gray-800 line-clamp-1'>{item.productName}</p>
-                <p className='text-xs text-gray-500 mt-0.5'>Phân loại: {item.sku}</p>
-                <p className='text-xs text-gray-500'>x{item.quantity}</p>
-              </div>
+            return (
+              <div key={item.id} className='flex items-center gap-4'>
+                {/* Variant Image */}
+                <div className='relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 shrink-0 bg-gray-50'>
+                  <Image
+                    src={item.variantImage}
+                    alt={item.productName}
+                    fill
+                    className='object-cover'
+                    sizes='64px'
+                  />
+                </div>
 
-              {/* Price */}
-              <div className='text-right shrink-0'>
-                <p className='text-sm font-semibold text-red-500'>{formatPrice(item.finalPrice)}</p>
+                {/* Item Info */}
+                <div className='flex-1 min-w-0'>
+                  <p className='text-sm font-medium text-gray-800 line-clamp-1'>{item.productName}</p>
+                  <p className='text-xs text-gray-500 mt-0.5'>Phân loại: {item.sku}</p>
+                  <p className='text-xs text-gray-500'>x{item.quantity}</p>
+                </div>
+
+                {/* Price */}
+                <div className='text-right shrink-0'>
+                  <p className='text-sm font-semibold text-red-500'>{formatPrice(item.finalPrice)}</p>
+                  {showReviewButton && (
+                    reviewedItemIds.includes(item.id) || item.isReviewed ? (
+                      <span className='mt-2 inline-flex items-center justify-center text-xs font-medium text-emerald-600'>
+                        Đã đánh giá
+                      </span>
+                    ) : (
+                      <button
+                        className='mt-2 inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium text-white bg-linear-to-r from-[#004643] to-[#005d58] rounded-md hover:from-[#003d3a] hover:to-[#00524e] transition-all shadow-sm'
+                        onClick={() => openReviewForItem(item.id)}
+                      >
+                        Đánh giá
+                      </button>
+                    )
+                  )}
+
+                  {showReviewButton && (
+                    <div className='mt-2 flex flex-col items-end gap-1'>
+                      <span className={cn('text-xs font-medium', returnStatusMeta.className)}>
+                        {returnStatusMeta.label}
+                      </span>
+                      {canRequestReturn && (
+                        <button
+                          className='inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium text-[#004643] border border-[#004643] rounded-md hover:bg-[#f0f9f8] transition-all'
+                          onClick={() => openReturnForItem(item.id)}
+                        >
+                          Trả hàng/Hoàn tiền
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 
@@ -213,17 +455,225 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
             </AlertDialog>
           )}
           {showReviewButton && (
-            <button
-              className='px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#004643] to-[#005d58] rounded-lg hover:from-[#003d3a] hover:to-[#00524e] transition-all shadow-sm'
-              onClick={() => {
-                // TODO: Implement review order
-              }}
-            >
-              Đánh giá
-            </button>
+            <Dialog open={isReviewOpen} onOpenChange={setIsReviewOpen}>
+              <DialogContent className='sm:max-w-[720px] max-h-[90vh] overflow-y-auto'>
+                <DialogHeader>
+                  <DialogTitle>Đánh giá sản phẩm</DialogTitle>
+                  <DialogDescription>
+                    Chia sẻ cảm nhận của bạn để giúp người khác có lựa chọn phù hợp.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className='space-y-5'>
+                  <div className='space-y-2'>
+                    <Label>Chọn sản phẩm</Label>
+                    {order.orderItems.length > 1 ? (
+                      <Select value={selectedItemId} onValueChange={setSelectedItemId}>
+                        <SelectTrigger className='w-full'>
+                          <SelectValue placeholder='Chọn sản phẩm cần đánh giá' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {order.orderItems.map((item) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.productName} - {item.sku}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div className='rounded-lg border bg-gray-50 px-3 py-2 text-sm text-gray-700'>
+                        {order.orderItems[0]?.productName} - {order.orderItems[0]?.sku}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className='space-y-2'>
+                    <Label>Đánh giá</Label>
+                    <div className='flex items-center gap-3'>
+                      <div className='flex items-center gap-1'>
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type='button'
+                            className='rounded p-0.5 transition-colors hover:scale-105'
+                            onClick={() => setRating(star as 1 | 2 | 3 | 4 | 5)}
+                            aria-label={`${star} sao`}
+                          >
+                            <Star
+                              className={cn(
+                                'h-6 w-6',
+                                star <= rating
+                                  ? 'text-amber-400 fill-amber-400'
+                                  : 'text-gray-300'
+                              )}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                      {rating > 0 && (
+                        <span className='text-sm text-gray-500'>{rating}/5</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className='space-y-2'>
+                    <Label>Nội dung đánh giá</Label>
+                    <Textarea
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      placeholder='Chia sẻ thật lòng về sản phẩm...'
+                      maxLength={300}
+                      className='min-h-[120px] resize-y'
+                    />
+                    <div className='flex items-center justify-between text-xs text-gray-500'>
+                      <span>Tối đa 300 ký tự</span>
+                      <span>{content.length}/300</span>
+                    </div>
+                  </div>
+
+                  <div className='space-y-2'>
+                    <Label>Ảnh minh họa (tối đa 3 ảnh)</Label>
+                    <GalleryUploader
+                      value={imageUrls}
+                      onChange={setImageUrls}
+                      onUpload={handleUploadImage}
+                      maxImages={3}
+                    />
+                  </div>
+
+                  <div className='space-y-2'>
+                    <Label>Video minh họa (tối đa 1 video)</Label>
+                    <VideoUploader
+                      value={videoUrl}
+                      onChange={setVideoUrl}
+                      onUpload={handleUploadVideo}
+                    />
+                  </div>
+
+                  {uploadingCount > 0 && (
+                    <div className='flex items-center gap-2 text-xs text-gray-500'>
+                      <Loader2 className='h-3.5 w-3.5 animate-spin' />
+                      Đang tải media...
+                    </div>
+                  )}
+                </div>
+
+                <DialogFooter className='gap-2 sm:gap-0'>
+                  <Button
+                    type='button'
+                    variant='outline'
+                    onClick={() => setIsReviewOpen(false)}
+                    disabled={isSubmittingReview}
+                  >
+                    Hủy
+                  </Button>
+                  <Button
+                    type='button'
+                    className='bg-[#004643] hover:bg-[#003d3a]'
+                    onClick={handleSubmitReview}
+                    disabled={!selectedItem || rating === 0 || isSubmittingReview || uploadingCount > 0}
+                  >
+                    {isSubmittingReview && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+                    Gửi đánh giá
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
+
+          {showReviewButton && (
+            <Dialog open={isReturnOpen} onOpenChange={setIsReturnOpen}>
+              <DialogContent className='sm:max-w-[560px] max-h-[90vh] overflow-y-auto'>
+                <DialogHeader>
+                  <DialogTitle>Yêu cầu trả hàng/hoàn tiền</DialogTitle>
+                  <DialogDescription>
+                    Vui lòng chọn sản phẩm và lý do để shop xử lý yêu cầu.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className='space-y-5'>
+                  <div className='space-y-2'>
+                    <Label>Chọn sản phẩm</Label>
+                    {order.orderItems.length > 1 ? (
+                      <Select value={selectedReturnItemId} onValueChange={setSelectedReturnItemId}>
+                        <SelectTrigger className='w-full'>
+                          <SelectValue placeholder='Chọn sản phẩm cần trả hàng' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {order.orderItems.map((item) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.productName} - {item.sku}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div className='rounded-lg border bg-gray-50 px-3 py-2 text-sm text-gray-700'>
+                        {order.orderItems[0]?.productName} - {order.orderItems[0]?.sku}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className='space-y-2'>
+                    <Label>Lý do trả hàng</Label>
+                    <Select value={returnReason} onValueChange={setReturnReason}>
+                      <SelectTrigger className='w-full'>
+                        <SelectValue placeholder='Chọn lý do' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {RETURN_REASONS.map((reason) => (
+                          <SelectItem key={reason} value={reason}>
+                            {reason}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {returnReason === 'Khác' && (
+                    <div className='space-y-2'>
+                      <Label>Lý do cụ thể</Label>
+                      <Textarea
+                        value={customReturnReason}
+                        onChange={(e) => setCustomReturnReason(e.target.value)}
+                        placeholder='Mô tả chi tiết lý do trả hàng...'
+                        maxLength={500}
+                        className='min-h-[100px] resize-y'
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <DialogFooter className='gap-2 sm:gap-0'>
+                  <Button
+                    type='button'
+                    variant='outline'
+                    onClick={() => setIsReturnOpen(false)}
+                    disabled={isSubmittingReturn}
+                  >
+                    Hủy
+                  </Button>
+                  <Button
+                    type='button'
+                    className='bg-[#004643] hover:bg-[#003d3a]'
+                    onClick={handleSubmitReturn}
+                    disabled={!returnReason || (returnReason === 'Khác' && !customReturnReason.trim()) || isSubmittingReturn}
+                  >
+                    {isSubmittingReturn && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+                    Gửi yêu cầu
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           )}
         </div>
       </div>
     </div>
   )
 }
+
+
+
+
+
+

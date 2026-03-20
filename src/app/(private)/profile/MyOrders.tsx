@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { Loader2, Package } from 'lucide-react'
@@ -32,18 +32,36 @@ export default function MyOrders() {
   const [isLoading, setIsLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
 
+  const buildQueryParams = (status: OrderStatusTab) => {
+    if (status === 'RETURNED') {
+      return { status: 'DELIVERY_COMPLETED', returnStatus: 'REFUNDED' }
+    }
+    return { status }
+  }
+
+  const filterReturnedOrders = (items: UserOrder[], status: OrderStatusTab) => {
+    if (status !== 'RETURNED') return items
+    return items
+      .map((order) => ({
+        ...order,
+        orderItems: order.orderItems.filter((item) => item.returnStatus === 'REFUNDED'),
+      }))
+      .filter((order) => order.orderItems.length > 0)
+  }
+
   // Load thêm đơn hàng khi scroll xuống
   const loadMoreOrders = async () => {
     if (!user?.id || !cursor || loadingMore) return
     try {
       setLoadingMore(true)
       const res = await getUserOrdersPaginatedAPI(user.id, {
-        status: activeStatus,
+        ...buildQueryParams(activeStatus),
         cursor,
         limit: ORDERS_PER_PAGE,
       })
 
-      setOrders(prev => [...prev, ...(res.data || [])])
+      const nextItems = filterReturnedOrders(res.data || [], activeStatus)
+      setOrders(prev => [...prev, ...nextItems])
       setCursor(res.meta?.nextCursor || null)
       setHasMore(res.meta?.hasMore || false)
     } catch {
@@ -71,11 +89,11 @@ export default function MyOrders() {
         setHasMore(false)
 
         const res = await getUserOrdersPaginatedAPI(user.id, {
-          status: activeStatus,
+          ...buildQueryParams(activeStatus),
           limit: ORDERS_PER_PAGE,
         })
 
-        setOrders(res.data || [])
+        setOrders(filterReturnedOrders(res.data || [], activeStatus))
         setCursor(res.meta?.nextCursor || null)
         setHasMore(res.meta?.hasMore || false)
       } catch {
