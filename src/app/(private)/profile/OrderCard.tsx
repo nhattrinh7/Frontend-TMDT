@@ -39,6 +39,7 @@ import {
 } from '~/components/ui/select'
 import { Textarea } from '~/components/ui/textarea'
 import { cn } from '~/lib/utils'
+import { useBoundStore } from '~/zustand/store'
 
 interface OrderCardProps {
   order: UserOrder
@@ -49,6 +50,7 @@ interface OrderCardProps {
 export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderCardProps) {
   const showCancelButton = activeStatus === 'AWAITING_CONFIRMATION' || activeStatus === 'PREPARING'
   const showReviewButton = activeStatus === 'DELIVERY_COMPLETED'
+  const user = useBoundStore((state) => state.user)
 
   const [isCancelling, setIsCancelling] = useState(false)
   const [cancelReason, setCancelReason] = useState<string>('')
@@ -189,10 +191,18 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
       return
     }
 
+    if (!user?.username) {
+      toast.error('Không thể xác định username người mua')
+      return
+    }
+
     setIsSubmittingReview(true)
     try {
       const payload = {
         orderId: order.id,
+        buyerUsername: user.username,
+        buyerAvatar: user.avatar ?? null,
+        productName: selectedItem.productName,
         sku: selectedItem.sku,
         rating: rating as 1 | 2 | 3 | 4 | 5,
         content: content.trim() ? content.trim() : undefined,

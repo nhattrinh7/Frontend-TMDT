@@ -61,6 +61,7 @@ function ReviewItem({ review, onMediaClick, onReport }: ReviewItemProps) {
               src={review.user.avatar}
               alt={review.user.username}
               fill
+              unoptimized
               className='object-cover'
             />
           ) : (
@@ -141,6 +142,7 @@ function ReviewItem({ review, onMediaClick, onReport }: ReviewItemProps) {
                     src={image}
                     alt={`Review image ${index + 1}`}
                     fill
+                    unoptimized
                     className='object-cover'
                   />
                 </div>
@@ -167,6 +169,20 @@ function ReviewItem({ review, onMediaClick, onReport }: ReviewItemProps) {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {review.reply && (
+            <div className='mt-4 rounded-lg border border-emerald-100 bg-emerald-50/70 p-4'>
+              <div className='text-xs font-semibold text-emerald-700 uppercase tracking-wide'>
+                Phản hồi từ shop
+              </div>
+              <p className='text-sm text-slate-700 mt-2 leading-relaxed'>
+                {review.reply.content}
+              </p>
+              <p className='text-xs text-slate-500 mt-3'>
+                {format(new Date(review.reply.createdAt), 'yyyy-MM-dd HH:mm')}
+              </p>
             </div>
           )}
         </div>

@@ -123,7 +123,7 @@ export default function AdminOrderTable({
               )}
 
               {hasCancelReasonColumn && (
-                <TableCell className='max-w-[240px] truncate' title={order.cancelReason || 'Không có lý do'}>
+                <TableCell className='max-w-60 truncate' title={order.cancelReason || 'Không có lý do'}>
                   {order.cancelReason || 'Không có lý do'}
                 </TableCell>
               )}

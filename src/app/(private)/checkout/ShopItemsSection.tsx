@@ -36,7 +36,7 @@ export default function ShopItemsSection({
   allItems,
 }: ShopItemsSectionProps) {
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       {itemsWithShop.map((shop) => (
         <ShopCard
           key={shop.id}
@@ -100,67 +100,67 @@ function ShopCard({ shop, selectedVoucherId, selectedVoucherName, onVoucherChang
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white">
+    <div className='rounded-lg border border-slate-200 bg-white'>
       {/* Shop Header */}
-      <div className="flex items-center gap-3 border-b border-slate-200 px-6 py-4">
+      <div className='flex items-center gap-3 border-b border-slate-200 px-6 py-4'>
         {shop.logo ? (
           <Image
             src={shop.logo}
             alt={shop.name}
             width={36}
             height={36}
-            className="h-9 w-9 rounded-full object-cover"
+            className='h-9 w-9 rounded-full object-cover'
           />
         ) : (
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100">
-            <span className="text-sm font-semibold text-emerald-700">{shop.name[0]}</span>
+          <div className='flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100'>
+            <span className='text-sm font-semibold text-emerald-700'>{shop.name[0]}</span>
           </div>
         )}
-        <span className="font-semibold text-slate-900">{shop.name}</span>
+        <span className='font-semibold text-slate-900'>{shop.name}</span>
       </div>
 
       {/* Items */}
-      <div className="divide-y divide-slate-100">
+      <div className='divide-y divide-slate-100'>
         {shop.items.map((item) => (
-          <div key={item.id} className="flex items-center gap-4 px-6 py-4">
+          <div key={item.id} className='flex items-center gap-4 px-6 py-4'>
             {/* Image */}
-            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-slate-200">
+            <div className='h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-slate-200'>
               {item.image ? (
                 <Image
                   src={item.image}
                   alt={item.name}
                   width={64}
                   height={64}
-                  className="h-full w-full object-cover"
+                  className='h-full w-full object-cover'
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-slate-100">
-                  <span className="text-xs text-slate-400">No img</span>
+                <div className='flex h-full w-full items-center justify-center bg-slate-100'>
+                  <span className='text-xs text-slate-400'>No img</span>
                 </div>
               )}
             </div>
 
             {/* Tên + Phân loại */}
-            <div className="min-w-0 flex-1">
-              <h3 className="line-clamp-1 text-sm font-semibold text-slate-900">{item.name}</h3>
+            <div className='min-w-0 flex-1'>
+              <h3 className='line-clamp-1 text-sm font-semibold text-slate-900'>{item.name}</h3>
               {item.sku && (
-                <p className="mt-0.5 text-xs text-slate-500">Phân loại: {item.sku}</p>
+                <p className='mt-0.5 text-xs text-slate-500'>Phân loại: {item.sku}</p>
               )}
             </div>
 
             {/* Đơn giá */}
-            <div className="w-28 shrink-0 text-right">
-              <p className="text-sm text-slate-600">{formatPrice(item.price)}</p>
+            <div className='w-28 shrink-0 text-right'>
+              <p className='text-sm text-slate-600'>{formatPrice(item.price)}</p>
             </div>
 
             {/* Số lượng */}
-            <div className="w-16 shrink-0 text-center">
-              <p className="text-sm text-slate-600">x{item.quantity}</p>
+            <div className='w-16 shrink-0 text-center'>
+              <p className='text-sm text-slate-600'>x{item.quantity}</p>
             </div>
 
             {/* Thành tiền */}
-            <div className="w-28 shrink-0 text-right">
-              <p className="text-sm font-semibold text-emerald-700">
+            <div className='w-28 shrink-0 text-right'>
+              <p className='text-sm font-semibold text-emerald-700'>
                 {formatPrice(item.price * item.quantity)}
               </p>
             </div>
@@ -169,31 +169,31 @@ function ShopCard({ shop, selectedVoucherId, selectedVoucherName, onVoucherChang
       </div>
 
       {/* Shop Footer: Voucher + Summary */}
-      <div className="border-t border-slate-200 px-6 py-4">
+      <div className='border-t border-slate-200 px-6 py-4'>
         {/* Shop Voucher */}
-        <div className="mb-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Ticket className="h-4 w-4 text-orange-500" />
-            <span className="text-sm font-medium text-slate-700">Voucher Shop</span>
+        <div className='mb-3 flex items-center justify-between'>
+          <div className='flex items-center gap-2'>
+            <Ticket className='h-4 w-4 text-orange-500' />
+            <span className='text-sm font-medium text-slate-700'>Voucher Shop</span>
           </div>
 
           <Popover open={isPopoverOpen} onOpenChange={handlePopoverOpen}>
             <PopoverTrigger asChild>
-              <button className="rounded-lg border border-orange-400 px-3 py-1.5 text-sm font-medium text-orange-600 transition-all hover:bg-orange-50">
+              <button className='rounded-lg border border-orange-400 px-3 py-1.5 text-sm font-medium text-orange-600 transition-all hover:bg-orange-50'>
                 {selectedVoucherName ? selectedVoucherName : 'Chọn voucher'}
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 p-0" align="end">
-              <div className="border-b border-slate-200 px-4 py-3">
-                <h4 className="font-semibold text-slate-900">Voucher của Shop</h4>
+            <PopoverContent className='w-80 p-0' align='end'>
+              <div className='border-b border-slate-200 px-4 py-3'>
+                <h4 className='font-semibold text-slate-900'>Voucher của Shop</h4>
               </div>
-              <div className="max-h-60 overflow-y-auto p-2">
+              <div className='max-h-60 overflow-y-auto p-2'>
                 {loadingVouchers ? (
-                  <div className="flex items-center justify-center py-6">
-                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+                  <div className='flex items-center justify-center py-6'>
+                    <div className='h-6 w-6 animate-spin rounded-full border-2 border-orange-500 border-t-transparent' />
                   </div>
                 ) : eligibleVouchers.length === 0 ? (
-                  <p className="py-6 text-center text-sm text-slate-500">
+                  <p className='py-6 text-center text-sm text-slate-500'>
                     Không có voucher khả dụng
                   </p>
                 ) : (
@@ -207,16 +207,16 @@ function ShopCard({ shop, selectedVoucherId, selectedVoucherName, onVoucherChang
                           : 'border-slate-200'
                       }`}
                     >
-                      <div className="flex items-start justify-between">
+                      <div className='flex items-start justify-between'>
                         <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-slate-900">{v.name}</span>
+                          <div className='flex items-center gap-2'>
+                            <span className='font-semibold text-slate-900'>{v.name}</span>
                             {selectedVoucherId === v.id && (
-                              <Check className="h-4 w-4 text-orange-600" />
+                              <Check className='h-4 w-4 text-orange-600' />
                             )}
                           </div>
-                          <p className="mt-0.5 text-xs text-slate-500">Mã: {v.code}</p>
-                          <p className="mt-1 text-sm font-medium text-orange-600">
+                          <p className='mt-0.5 text-xs text-slate-500'>Mã: {v.code}</p>
+                          <p className='mt-1 text-sm font-medium text-orange-600'>
                             Giảm{' '}
                             {v.discountType === 'FIXED'
                               ? formatPrice(v.discountValue)
@@ -225,7 +225,7 @@ function ShopCard({ shop, selectedVoucherId, selectedVoucherName, onVoucherChang
                           </p>
                         </div>
                       </div>
-                      <p className="mt-1 text-xs text-slate-400">
+                      <p className='mt-1 text-xs text-slate-400'>
                         Đơn tối thiểu: {formatPrice(v.minOrderValue)} • Còn lại: {v.userRemainingUsage} lượt
                       </p>
                     </button>
@@ -237,19 +237,19 @@ function ShopCard({ shop, selectedVoucherId, selectedVoucherName, onVoucherChang
         </div>
 
         {/* Shop Summary */}
-        <div className="space-y-1.5 border-t border-dashed border-slate-200 pt-3">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-500">Tổng tiền hàng:</span>
-            <span className="font-medium text-slate-700">{formatPrice(shop.shopSubtotal)}</span>
+        <div className='space-y-1.5 border-t border-dashed border-slate-200 pt-3'>
+          <div className='flex items-center justify-between text-sm'>
+            <span className='text-slate-500'>Tổng tiền hàng:</span>
+            <span className='font-medium text-slate-700'>{formatPrice(shop.shopSubtotal)}</span>
           </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-500">Phí vận chuyển:</span>
-            <span className="font-medium text-slate-700">{formatPrice(shop.shopShippingFee)}</span>
+          <div className='flex items-center justify-between text-sm'>
+            <span className='text-slate-500'>Phí vận chuyển:</span>
+            <span className='font-medium text-slate-700'>{formatPrice(shop.shopShippingFee)}</span>
           </div>
           {shop.shopVoucherDiscount > 0 && (
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-500">Giảm giá voucher:</span>
-              <span className="font-medium text-orange-600">
+            <div className='flex items-center justify-between text-sm'>
+              <span className='text-slate-500'>Giảm giá voucher:</span>
+              <span className='font-medium text-orange-600'>
                 -{formatPrice(shop.shopVoucherDiscount)}
               </span>
             </div>

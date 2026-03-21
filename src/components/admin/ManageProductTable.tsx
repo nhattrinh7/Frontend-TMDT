@@ -41,26 +41,26 @@ export default function ManageProductTable({
 
   if (isLoading) {
     return (
-      <div className="flex justify-center p-8">
-        <div className="text-muted-foreground">Đang tải danh sách sản phẩm...</div>
+      <div className='flex justify-center p-8'>
+        <div className='text-muted-foreground'>Đang tải danh sách sản phẩm...</div>
       </div>
     )
   }
 
   if (products.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 border rounded-lg bg-card text-card-foreground shadow-sm">
-        <p className="text-muted-foreground">Không tìm thấy sản phẩm nào</p>
+      <div className='flex flex-col items-center justify-center p-8 border rounded-lg bg-card text-card-foreground shadow-sm'>
+        <p className='text-muted-foreground'>Không tìm thấy sản phẩm nào</p>
       </div>
     )
   }
 
   return (
-    <div className="rounded-md border">
+    <div className='rounded-md border'>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[50px]"></TableHead>
+            <TableHead className='w-[50px]'></TableHead>
             <TableHead>Sản phẩm</TableHead>
             <TableHead>Shop</TableHead>
             <TableHead>Danh mục</TableHead>
@@ -74,34 +74,34 @@ export default function ManageProductTable({
               <TableRow key={product.id}>
                 <TableCell>
                   <Button
-                    variant="ghost"
-                    size="sm"
+                    variant='ghost'
+                    size='sm'
                     onClick={() => toggleExpand(product.id)}
                   >
                     {expandedProductIds.has(product.id) ? (
-                      <ChevronUp className="size-4" />
+                      <ChevronUp className='size-4' />
                     ) : (
-                      <ChevronDown className="size-4" />
+                      <ChevronDown className='size-4' />
                     )}
                   </Button>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-3">
-                    <div className="relative size-12 overflow-hidden rounded-md border">
+                  <div className='flex items-center gap-3'>
+                    <div className='relative size-12 overflow-hidden rounded-md border'>
                       <Image
                         src={product.mainImage}
                         alt={product.name}
                         fill
-                        sizes="48px"
-                        className="object-cover"
+                        sizes='48px'
+                        className='object-cover'
                       />
                     </div>
                     <div>
-                      <div className="font-medium line-clamp-1 max-w-[200px]" title={product.name}>
+                      <div className='font-medium line-clamp-1 max-w-[200px]' title={product.name}>
                         {product.name}
                       </div>
                       {/* Show price range if multiple variants or single price */}
-                      <div className="text-sm text-muted-foreground">
+                      <div className='text-sm text-muted-foreground'>
                         {product.variants && product.variants.length > 0
                           ? (() => {
                             const prices = product.variants.map((v) => v.price)
@@ -117,26 +117,26 @@ export default function ManageProductTable({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
+                  <div className='flex items-center gap-2'>
                     {product.shop.logo && (
-                      <div className="relative size-6 overflow-hidden rounded-full border">
+                      <div className='relative size-6 overflow-hidden rounded-full border'>
                         <Image
                           src={product.shop.logo}
                           alt={product.shop.name}
                           fill
-                          sizes="24px"
-                          className="object-cover"
+                          sizes='24px'
+                          className='object-cover'
                         />
                       </div>
                     )}
-                    <span className="text-sm font-medium">{product.shop.name}</span>
+                    <span className='text-sm font-medium'>{product.shop.name}</span>
                   </div>
                 </TableCell>
                 <TableCell>{product.category.name}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Star className="size-3 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm">
+                  <div className='flex items-center gap-1'>
+                    <Star className='size-3 fill-yellow-400 text-yellow-400' />
+                    <span className='text-sm'>
                       {product.ratingAvg.toFixed(1)} ({product.ratingCount})
                     </span>
                   </div>
@@ -161,36 +161,36 @@ export default function ManageProductTable({
               </TableRow>
 
               {expandedProductIds.has(product.id) && (
-                <TableRow className="bg-muted/50">
-                  <TableCell colSpan={6} className="p-4">
-                    <div className="grid grid-cols-2 gap-8">
+                <TableRow className='bg-muted/50'>
+                  <TableCell colSpan={6} className='p-4'>
+                    <div className='grid grid-cols-2 gap-8'>
                       {/* Left Column: Additional Info */}
-                      <div className="space-y-4">
+                      <div className='space-y-4'>
                         <div>
-                          <h4 className="font-semibold mb-2">Thông tin chi tiết</h4>
-                          <div className="grid grid-cols-2 gap-2 text-sm">
-                            <span className="text-muted-foreground">Đơn vị:</span>
+                          <h4 className='font-semibold mb-2'>Thông tin chi tiết</h4>
+                          <div className='grid grid-cols-2 gap-2 text-sm'>
+                            <span className='text-muted-foreground'>Đơn vị:</span>
                             <span>{product.unit}</span>
-                            <span className="text-muted-foreground">Ngày tạo:</span>
+                            <span className='text-muted-foreground'>Ngày tạo:</span>
                             <span>{new Date(product.createdAt).toLocaleDateString('vi-VN')}</span>
-                            <span className="text-muted-foreground">Cập nhật cuối:</span>
+                            <span className='text-muted-foreground'>Cập nhật cuối:</span>
                             <span>{new Date(product.updatedAt).toLocaleDateString('vi-VN')}</span>
                           </div>
                         </div>
 
                         {product.rejectReason && product.approveStatus === 'REJECTED' && (
-                          <div className="bg-destructive/10 p-3 rounded-md border border-destructive/20">
-                            <h4 className="font-semibold text-destructive mb-1 text-sm">Lí do từ chối:</h4>
-                            <p className="text-sm text-destructive">{product.rejectReason}</p>
+                          <div className='bg-destructive/10 p-3 rounded-md border border-destructive/20'>
+                            <h4 className='font-semibold text-destructive mb-1 text-sm'>Lí do từ chối:</h4>
+                            <p className='text-sm text-destructive'>{product.rejectReason}</p>
                           </div>
                         )}
 
                         <div>
-                          <h4 className="font-semibold mb-2">Thuộc tính</h4>
-                          <div className="grid grid-cols-2 gap-2 text-sm bg-background p-3 rounded border">
+                          <h4 className='font-semibold mb-2'>Thuộc tính</h4>
+                          <div className='grid grid-cols-2 gap-2 text-sm bg-background p-3 rounded border'>
                             {Object.entries(product.attributes).map(([key, value]) => (
-                              <div key={key} className="contents">
-                                <span className="text-muted-foreground">{key}:</span>
+                              <div key={key} className='contents'>
+                                <span className='text-muted-foreground'>{key}:</span>
                                 <span>{value}</span>
                               </div>
                             ))}
@@ -199,18 +199,18 @@ export default function ManageProductTable({
                       </div>
 
                       {/* Right Column: Images, Video, Bio */}
-                      <div className="space-y-4">
+                      <div className='space-y-4'>
                         <div>
-                          <h4 className="font-semibold mb-2">Mô tả</h4>
-                          <p className="text-sm text-muted-foreground line-clamp-4">{product.descriptions}</p>
+                          <h4 className='font-semibold mb-2'>Mô tả</h4>
+                          <p className='text-sm text-muted-foreground line-clamp-4'>{product.descriptions}</p>
                         </div>
 
                         <div>
-                          <h4 className="font-semibold mb-2">Thư viện ảnh ({product.galleryImage.length})</h4>
-                          <div className="flex gap-2 overflow-x-auto pb-2">
+                          <h4 className='font-semibold mb-2'>Thư viện ảnh ({product.galleryImage.length})</h4>
+                          <div className='flex gap-2 overflow-x-auto pb-2'>
                             {product.galleryImage.map((img, idx) => (
-                              <div key={idx} className="relative size-20 shrink-0 border rounded overflow-hidden">
-                                <Image src={img} alt="" fill sizes="80px" className="object-cover" />
+                              <div key={idx} className='relative size-20 shrink-0 border rounded overflow-hidden'>
+                                <Image src={img} alt='' fill sizes='80px' className='object-cover' />
                               </div>
                             ))}
                           </div>
@@ -218,8 +218,8 @@ export default function ManageProductTable({
                         
                         {product.video && (
                           <div>
-                            <h4 className="font-semibold mb-2">Video</h4>
-                            <video src={product.video} controls className="w-full max-h-[200px] rounded border bg-black/5" />
+                            <h4 className='font-semibold mb-2'>Video</h4>
+                            <video src={product.video} controls className='w-full max-h-[200px] rounded border bg-black/5' />
                           </div>
                         )}
                       </div>

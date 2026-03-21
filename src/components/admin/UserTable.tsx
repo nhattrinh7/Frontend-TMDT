@@ -125,9 +125,9 @@ export default function UserTable({
     if (activeTab === 'active') {
       return (
         <Button
-          variant="ghost"
-          size="sm"
-          className="gap-1.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
+          variant='ghost'
+          size='sm'
+          className='gap-1.5 text-destructive hover:bg-destructive/10 hover:text-destructive'
           onClick={() =>
             setConfirmDialog({
               open: true,
@@ -137,16 +137,16 @@ export default function UserTable({
             })
           }
         >
-          <Ban className="size-4" />
+          <Ban className='size-4' />
           Ban
         </Button>
       )
     }
     return (
       <Button
-        variant="ghost"
-        size="sm"
-        className="gap-1.5 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+        variant='ghost'
+        size='sm'
+        className='gap-1.5 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700'
         onClick={() =>
           setConfirmDialog({
             open: true,
@@ -156,7 +156,7 @@ export default function UserTable({
           })
         }
       >
-        <UserCheck className="size-4" />
+        <UserCheck className='size-4' />
         Unban
       </Button>
     )
@@ -165,44 +165,44 @@ export default function UserTable({
   // Render expanded row content
   const renderExpandedContent = (user: User) => {
     return (
-      <TableRow className="bg-muted/30 hover:bg-muted/40">
+      <TableRow className='bg-muted/30 hover:bg-muted/40'>
         <TableCell colSpan={7}>
-          <div className="grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className='grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-4'>
             {/* Full Name */}
-            <div className="flex items-center gap-2">
-              <UserIcon className="size-4 text-muted-foreground" />
+            <div className='flex items-center gap-2'>
+              <UserIcon className='size-4 text-muted-foreground' />
               <div>
-                <p className="text-xs text-muted-foreground">Họ và tên</p>
-                <p className="font-medium">{user.fullName}</p>
+                <p className='text-xs text-muted-foreground'>Họ và tên</p>
+                <p className='font-medium'>{user.fullName}</p>
               </div>
             </div>
 
             {/* Date of Birth */}
-            <div className="flex items-center gap-2">
-              <Calendar className="size-4 text-muted-foreground" />
+            <div className='flex items-center gap-2'>
+              <Calendar className='size-4 text-muted-foreground' />
               <div>
-                <p className="text-xs text-muted-foreground">Ngày sinh</p>
-                <p className="font-medium">
+                <p className='text-xs text-muted-foreground'>Ngày sinh</p>
+                <p className='font-medium'>
                   {new Date(user.dob).toLocaleDateString('vi-VN')}
                 </p>
               </div>
             </div>
 
             {/* Email Verified */}
-            <div className="flex items-center gap-2">
-              <Mail className="size-4 text-muted-foreground" />
+            <div className='flex items-center gap-2'>
+              <Mail className='size-4 text-muted-foreground' />
               <div>
-                <p className="text-xs text-muted-foreground">Email đã xác thực</p>
-                <div className="flex items-center gap-1">
+                <p className='text-xs text-muted-foreground'>Email đã xác thực</p>
+                <div className='flex items-center gap-1'>
                   {user.emailVerified ? (
                     <>
-                      <CheckCircle className="size-4 text-emerald-500" />
-                      <span className="font-medium text-emerald-600">Đã xác thực</span>
+                      <CheckCircle className='size-4 text-emerald-500' />
+                      <span className='font-medium text-emerald-600'>Đã xác thực</span>
                     </>
                   ) : (
                     <>
-                      <XCircle className="size-4 text-destructive" />
-                      <span className="font-medium text-destructive">Chưa xác thực</span>
+                      <XCircle className='size-4 text-destructive' />
+                      <span className='font-medium text-destructive'>Chưa xác thực</span>
                     </>
                   )}
                 </div>
@@ -210,20 +210,20 @@ export default function UserTable({
             </div>
 
             {/* 2FA */}
-            <div className="flex items-center gap-2">
-              <Shield className="size-4 text-muted-foreground" />
+            <div className='flex items-center gap-2'>
+              <Shield className='size-4 text-muted-foreground' />
               <div>
-                <p className="text-xs text-muted-foreground">Xác thực 2 bước</p>
-                <div className="flex items-center gap-1">
+                <p className='text-xs text-muted-foreground'>Xác thực 2 bước</p>
+                <div className='flex items-center gap-1'>
                   {user.require2FA ? (
                     <>
-                      <CheckCircle className="size-4 text-emerald-500" />
-                      <span className="font-medium text-emerald-600">Đã bật</span>
+                      <CheckCircle className='size-4 text-emerald-500' />
+                      <span className='font-medium text-emerald-600'>Đã bật</span>
                     </>
                   ) : (
                     <>
-                      <XCircle className="size-4 text-muted-foreground" />
-                      <span className="font-medium text-muted-foreground">Chưa bật</span>
+                      <XCircle className='size-4 text-muted-foreground' />
+                      <span className='font-medium text-muted-foreground'>Chưa bật</span>
                     </>
                   )}
                 </div>
@@ -231,29 +231,29 @@ export default function UserTable({
             </div>
 
             {/* Created At */}
-            <div className="flex items-center gap-2">
-              <Calendar className="size-4 text-muted-foreground" />
+            <div className='flex items-center gap-2'>
+              <Calendar className='size-4 text-muted-foreground' />
               <div>
-                <p className="text-xs text-muted-foreground">Ngày tạo</p>
-                <p className="font-medium">{formatDate(user.createdAt)}</p>
+                <p className='text-xs text-muted-foreground'>Ngày tạo</p>
+                <p className='font-medium'>{formatDate(user.createdAt)}</p>
               </div>
             </div>
 
             {/* Updated At */}
-            <div className="flex items-center gap-2">
-              <Calendar className="size-4 text-muted-foreground" />
+            <div className='flex items-center gap-2'>
+              <Calendar className='size-4 text-muted-foreground' />
               <div>
-                <p className="text-xs text-muted-foreground">Cập nhật lần cuối</p>
-                <p className="font-medium">{formatDate(user.updatedAt)}</p>
+                <p className='text-xs text-muted-foreground'>Cập nhật lần cuối</p>
+                <p className='font-medium'>{formatDate(user.updatedAt)}</p>
               </div>
             </div>
 
             {/* Role ID */}
-            <div className="flex items-center gap-2 sm:col-span-2">
-              <Shield className="size-4 text-muted-foreground" />
+            <div className='flex items-center gap-2 sm:col-span-2'>
+              <Shield className='size-4 text-muted-foreground' />
               <div>
-                <p className="text-xs text-muted-foreground">Role ID</p>
-                <p className="font-mono text-sm">{user.roleId}</p>
+                <p className='text-xs text-muted-foreground'>Role ID</p>
+                <p className='font-mono text-sm'>{user.roleId}</p>
               </div>
             </div>
           </div>
@@ -264,33 +264,33 @@ export default function UserTable({
 
   if (isLoading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Đang tải...</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Đang tải...</div>
       </div>
     )
   }
 
   if (users.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Không có người dùng nào</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Không có người dùng nào</div>
       </div>
     )
   }
 
   return (
     <>
-      <div className="rounded-lg border">
+      <div className='rounded-lg border'>
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/50">
-              <TableHead className="w-12"></TableHead>
-              <TableHead className="w-16">Avatar</TableHead>
+            <TableRow className='bg-muted/50'>
+              <TableHead className='w-12'></TableHead>
+              <TableHead className='w-16'>Avatar</TableHead>
               <TableHead>Username</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Số điện thoại</TableHead>
               <TableHead>Giới tính</TableHead>
-              <TableHead className="w-24">Thao tác</TableHead>
+              <TableHead className='w-24'>Thao tác</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -299,43 +299,43 @@ export default function UserTable({
 
               return (
                 <Fragment key={user.id}>
-                  <TableRow className="hover:bg-muted/30">
+                  <TableRow className='hover:bg-muted/30'>
                     <TableCell>
                       <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-6"
+                        variant='ghost'
+                        size='icon'
+                        className='size-6'
                         onClick={() => toggleExpand(user.id)}
                       >
                         {isExpanded ? (
-                          <ChevronDown className="size-4" />
+                          <ChevronDown className='size-4' />
                         ) : (
-                          <ChevronRight className="size-4" />
+                          <ChevronRight className='size-4' />
                         )}
                       </Button>
                     </TableCell>
                     <TableCell>
-                      <Avatar className="size-10">
+                      <Avatar className='size-10'>
                         <AvatarImage src={user.avatar || undefined} alt={user.username} />
-                        <AvatarFallback className="bg-[#004643] text-white">
+                        <AvatarFallback className='bg-[#004643] text-white'>
                           {getInitials(user.fullName || user.username)}
                         </AvatarFallback>
                       </Avatar>
                     </TableCell>
                     <TableCell>
-                      <div className="font-medium">{user.username}</div>
+                      <div className='font-medium'>{user.username}</div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm">{user.email}</div>
+                      <div className='text-sm'>{user.email}</div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1.5 text-sm">
-                        <Phone className="size-3.5 text-muted-foreground" />
+                      <div className='flex items-center gap-1.5 text-sm'>
+                        <Phone className='size-3.5 text-muted-foreground' />
                         {user.phoneNumber}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="font-normal">
+                      <Badge variant='outline' className='font-normal'>
                         {formatGender(user.gender)}
                       </Badge>
                     </TableCell>
@@ -366,13 +366,13 @@ export default function UserTable({
               {confirmDialog.action === 'ban' ? (
                 <>
                   Bạn có chắc chắn muốn ban người dùng{' '}
-                  <span className="font-semibold">{confirmDialog.username}</span>? Người
+                  <span className='font-semibold'>{confirmDialog.username}</span>? Người
                   dùng này sẽ không thể đăng nhập vào hệ thống.
                 </>
               ) : (
                 <>
                   Bạn có chắc chắn muốn unban người dùng{' '}
-                  <span className="font-semibold">{confirmDialog.username}</span>? Người
+                  <span className='font-semibold'>{confirmDialog.username}</span>? Người
                   dùng này sẽ có thể đăng nhập lại vào hệ thống.
                 </>
               )}

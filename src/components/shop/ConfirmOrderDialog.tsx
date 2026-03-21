@@ -51,8 +51,8 @@ export default function ConfirmOrderDialog({ orderId, fetchData }: ConfirmOrderD
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button 
-          className="w-28 bg-[#004643] hover:bg-[#004643]/90 text-white shadow-sm" 
-          size="sm"
+          className='w-28 bg-[#004643] hover:bg-[#004643]/90 text-white shadow-sm' 
+          size='sm'
         >
           Xác nhận
         </Button>
@@ -72,7 +72,7 @@ export default function ConfirmOrderDialog({ orderId, fetchData }: ConfirmOrderD
               handleConfirmOrder()
             }}
             disabled={loading}
-            className="bg-[#004643] hover:bg-[#004643]/90 text-white"
+            className='bg-[#004643] hover:bg-[#004643]/90 text-white'
           >
             {loading ? 'Đang xử lý...' : 'Xác nhận'}
           </AlertDialogAction>

@@ -75,47 +75,47 @@ export default function AddressSection({ selectedAddress, onAddressChange }: Add
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-6">
+    <div className='rounded-lg border border-slate-200 bg-white p-6'>
       {/* Header */}
-      <div className="mb-4 flex items-center gap-2">
-        <MapPin className="h-5 w-5 text-emerald-700" />
-        <h2 className="text-lg font-bold text-slate-900">Địa Chỉ Nhận Hàng</h2>
+      <div className='mb-4 flex items-center gap-2'>
+        <MapPin className='h-5 w-5 text-emerald-700' />
+        <h2 className='text-lg font-bold text-slate-900'>Địa Chỉ Nhận Hàng</h2>
       </div>
 
       {selectedAddress ? (
-        <div className="flex items-start justify-between">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-3">
-              <span className="font-semibold text-slate-900">{selectedAddress.recipientName}</span>
-              <span className="text-slate-300">|</span>
-              <div className="flex items-center gap-1.5 text-slate-600">
-                <Phone className="h-3.5 w-3.5" />
+        <div className='flex items-start justify-between'>
+          <div className='space-y-1.5'>
+            <div className='flex items-center gap-3'>
+              <span className='font-semibold text-slate-900'>{selectedAddress.recipientName}</span>
+              <span className='text-slate-300'>|</span>
+              <div className='flex items-center gap-1.5 text-slate-600'>
+                <Phone className='h-3.5 w-3.5' />
                 <span>{selectedAddress.recipientPhoneNumber}</span>
               </div>
               {selectedAddress.isDefault && (
-                <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+                <span className='rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700'>
                   Mặc định
                 </span>
               )}
             </div>
-            <p className="text-sm text-slate-500">
+            <p className='text-sm text-slate-500'>
               {selectedAddress.detail}, {selectedAddress.ward}, {selectedAddress.province}
             </p>
           </div>
 
           <button
             onClick={handleOpenDialog}
-            className="shrink-0 rounded-lg border border-emerald-700 px-4 py-2 text-sm font-semibold text-emerald-700 transition-all hover:bg-emerald-50"
+            className='shrink-0 rounded-lg border border-emerald-700 px-4 py-2 text-sm font-semibold text-emerald-700 transition-all hover:bg-emerald-50'
           >
             Thay đổi
           </button>
         </div>
       ) : (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-slate-500">Chưa có địa chỉ giao hàng</p>
+        <div className='flex items-center justify-between'>
+          <p className='text-sm text-slate-500'>Chưa có địa chỉ giao hàng</p>
           <button
             onClick={handleOpenDialog}
-            className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-emerald-800"
+            className='rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-emerald-800'
           >
             Chọn địa chỉ
           </button>
@@ -124,18 +124,18 @@ export default function AddressSection({ selectedAddress, onAddressChange }: Add
 
       {/* Dialog chọn địa chỉ */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-xl">
+        <DialogContent className='max-w-xl'>
           <DialogHeader>
             <DialogTitle>Chọn Địa Chỉ Giao Hàng</DialogTitle>
           </DialogHeader>
 
-          <div className="max-h-[60vh] space-y-3 overflow-y-auto pr-1">
+          <div className='max-h-[60vh] space-y-3 overflow-y-auto pr-1'>
             {loadingAddresses ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-700 border-t-transparent" />
+              <div className='flex items-center justify-center py-8'>
+                <div className='h-8 w-8 animate-spin rounded-full border-4 border-emerald-700 border-t-transparent' />
               </div>
             ) : allAddresses.length === 0 ? (
-              <p className="py-8 text-center text-sm text-slate-500">
+              <p className='py-8 text-center text-sm text-slate-500'>
                 Bạn chưa có địa chỉ nào. Vui lòng thêm địa chỉ trong phần Quản lý địa chỉ.
               </p>
             ) : (
@@ -149,17 +149,17 @@ export default function AddressSection({ selectedAddress, onAddressChange }: Add
                       : 'border-slate-200'
                   }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-slate-900">{addr.recipientName}</span>
-                    <span className="text-slate-300">|</span>
-                    <span className="text-sm text-slate-600">{addr.recipientPhoneNumber}</span>
+                  <div className='flex items-center gap-2'>
+                    <span className='font-semibold text-slate-900'>{addr.recipientName}</span>
+                    <span className='text-slate-300'>|</span>
+                    <span className='text-sm text-slate-600'>{addr.recipientPhoneNumber}</span>
                     {addr.isDefault && (
-                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                      <span className='rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700'>
                         Mặc định
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className='mt-1 text-sm text-slate-500'>
                     {addr.detail}, {addr.ward}, {addr.province}
                   </p>
                 </button>

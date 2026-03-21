@@ -54,78 +54,78 @@ export default function BrandTable({
 
   if (isLoading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Đang tải...</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Đang tải...</div>
       </div>
     )
   }
 
   if (brands.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Không có thương hiệu nào</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Không có thương hiệu nào</div>
       </div>
     )
   }
 
   return (
     <>
-      <div className="rounded-lg border">
+      <div className='rounded-lg border'>
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/50">
-              <TableHead className="w-20">Logo</TableHead>
-              <TableHead className="min-w-[150px]">Tên</TableHead>
-              <TableHead className="min-w-[250px]">Mô tả</TableHead>
-              <TableHead className="min-w-[120px]">Quốc gia</TableHead>
-              <TableHead className="w-28">Thao tác</TableHead>
+            <TableRow className='bg-muted/50'>
+              <TableHead className='w-20'>Logo</TableHead>
+              <TableHead className='min-w-[150px]'>Tên</TableHead>
+              <TableHead className='min-w-[250px]'>Mô tả</TableHead>
+              <TableHead className='min-w-[120px]'>Quốc gia</TableHead>
+              <TableHead className='w-28'>Thao tác</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {brands.map((brand) => (
-              <TableRow key={brand.id} className="hover:bg-muted/30">
+              <TableRow key={brand.id} className='hover:bg-muted/30'>
                 <TableCell>
                   {brand.logo ? (
-                    <div className="relative size-12 overflow-hidden rounded-md border">
+                    <div className='relative size-12 overflow-hidden rounded-md border'>
                       <Image
                         src={brand.logo}
                         alt={brand.name}
                         fill
-                        className="object-cover"
+                        className='object-cover'
                       />
                     </div>
                   ) : (
-                    <div className="flex size-12 items-center justify-center rounded-md border bg-muted">
-                      <ImageIcon className="size-4 text-muted-foreground" />
+                    <div className='flex size-12 items-center justify-center rounded-md border bg-muted'>
+                      <ImageIcon className='size-4 text-muted-foreground' />
                     </div>
                   )}
                 </TableCell>
                 <TableCell>
-                  <div className="font-medium">{brand.name}</div>
+                  <div className='font-medium'>{brand.name}</div>
                 </TableCell>
                 <TableCell>
-                  <p className="line-clamp-2 text-sm text-muted-foreground">
+                  <p className='line-clamp-2 text-sm text-muted-foreground'>
                     {brand.description}
                   </p>
                 </TableCell>
                 <TableCell>
-                  <div className="text-sm">{brand.country}</div>
+                  <div className='text-sm'>{brand.country}</div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1">
+                  <div className='flex items-center gap-1'>
                     <Button
-                      variant="ghost"
-                      size="icon"
-                      title="Cập nhật"
+                      variant='ghost'
+                      size='icon'
+                      title='Cập nhật'
                       onClick={() => onEdit(brand)}
                     >
-                      <Pencil className="size-4" />
+                      <Pencil className='size-4' />
                     </Button>
                     <Button
-                      variant="ghost"
-                      size="icon"
-                      title="Xóa"
-                      className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      variant='ghost'
+                      size='icon'
+                      title='Xóa'
+                      className='text-destructive hover:bg-destructive/10 hover:text-destructive'
                       onClick={() =>
                         setDeleteDialog({
                           open: true,
@@ -134,7 +134,7 @@ export default function BrandTable({
                         })
                       }
                     >
-                      <Trash2 className="size-4" />
+                      <Trash2 className='size-4' />
                     </Button>
                   </div>
                 </TableCell>
@@ -154,7 +154,7 @@ export default function BrandTable({
             <AlertDialogTitle>Xóa thương hiệu?</AlertDialogTitle>
             <AlertDialogDescription>
               Bạn có chắc chắn muốn xóa thương hiệu{' '}
-              <span className="font-semibold">{deleteDialog.brandName}</span>? Hành động
+              <span className='font-semibold'>{deleteDialog.brandName}</span>? Hành động
               này không thể hoàn tác.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -162,7 +162,7 @@ export default function BrandTable({
             <AlertDialogCancel>Hủy</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmDelete}
-              className="bg-destructive hover:bg-destructive/90"
+              className='bg-destructive hover:bg-destructive/90'
             >
               Xóa
             </AlertDialogAction>

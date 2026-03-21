@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { reportReviewAPI } from '~/apiRequests/product.apiRequest'
+import { useBoundStore } from '~/zustand/store'
 
 const REPORT_REASONS = [
   { label: 'Đánh giá thô tục phản cảm', value: 'VULGAR' },
@@ -23,6 +24,7 @@ export function ReportReviewModal({ reviewId, onClose }: ReportReviewModalProps)
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [description, setDescription] = useState('')
   const [loading, setLoading] = useState(false)
+  const user = useBoundStore((state) => state.user)
 
   const selectedReason = selectedIndex !== null ? REPORT_REASONS[selectedIndex] : null
   const isOther = selectedReason?.value === 'OTHER'
@@ -30,12 +32,18 @@ export function ReportReviewModal({ reviewId, onClose }: ReportReviewModalProps)
 
   const handleSubmit = async () => {
     if (!selectedReason || !canSubmit) return
+    if (!user?.username) {
+      toast.error('Vui lòng đăng nhập để báo cáo đánh giá')
+      return
+    }
 
     setLoading(true)
     try {
       await reportReviewAPI(reviewId, {
         reason: selectedReason.value,
         description: isOther ? description.trim() : undefined,
+        reporterUsername: user.username,
+        reporterAvatar: user.avatar ?? null,
       })
       toast.success('Đã gửi báo cáo thành công')
       onClose()

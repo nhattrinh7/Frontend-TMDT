@@ -24,14 +24,14 @@ export default function ProductSearch({
   }, [searchValue, onSearch])
 
   return (
-    <div className="relative w-full max-w-sm">
-      <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+    <div className='relative w-full max-w-sm'>
+      <Search className='absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
       <Input
-        type="text"
+        type='text'
         placeholder={placeholder}
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
-        className="pl-10"
+        className='pl-10'
       />
     </div>
   )

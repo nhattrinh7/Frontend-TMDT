@@ -137,7 +137,7 @@ export default function BrandFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className='sm:max-w-[500px]'>
         <DialogHeader>
           <DialogTitle>
             {isUpdate ? 'Cập nhật thương hiệu' : 'Tạo thương hiệu mới'}
@@ -150,17 +150,17 @@ export default function BrandFormDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-4'>
             <FormField
               control={form.control}
-              name="name"
+              name='name'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Tên thương hiệu <span className="text-destructive">*</span>
+                    Tên thương hiệu <span className='text-destructive'>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="VD: Apple, Samsung..." {...field} />
+                    <Input placeholder='VD: Apple, Samsung...' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -169,16 +169,16 @@ export default function BrandFormDialog({
 
             <FormField
               control={form.control}
-              name="description"
+              name='description'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Mô tả <span className="text-destructive">*</span>
+                    Mô tả <span className='text-destructive'>*</span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Mô tả về thương hiệu..."
-                      className="min-h-[80px]"
+                      placeholder='Mô tả về thương hiệu...'
+                      className='min-h-[80px]'
                       {...field}
                     />
                   </FormControl>
@@ -190,54 +190,54 @@ export default function BrandFormDialog({
             {/* Logo Upload */}
             <FormField
               control={form.control}
-              name="logo"
+              name='logo'
               render={() => (
                 <FormItem>
                   <FormLabel>
-                    Logo <span className="text-destructive">*</span>
+                    Logo <span className='text-destructive'>*</span>
                   </FormLabel>
                   <FormControl>
-                    <div className="space-y-3">
+                    <div className='space-y-3'>
                       {/* Preview */}
                       {previewUrl ? (
-                        <div className="relative inline-block">
-                          <div className="relative size-24 overflow-hidden rounded-lg border-2 border-dashed border-muted-foreground/25">
+                        <div className='relative inline-block'>
+                          <div className='relative size-24 overflow-hidden rounded-lg border-2 border-dashed border-muted-foreground/25'>
                             <Image
                               src={previewUrl}
-                              alt="Logo preview"
+                              alt='Logo preview'
                               fill
-                              className="object-cover"
+                              className='object-cover'
                             />
                             {isUploading && (
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                                <Loader2 className="size-6 animate-spin text-white" />
+                              <div className='absolute inset-0 flex items-center justify-center bg-black/50'>
+                                <Loader2 className='size-6 animate-spin text-white' />
                               </div>
                             )}
                           </div>
                           <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute -right-2 -top-2 size-6"
+                            type='button'
+                            variant='destructive'
+                            size='icon'
+                            className='absolute -right-2 -top-2 size-6'
                             onClick={handleRemoveImage}
                             disabled={isUploading}
                           >
-                            <X className="size-3" />
+                            <X className='size-3' />
                           </Button>
                         </div>
                       ) : (
                         <button
-                          type="button"
+                          type='button'
                           onClick={() => fileInputRef.current?.click()}
                           disabled={isUploading}
-                          className="flex size-24 flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-muted-foreground/25 transition-colors hover:border-muted-foreground/50 hover:bg-muted/50"
+                          className='flex size-24 flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-muted-foreground/25 transition-colors hover:border-muted-foreground/50 hover:bg-muted/50'
                         >
                           {isUploading ? (
-                            <Loader2 className="size-6 animate-spin text-muted-foreground" />
+                            <Loader2 className='size-6 animate-spin text-muted-foreground' />
                           ) : (
                             <>
-                              <ImageIcon className="size-6 text-muted-foreground" />
-                              <span className="text-xs text-muted-foreground">Chọn ảnh</span>
+                              <ImageIcon className='size-6 text-muted-foreground' />
+                              <span className='text-xs text-muted-foreground'>Chọn ảnh</span>
                             </>
                           )}
                         </button>
@@ -246,13 +246,13 @@ export default function BrandFormDialog({
                       {/* Upload Button */}
                       {previewUrl && !isUploading && (
                         <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
+                          type='button'
+                          variant='outline'
+                          size='sm'
                           onClick={() => fileInputRef.current?.click()}
-                          className="gap-1.5"
+                          className='gap-1.5'
                         >
-                          <Upload className="size-3.5" />
+                          <Upload className='size-3.5' />
                           Thay đổi ảnh
                         </Button>
                       )}
@@ -260,10 +260,10 @@ export default function BrandFormDialog({
                       {/* Hidden file input */}
                       <input
                         ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
+                        type='file'
+                        accept='image/*'
                         onChange={handleFileSelect}
-                        className="hidden"
+                        className='hidden'
                       />
                     </div>
                   </FormControl>
@@ -274,14 +274,14 @@ export default function BrandFormDialog({
 
             <FormField
               control={form.control}
-              name="country"
+              name='country'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Quốc gia <span className="text-destructive">*</span>
+                    Quốc gia <span className='text-destructive'>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="VD: Mỹ, Hàn Quốc, Nhật Bản..." {...field} />
+                    <Input placeholder='VD: Mỹ, Hàn Quốc, Nhật Bản...' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -290,19 +290,19 @@ export default function BrandFormDialog({
 
             <DialogFooter>
               <Button
-                type="button"
-                variant="outline"
+                type='button'
+                variant='outline'
                 onClick={() => onOpenChange(false)}
                 disabled={isSubmitting || isUploading}
               >
                 Hủy
               </Button>
               <Button
-                type="submit"
-                className="gap-2 bg-[#004643] hover:bg-[#004643]/90"
+                type='submit'
+                className='gap-2 bg-[#004643] hover:bg-[#004643]/90'
                 disabled={isSubmitting || isUploading}
               >
-                {isSubmitting && <Loader2 className="size-4 animate-spin" />}
+                {isSubmitting && <Loader2 className='size-4 animate-spin' />}
                 {isUpdate ? 'Cập nhật' : 'Tạo'}
               </Button>
             </DialogFooter>

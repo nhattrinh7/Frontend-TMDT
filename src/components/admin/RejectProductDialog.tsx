@@ -64,26 +64,26 @@ export default function RejectProductDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className='sm:max-w-md'>
         <DialogHeader>
-          <DialogTitle className="text-destructive">Từ chối sản phẩm</DialogTitle>
+          <DialogTitle className='text-destructive'>Từ chối sản phẩm</DialogTitle>
           <DialogDescription>
-            Bạn đang từ chối sản phẩm <span className="font-semibold">{productName}</span>.
+            Bạn đang từ chối sản phẩm <span className='font-semibold'>{productName}</span>.
             Vui lòng nhập lý do từ chối để thông báo cho người bán.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-4'>
             <FormField
               control={form.control}
-              name="rejectReason"
+              name='rejectReason'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Lý do từ chối</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Nhập lý do từ chối sản phẩm..."
+                      placeholder='Nhập lý do từ chối sản phẩm...'
                       rows={4}
                       {...field}
                     />
@@ -93,18 +93,18 @@ export default function RejectProductDialog({
               )}
             />
 
-            <DialogFooter className="gap-2 sm:gap-0">
+            <DialogFooter className='gap-2 sm:gap-0'>
               <Button
-                type="button"
-                variant="outline"
+                type='button'
+                variant='outline'
                 onClick={() => handleOpenChange(false)}
                 disabled={isLoading}
               >
                 Hủy
               </Button>
               <Button
-                type="submit"
-                variant="destructive"
+                type='submit'
+                variant='destructive'
                 disabled={isLoading}
               >
                 {isLoading ? 'Đang xử lý...' : 'Xác nhận từ chối'}

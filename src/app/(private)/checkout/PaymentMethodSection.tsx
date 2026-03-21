@@ -14,19 +14,19 @@ const paymentOptions: { value: PaymentMethod; label: string; description: string
     value: 'COD',
     label: 'Thanh toán khi nhận hàng',
     description: 'Thanh toán bằng tiền mặt khi nhận hàng',
-    icon: <Truck className="h-5 w-5" />,
+    icon: <Truck className='h-5 w-5' />,
   },
   {
     value: 'WALLET',
     label: 'Ví Szone',
     description: 'Thanh toán bằng số dư ví Szone',
-    icon: <Wallet className="h-5 w-5" />,
+    icon: <Wallet className='h-5 w-5' />,
   },
   {
     value: 'QRCODE',
     label: 'Chuyển khoản ngân hàng',
     description: 'Quét mã QR để thanh toán qua ngân hàng',
-    icon: <QrCode className="h-5 w-5" />,
+    icon: <QrCode className='h-5 w-5' />,
   },
 ]
 
@@ -35,10 +35,10 @@ export default function PaymentMethodSection({
   onPaymentMethodChange,
 }: PaymentMethodSectionProps) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-6">
-      <h2 className="mb-4 text-lg font-bold text-slate-900">Phương Thức Thanh Toán</h2>
+    <div className='rounded-lg border border-slate-200 bg-white p-6'>
+      <h2 className='mb-4 text-lg font-bold text-slate-900'>Phương Thức Thanh Toán</h2>
 
-      <div className="space-y-2">
+      <div className='space-y-2'>
         {paymentOptions.map((opt) => (
           <button
             key={opt.value}
@@ -58,7 +58,7 @@ export default function PaymentMethodSection({
               }`}
             >
               {paymentMethod === opt.value && (
-                <div className="h-2.5 w-2.5 rounded-full bg-emerald-600" />
+                <div className='h-2.5 w-2.5 rounded-full bg-emerald-600' />
               )}
             </div>
 
@@ -80,7 +80,7 @@ export default function PaymentMethodSection({
               >
                 {opt.label}
               </p>
-              <p className="text-xs text-slate-500">{opt.description}</p>
+              <p className='text-xs text-slate-500'>{opt.description}</p>
             </div>
           </button>
         ))}

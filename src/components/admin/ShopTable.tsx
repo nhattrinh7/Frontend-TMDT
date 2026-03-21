@@ -75,66 +75,66 @@ export default function ShopTable({
 
   if (isLoading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Đang tải...</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Đang tải...</div>
       </div>
     )
   }
 
   if (shops.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Không có shop nào cần duyệt</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Không có shop nào cần duyệt</div>
       </div>
     )
   }
 
   return (
     <>
-      <div className="rounded-lg border overflow-x-auto">
+      <div className='rounded-lg border overflow-x-auto'>
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/50">
-              <TableHead className="w-20">Logo</TableHead>
-              <TableHead className="min-w-[200px]">Thông tin Shop</TableHead>
-              <TableHead className="min-w-[180px]">Chủ Shop</TableHead>
-              <TableHead className="min-w-[200px]">Địa chỉ</TableHead>
-              <TableHead className="min-w-[150px]">Ngân hàng & MST</TableHead>
-              <TableHead className="min-w-[100px]">Ngày đăng ký</TableHead>
-              <TableHead className="w-32 text-center">Thao tác</TableHead>
+            <TableRow className='bg-muted/50'>
+              <TableHead className='w-20'>Logo</TableHead>
+              <TableHead className='min-w-[200px]'>Thông tin Shop</TableHead>
+              <TableHead className='min-w-[180px]'>Chủ Shop</TableHead>
+              <TableHead className='min-w-[200px]'>Địa chỉ</TableHead>
+              <TableHead className='min-w-[150px]'>Ngân hàng & MST</TableHead>
+              <TableHead className='min-w-[100px]'>Ngày đăng ký</TableHead>
+              <TableHead className='w-32 text-center'>Thao tác</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {shops.map((shop) => (
-              <TableRow key={shop.id} className="hover:bg-muted/30">
+              <TableRow key={shop.id} className='hover:bg-muted/30'>
                 {/* Logo */}
                 <TableCell>
                   {shop.logo ? (
-                    <div className="relative size-14 overflow-hidden rounded-lg border shadow-sm">
+                    <div className='relative size-14 overflow-hidden rounded-lg border shadow-sm'>
                       <Image
                         src={shop.logo}
                         alt={shop.name}
                         fill
-                        className="object-cover"
+                        className='object-cover'
                       />
                     </div>
                   ) : (
-                    <div className="flex size-14 items-center justify-center rounded-lg border bg-muted">
-                      <Store className="size-6 text-muted-foreground" />
+                    <div className='flex size-14 items-center justify-center rounded-lg border bg-muted'>
+                      <Store className='size-6 text-muted-foreground' />
                     </div>
                   )}
                 </TableCell>
 
                 {/* Shop Info */}
                 <TableCell>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-[#004643]">{shop.name}</span>
-                      <Badge variant="secondary" className="text-xs">
+                  <div className='space-y-1'>
+                    <div className='flex items-center gap-2'>
+                      <span className='font-semibold text-[#004643]'>{shop.name}</span>
+                      <Badge variant='secondary' className='text-xs'>
                         Chờ duyệt
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
+                    <p className='text-sm text-muted-foreground line-clamp-2'>
                       {shop.description}
                     </p>
                   </div>
@@ -142,26 +142,26 @@ export default function ShopTable({
 
                 {/* Owner Info */}
                 <TableCell>
-                  <div className="flex items-start gap-2">
-                    <User className="size-4 text-muted-foreground mt-0.5 shrink-0" />
-                    <div className="space-y-0.5">
-                      <div className="font-medium">{shop.owner.fullName}</div>
-                      <div className="text-xs text-muted-foreground">{shop.owner.email}</div>
-                      <div className="text-xs text-muted-foreground">{shop.owner.phoneNumber}</div>
+                  <div className='flex items-start gap-2'>
+                    <User className='size-4 text-muted-foreground mt-0.5 shrink-0' />
+                    <div className='space-y-0.5'>
+                      <div className='font-medium'>{shop.owner.fullName}</div>
+                      <div className='text-xs text-muted-foreground'>{shop.owner.email}</div>
+                      <div className='text-xs text-muted-foreground'>{shop.owner.phoneNumber}</div>
                     </div>
                   </div>
                 </TableCell>
 
                 {/* Address */}
                 <TableCell>
-                  <div className="flex items-start gap-2">
-                    <MapPin className="size-4 text-muted-foreground mt-0.5 shrink-0" />
-                    <div className="space-y-0.5">
-                      <div className="text-sm font-medium">{shop.address.recipientName}</div>
-                      <div className="text-xs text-muted-foreground">
+                  <div className='flex items-start gap-2'>
+                    <MapPin className='size-4 text-muted-foreground mt-0.5 shrink-0' />
+                    <div className='space-y-0.5'>
+                      <div className='text-sm font-medium'>{shop.address.recipientName}</div>
+                      <div className='text-xs text-muted-foreground'>
                         {shop.address.detail}, {shop.address.ward}, {shop.address.province}
                       </div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className='text-xs text-muted-foreground'>
                         SĐT: {shop.address.recipientPhoneNumber}
                       </div>
                     </div>
@@ -170,44 +170,44 @@ export default function ShopTable({
 
                 {/* Bank & Tax */}
                 <TableCell>
-                  <div className="flex items-start gap-2">
-                    <CreditCard className="size-4 text-muted-foreground mt-0.5 shrink-0" />
-                    <div className="space-y-0.5">
-                      <div className="text-sm font-medium">{shop.bankName}</div>
-                      <div className="text-xs text-muted-foreground">STK: {shop.bankNumber}</div>
-                      <div className="text-xs text-muted-foreground">MST: {shop.taxCode}</div>
+                  <div className='flex items-start gap-2'>
+                    <CreditCard className='size-4 text-muted-foreground mt-0.5 shrink-0' />
+                    <div className='space-y-0.5'>
+                      <div className='text-sm font-medium'>{shop.bankName}</div>
+                      <div className='text-xs text-muted-foreground'>STK: {shop.bankNumber}</div>
+                      <div className='text-xs text-muted-foreground'>MST: {shop.taxCode}</div>
                     </div>
                   </div>
                 </TableCell>
 
                 {/* Created Date */}
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="size-4 text-muted-foreground" />
-                    <span className="text-sm">{formatDate(shop.createdAt)}</span>
+                  <div className='flex items-center gap-2'>
+                    <Calendar className='size-4 text-muted-foreground' />
+                    <span className='text-sm'>{formatDate(shop.createdAt)}</span>
                   </div>
                 </TableCell>
 
                 {/* Actions */}
                 <TableCell>
-                  <div className="flex items-center justify-center gap-2">
+                  <div className='flex items-center justify-center gap-2'>
                     <Button
-                      size="sm"
-                      className="gap-1 bg-green-600 hover:bg-green-700"
+                      size='sm'
+                      className='gap-1 bg-green-600 hover:bg-green-700'
                       onClick={() => onApprove(shop.id)}
                       disabled={isApproving === shop.id || isRejecting === shop.id}
                     >
-                      <Check className="size-4" />
+                      <Check className='size-4' />
                       {isApproving === shop.id ? 'Đang...' : 'Duyệt'}
                     </Button>
                     <Button
-                      size="sm"
-                      variant="destructive"
-                      className="gap-1"
+                      size='sm'
+                      variant='destructive'
+                      className='gap-1'
                       onClick={() => handleOpenRejectDialog(shop.id, shop.name)}
                       disabled={isApproving === shop.id || isRejecting === shop.id}
                     >
-                      <X className="size-4" />
+                      <X className='size-4' />
                       {isRejecting === shop.id ? 'Đang...' : 'Từ chối'}
                     </Button>
                   </div>
@@ -231,27 +231,27 @@ export default function ShopTable({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="py-4 space-y-2">
-            <Label htmlFor="reject-reason">Lý do từ chối</Label>
+          <div className='py-4 space-y-2'>
+            <Label htmlFor='reject-reason'>Lý do từ chối</Label>
             <Textarea
-              id="reject-reason"
-              placeholder="Nhập lý do từ chối..."
+              id='reject-reason'
+              placeholder='Nhập lý do từ chối...'
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
-              className="resize-none"
+              className='resize-none'
               rows={4}
             />
           </div>
 
           <DialogFooter>
             <Button
-              variant="outline"
+              variant='outline'
               onClick={() => setRejectDialog((prev) => ({ ...prev, open: false }))}
             >
               Hủy
             </Button>
             <Button
-              variant="destructive"
+              variant='destructive'
               onClick={handleConfirmReject}
               disabled={!rejectReason.trim()}
             >

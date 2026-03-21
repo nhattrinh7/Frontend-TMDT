@@ -44,14 +44,14 @@ export default function UserSearch({
   }, [value, debounceMs])
 
   return (
-    <div className="relative w-full max-w-md">
-      <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+    <div className='relative w-full max-w-md'>
+      <Search className='absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
       <Input
-        type="text"
+        type='text'
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="pl-10"
+        className='pl-10'
       />
     </div>
   )

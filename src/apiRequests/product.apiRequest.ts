@@ -10,6 +10,8 @@ import {
   AdminProductsPaginatedResponse,
   ProductToSold,
   ProductReviewsPaginatedResponse,
+  ShopReviewsPaginatedResponse,
+  ReportedReviewsPaginatedResponse,
 } from '~/zodSchema/product.schema'
 
 // Upload áº£nh cho sáº£n pháº©m, áº£nh gÃ¬ cÅ©ng dÃ¹ng api nÃ y, cÅ©ng chá»‰ lÃ  gá»­i áº£nh lÃªn Ä‘á»ƒ láº¥y vá» url thÃ´i
@@ -191,7 +193,14 @@ export const getProductReviewsPaginatedAPI = async (params: GetProductReviewsPar
 }
 
 // BÃ¡o cÃ¡o review vi pháº¡m
-export const reportReviewAPI = async (reviewId: string, body: { reason: string; description?: string }) => {
+export type ReportReviewBody = {
+  reason: string
+  description?: string
+  reporterUsername: string
+  reporterAvatar?: string | null
+}
+
+export const reportReviewAPI = async (reviewId: string, body: ReportReviewBody) => {
   const response = await http.post<ApiResponse<void>>(
     `/api/v1/reviews/${reviewId}/report`,
     body
@@ -199,9 +208,25 @@ export const reportReviewAPI = async (reviewId: string, body: { reason: string; 
   return response.data
 }
 
-// Tạo review cho sản phẩm
+export type CreateReviewReplyBody = {
+  shopId: string
+  content: string
+}
+
+export const createReviewReplyAPI = async (reviewId: string, body: CreateReviewReplyBody) => {
+  const response = await http.post<ApiResponse<void>>(
+    `/api/v1/reviews/${reviewId}/reply`,
+    body
+  )
+  return response.data
+}
+
+// T?o review cho s?n ph?m
 export type CreateProductReviewBody = {
   orderId: string
+  buyerUsername: string
+  buyerAvatar?: string | null
+  productName: string
   sku: string
   rating: 1 | 2 | 3 | 4 | 5
   content?: string
@@ -216,4 +241,63 @@ export const createProductReviewAPI = async (productId: string, body: CreateProd
   )
   return response.data
 }
+
+
+// ========== Shop review APIs ==========
+export type GetShopReviewsParams = {
+  shopId: string
+  page?: number
+  limit?: number
+  ratings?: number[]
+  search?: string
+  startDate?: string
+  endDate?: string
+}
+
+export const getShopReviewsPaginatedAPI = async (params: GetShopReviewsParams) => {
+  const searchParams = new URLSearchParams()
+  if (params.page) searchParams.append('page', params.page.toString())
+  if (params.limit) searchParams.append('limit', params.limit.toString())
+  if (params.search) searchParams.append('search', params.search)
+  if (params.ratings && params.ratings.length > 0) searchParams.append('ratings', params.ratings.join(','))
+  if (params.startDate) searchParams.append('startDate', params.startDate)
+  if (params.endDate) searchParams.append('endDate', params.endDate)
+
+  const queryString = searchParams.toString()
+  const url = `/api/v1/products/shop/${params.shopId}/reviews${queryString ? `?${queryString}` : ''}`
+
+  const response = await http.get<ApiResponse<ShopReviewsPaginatedResponse>>(url)
+  return response.data
+}
+
+export type GetReportedReviewsParams = {
+  page?: number
+  limit?: number
+  isHidden?: boolean
+}
+
+export const getReportedReviewsPaginatedAPI = async (params: GetReportedReviewsParams) => {
+  const searchParams = new URLSearchParams()
+  if (params.page) searchParams.append('page', params.page.toString())
+  if (params.limit) searchParams.append('limit', params.limit.toString())
+  if (params.isHidden !== undefined) searchParams.append('isHidden', params.isHidden.toString())
+
+  const queryString = searchParams.toString()
+  const url = `/api/v1/products/reviews/reported${queryString ? `?${queryString}` : ''}`
+
+  const response = await http.get<ApiResponse<ReportedReviewsPaginatedResponse>>(url)
+  return response.data
+}
+
+export const hideReviewAPI = async (reviewId: string) => {
+  const response = await http.patch<ApiResponse<void>>(
+    `/api/v1/products/reviews/${reviewId}/hide`
+  )
+  return response.data
+}
+
+
+
+
+
 
