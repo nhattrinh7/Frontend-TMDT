@@ -47,6 +47,10 @@ export interface SearchResponse {
   }
 }
 
+export interface TodayRecommendationsResponse {
+  items: SearchProduct[]
+}
+
 /**
  * Search API params interface
  */

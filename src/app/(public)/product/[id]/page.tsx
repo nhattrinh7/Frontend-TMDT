@@ -14,6 +14,7 @@ import { ReviewList } from '~/components/products/ReviewList'
 import {
   getProductToSoldAPI,
   getProductReviewsPaginatedAPI,
+  trackProductViewAPI,
 } from '~/apiRequests/product.apiRequest'
 import { addToCartAPI } from '~/apiRequests/user.apiRequest'
 import { useBoundStore } from '~/zustand/store'
@@ -30,6 +31,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '~/components/ui/pagination'
+import { formatRating } from '~/lib/utils'
 
 export default function ProductDetailPage() {
   const params = useParams()
@@ -101,6 +103,11 @@ export default function ProductDetailPage() {
       fetchReviews()
     }
   }, [productId, currentPage, selectedRating, hasMedia])
+
+  useEffect(() => {
+    if (!user || !productId) return
+    trackProductViewAPI(productId).catch(() => {})
+  }, [user, productId])
 
   const handleRatingChange = (rating: number | null) => {
     setSelectedRating(rating)
@@ -238,7 +245,7 @@ export default function ProductDetailPage() {
                 <div className='flex items-center gap-6 py-2 border-b border-slate-100 text-sm'>
                   <div className='flex items-center gap-1 border-r border-slate-200 pr-4'>
                     <span className='underline text-emerald-600 font-medium'>
-                      {product.ratingAvg.toFixed(1)}
+                      {formatRating(product.ratingAvg)}
                     </span>
                     <div className='flex text-emerald-600'>
                       {[1, 2, 3, 4, 5].map((star) => (

@@ -152,10 +152,10 @@ export default function Header() {
             </Link>
           </div>
           <div className='flex items-center gap-2 lg:gap-4'>
-            <button className='hover:text-[#ABD1C6] transition-colors flex items-center gap-1.5 font-semibold'>
+            {/* <button className='hover:text-[#ABD1C6] transition-colors flex items-center gap-1.5 font-semibold'>
               <Globe className='w-4 h-4' />
               <span className='text-xs lg:text-sm'>Tiếng Việt</span>
-            </button>
+            </button> */}
             {/* <ModeToggle /> */}
             <div className='h-4 w-px bg-white/30'></div>
             

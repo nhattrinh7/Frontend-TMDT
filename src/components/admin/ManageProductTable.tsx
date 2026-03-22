@@ -14,7 +14,7 @@ import { Button } from '~/components/ui/button'
 import { Badge } from '~/components/ui/badge'
 import { ChevronDown, ChevronUp, Star } from 'lucide-react'
 import { AdminProduct } from '~/zodSchema/product.schema'
-import { formatPrice } from '~/lib/utils'
+import { formatPrice, formatRating } from '~/lib/utils'
 
 type ManageProductTableProps = {
   products: AdminProduct[]
@@ -137,7 +137,7 @@ export default function ManageProductTable({
                   <div className='flex items-center gap-1'>
                     <Star className='size-3 fill-yellow-400 text-yellow-400' />
                     <span className='text-sm'>
-                      {product.ratingAvg.toFixed(1)} ({product.ratingCount})
+                      {formatRating(product.ratingAvg)} ({product.ratingCount})
                     </span>
                   </div>
                 </TableCell>
@@ -234,3 +234,4 @@ export default function ManageProductTable({
     </div>
   )
 }
+

@@ -13,6 +13,7 @@ import {
   ShopReviewsPaginatedResponse,
   ReportedReviewsPaginatedResponse,
 } from '~/zodSchema/product.schema'
+import { TodayRecommendationsResponse } from '~/zodSchema/search.schema'
 
 // Upload áº£nh cho sáº£n pháº©m, áº£nh gÃ¬ cÅ©ng dÃ¹ng api nÃ y, cÅ©ng chá»‰ lÃ  gá»­i áº£nh lÃªn Ä‘á»ƒ láº¥y vá» url thÃ´i
 export const uploadImageAPI = async (file: File) => {
@@ -165,6 +166,27 @@ export const getProductToSoldAPI = async (productId: string) => {
   const response = await http.get<ApiResponse<ProductToSold>>(
     `/api/v1/products/${productId}/to-sold`
   )
+  return response.data
+}
+
+// Ghi nhận user vừa xem sản phẩm
+export const trackProductViewAPI = async (productId: string) => {
+  const response = await http.post<ApiResponse<void>>(
+    '/api/v1/recommendations/views',
+    { productId }
+  )
+  return response.data
+}
+
+// Gợi ý hôm nay
+export const getTodayRecommendationsAPI = async (limit = 25) => {
+  const searchParams = new URLSearchParams()
+  if (limit) searchParams.append('limit', limit.toString())
+
+  const queryString = searchParams.toString()
+  const url = `/api/v1/recommendations${queryString ? `?${queryString}` : ''}`
+
+  const response = await http.get<ApiResponse<TodayRecommendationsResponse>>(url)
   return response.data
 }
 

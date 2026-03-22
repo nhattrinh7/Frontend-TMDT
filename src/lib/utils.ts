@@ -38,3 +38,9 @@ export const formatPrice = (price: number): string => {
     currency: 'VND',
   }).format(price)
 }
+
+export const formatRating = (rating: number | null | undefined): string => {
+  if (!Number.isFinite(rating)) return '0.0'
+  const safeRating = Math.max(0, rating as number)
+  return safeRating.toFixed(1)
+}

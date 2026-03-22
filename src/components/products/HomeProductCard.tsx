@@ -4,13 +4,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
 import { formatRating } from '~/lib/utils'
+import { Badge } from '~/components/ui/badge'
 import { SearchProduct } from '~/zodSchema/search.schema'
 
-interface ProductCardProps {
+interface HomeProductCardProps {
   product: SearchProduct
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function HomeProductCard({ product }: HomeProductCardProps) {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -36,6 +37,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           fill
           className='object-cover group-hover:scale-105 transition-transform'
         />
+        <Badge className='absolute left-2 top-2 bg-linear-to-r from-[#FF6B35] to-[#FF5722] text-white shadow-md'>
+          Gợi ý
+        </Badge>
       </div>
 
       <div className='p-2 flex flex-col flex-1'>
@@ -44,7 +48,6 @@ export default function ProductCard({ product }: ProductCardProps) {
         </h3>
 
         <div className='mt-auto pt-1'>
-          {/* Rating and Buy Count */}
           <div className='flex items-center gap-2 mb-3'>
             <div className='flex items-center gap-1.5 bg-amber-50 px-2 py-1 rounded-xl w-max'>
               <Star className='w-4 h-4 fill-amber-400 text-amber-400' />
@@ -58,7 +61,6 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           </div>
 
-          {/* Price */}
           <div className='flex items-baseline gap-1 mt-1.5'>
             {product.price.min === product.price.max ? (
               <p className='text-emerald-700 font-bold text-base lg:text-lg tracking-tight'>

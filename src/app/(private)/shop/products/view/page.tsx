@@ -30,7 +30,7 @@ import { Separator } from '~/components/ui/separator'
 import { toast } from 'sonner'
 import { ProductDetail } from '~/zodSchema/product.schema'
 import { getProductByIdAPI } from '~/apiRequests/product.apiRequest'
-import { formatPrice } from '~/lib/utils'
+import { formatPrice, formatRating } from '~/lib/utils'
 
 function ProductViewLoading() {
   return (
@@ -384,7 +384,7 @@ function ProductViewContent() {
                     <span className="text-sm">Đánh giá</span>
                   </div>
                   <p className="mt-1 font-semibold">
-                    {product.ratingAvg.toFixed(1)} / 5{' '}
+                    {formatRating(product.ratingAvg)} / 5{' '}
                     <span className="text-sm font-normal text-muted-foreground">
                       ({product.ratingCount} lượt)
                     </span>
