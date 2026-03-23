@@ -15,9 +15,9 @@ interface ConversationItemProps {
 }
 
 export function ConversationItem({ conversation, isActive, onClick, viewerType }: ConversationItemProps) {
-  const displayName = viewerType === SENDER_TYPE.USER 
-    ? (conversation.shopName || `Shop ${conversation.shopId.slice(0, 6)}`)
-    : (conversation.userName || `User ${conversation.userId.slice(0, 6)}`)
+  const displayName = viewerType === SENDER_TYPE.USER
+    ? (conversation.shopName || 'Shop')
+    : (conversation.userName || 'Người dùng')
   
   const displayAvatar = viewerType === SENDER_TYPE.USER ? conversation.shopLogo : conversation.userAvatar
 

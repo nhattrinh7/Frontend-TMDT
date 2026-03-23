@@ -1,8 +1,9 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import { getTodayRecommendationsAPI } from '~/apiRequests/product.apiRequest'
+import HomeCategorySection from '~/components/home/HomeCategorySection'
 import HomeProductCard from '~/components/products/HomeProductCard'
 import { Skeleton } from '~/components/ui/skeleton'
 import { RECOMMENDATION_LIMIT } from '~/constants/home.constants'
@@ -30,6 +31,8 @@ export default function HomePage() {
 
   return (
     <div className='min-h-screen bg-gray-50'>
+      <HomeCategorySection />
+
       {/* Recommendations Section */}
       <section className='w-full py-12 md:py-16'>
         <div className='w-full max-w-400 mx-auto px-4 lg:px-6'>
@@ -60,7 +63,7 @@ export default function HomePage() {
             </div>
           ) : (
             <div className='py-16 text-center text-slate-500'>
-              Chưa có sản phẩm gợi ý phù hợp
+              Chưa có sản phẩm
             </div>
           )}
         </div>

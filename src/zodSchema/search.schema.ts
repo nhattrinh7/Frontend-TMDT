@@ -47,6 +47,13 @@ export interface SearchResponse {
   }
 }
 
+export interface RootCategoryProductsResponse {
+  products: {
+    items: SearchProduct[]
+    meta: PaginationMeta
+  }
+}
+
 export interface TodayRecommendationsResponse {
   items: SearchProduct[]
 }

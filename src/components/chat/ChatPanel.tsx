@@ -131,7 +131,7 @@ export function ChatPanel({ onClose, onMinimize, initialShopId, initialShopName 
       } else {
         // New conversation (lazy creation) - chỉ khi gửi tin nhắn đầu tiên mới tạo conversation mới
         // cụ thể xem dưới hàm handleSendText()
-        setNewChatShop({ shopId: initialShopId, shopName: initialShopName || `Shop ${initialShopId.slice(0, 6)}` })
+        setNewChatShop({ shopId: initialShopId, shopName: initialShopName || 'Shop' })
         setActiveConversationId(null)
         setMessages([])
       }
@@ -340,7 +340,7 @@ export function ChatPanel({ onClose, onMinimize, initialShopId, initialShopName 
 
   const activeConversation = conversations.find(c => c.id === activeConversationId)
   const showChatArea = activeConversationId || newChatShop
-  const chatTitle = newChatShop?.shopName || activeConversation?.shopName || `Shop ${activeConversation?.shopId?.slice(0, 6) || ''}`
+  const chatTitle = newChatShop?.shopName || activeConversation?.shopName || 'Shop'
 
   return (
     <div

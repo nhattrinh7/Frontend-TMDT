@@ -118,6 +118,7 @@ export function ChatSidebar() {
     if (!shop) return
     try {
       const res = await getConversationsAPI({ type: 'shop', shopId: shop.id })
+      console.log('res', res)
       if (res && 'data' in res) {
         setConversations(((res as unknown) as { data: ChatConversation[] }).data || [])
       }
@@ -191,6 +192,7 @@ export function ChatSidebar() {
   }
 
   const activeConv = conversations.find(c => c.id === activeConversationId)
+  const activeConvName = activeConv?.userName || 'Người dùng'
 
   return (
     <>
@@ -203,11 +205,11 @@ export function ChatSidebar() {
               <div className='flex items-center gap-2'>
                 <Avatar className='size-6 border border-white/20'>
                   <AvatarFallback className='bg-white/20 text-white text-xs'>
-                    {(activeConv.userName || 'U')[0]}
+                    {activeConvName[0]}
                   </AvatarFallback>
                 </Avatar>
                 <span className='text-sm font-medium truncate max-w-[140px]'>
-                  {activeConv.userName || `User ${activeConv.userId.slice(0, 6)}`}
+                  {activeConvName}
                 </span>
               </div>
               <div className='flex items-center gap-1'>
