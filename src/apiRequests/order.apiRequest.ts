@@ -193,6 +193,29 @@ export interface UserOrder {
   cancelReason?: string | null
   orderItems: UserOrderItem[]
 }
+
+export interface WarehouseHistoryItem {
+  name: string
+  address: string
+  time: string
+}
+
+export interface ShipperHistory {
+  name: string
+  phoneNumber: string
+  time: string
+}
+
+export interface OrderDeliveryHistory {
+  id: string
+  orderId: string
+  orderedAt?: string | null
+  dispatchToCarrierAt?: string | null
+  deliverySuccessAt?: string | null
+  deliveryFailAt?: string | null
+  warehouses?: WarehouseHistoryItem[] | null
+  shipper?: ShipperHistory | null
+}
 export interface CursorMeta {
   nextCursor: string | null
   hasMore: boolean
@@ -211,6 +234,13 @@ export const getUserOrdersPaginatedAPI = async (
 
   const response = await http.get<ApiResponse<UserOrder[]> & { meta: CursorMeta }>(
     `/api/v1/orders/users/${userId}?${searchParams.toString()}`
+  )
+  return response
+}
+
+export const getOrderDeliveryHistoryAPI = async (orderId: string) => {
+  const response = await http.get<ApiResponse<OrderDeliveryHistory>>(
+    `/api/v1/orders/${orderId}/delivery-history`
   )
   return response
 }

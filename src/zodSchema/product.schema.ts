@@ -1,6 +1,6 @@
 ﻿import { z } from 'zod'
 
-// Response tá»« API upload áº£nh/video
+// Response từ API upload ảnh/video
 export const UploadMediaResponseSchema = z.object({
   url: z.url(),
 })
@@ -8,55 +8,55 @@ export type UploadMediaResponse = z.infer<typeof UploadMediaResponseSchema>
 
 
 export const ProductVariantInputSchema = z.object({
-  id: z.string().optional(), // Optional - cÃ³ khi update, khÃ´ng cÃ³ khi táº¡o má»›i
-  sku: z.string().min(1, 'SKU khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
-  price: z.number().min(0, 'GiÃ¡ pháº£i lá»›n hÆ¡n hoáº·c báº±ng 0'),
-  stock: z.number().min(0, 'Sá»‘ lÆ°á»£ng pháº£i lá»›n hÆ¡n hoáº·c báº±ng 0'),
+  id: z.string().optional(), // Optional - có khi update, không có khi tạo mới
+  sku: z.string().min(1, 'SKU không được để trống'),
+  price: z.number().min(0, 'Giá phải lớn hơn hoặc bằng 0'),
+  stock: z.number().min(0, 'Số lượng phải lớn hơn hoặc bằng 0'),
   image: z.url().optional().nullable(),
-  optionValues: z.array(z.string()).optional(), // Máº£ng cÃ¡c giÃ¡ trá»‹ option theo thá»© tá»± classifications
+  optionValues: z.array(z.string()).optional(), // Mảng các giá trị option theo thứ tự classifications
 })
 export type ProductVariantInput = z.infer<typeof ProductVariantInputSchema>
 
 
 export const ClassificationOptionSchema = z.object({
-  id: z.string(), // ID táº¡m thá»i cho frontend (khÃ´ng gá»­i lÃªn BE)
-  value: z.string().min(1, 'GiÃ¡ trá»‹ khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
+  id: z.string(), // ID tạm thời cho frontend (không gửi lên BE)
+  value: z.string().min(1, 'Giá trị không được để trống'),
 })
 export type ClassificationOption = z.infer<typeof ClassificationOptionSchema>
 
 export const ClassificationSchema = z.object({
-  id: z.string(), // ID táº¡m thá»i cho frontend
-  name: z.string().min(1, 'TÃªn phÃ¢n loáº¡i khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
-  options: z.array(ClassificationOptionSchema).min(1, 'Cáº§n Ã­t nháº¥t 1 tÃ¹y chá»n'),
+  id: z.string(), // ID tạm thời cho frontend
+  name: z.string().min(1, 'Tên phân loại không được để trống'),
+  options: z.array(ClassificationOptionSchema).min(1, 'Cần ít nhất 1 tùy chọn'),
 })
 export type Classification = z.infer<typeof ClassificationSchema>
 
 
 
 export const CreateProductSchema = z.object({
-  name: z.string().min(1, 'TÃªn sáº£n pháº©m khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
-  descriptions: z.string().min(1, 'MÃ´ táº£ sáº£n pháº©m khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
+  name: z.string().min(1, 'Tên sản phẩm không được để trống'),
+  descriptions: z.string().min(1, 'Mô tả sản phẩm không được để trống'),
   categoryId: z.string(),
   mainImage: z.string(),
-  galleryImage: z.array(z.string()).max(5, 'Tá»‘i Ä‘a 5 áº£nh phá»¥').optional().nullable(),
+  galleryImage: z.array(z.string()).max(5, 'Tối đa 5 ảnh phụ').optional().nullable(),
   video: z.string().optional().nullable(),
-  unit: z.string().min(1, 'ÄÆ¡n vá»‹ khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
+  unit: z.string().min(1, 'Đơn vị không được để trống'),
   attributes: z.record(z.string(), z.string()),
-  variants: z.array(ProductVariantInputSchema).min(1, 'Cáº§n Ã­t nháº¥t 1 SKU'),
+  variants: z.array(ProductVariantInputSchema).min(1, 'Cần ít nhất 1 SKU'),
 })
 export type CreateProductInput = z.infer<typeof CreateProductSchema>
 
-// Schema cho classification gá»­i lÃªn API (dÃ¹ng cho táº¡o sáº£n pháº©m)
+// Schema cho classification gửi lên API (dùng cho tạo sản phẩm)
 export const ClassificationInputSchema = z.object({
-  name: z.string().min(1, 'TÃªn phÃ¢n loáº¡i khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
-  values: z.array(z.string().min(1)).min(1, 'Cáº§n Ã­t nháº¥t 1 giÃ¡ trá»‹'),
+  name: z.string().min(1, 'Tên phân loại không được để trống'),
+  values: z.array(z.string().min(1)).min(1, 'Cần ít nhất 1 giá trị'),
 })
 export type ClassificationInput = z.infer<typeof ClassificationInputSchema>
 
-// Schema cho dá»¯ liá»‡u gá»­i lÃªn API
+// Schema cho dữ liệu gửi lên API
 export const CreateProductBodySchema = CreateProductSchema.extend({
   shopId: z.uuid(),
-  classifications: z.array(ClassificationInputSchema).optional(), // PhÃ¢n loáº¡i hÃ ng
+  classifications: z.array(ClassificationInputSchema).optional(), // Phân loại hàng
 })
 export type CreateProductBody = z.infer<typeof CreateProductBodySchema>
 
@@ -100,28 +100,28 @@ export const ProductSchema = z.object({
 })
 export type Product = z.infer<typeof ProductSchema>
 
-// ========== Schemas cho trang Quáº£n lÃ½ sáº£n pháº©m ==========
+// ========== Schemas cho trang Quản lý sản phẩm ==========
 
-// Variant vá»›i trÆ°á»ng stock vÃ  soldQuantity (láº¥y tá»« inventory service)
+// Variant với trường stock và soldQuantity (lấy từ inventory service)
 export const ProductVariantWithStockSchema = ProductVariantSchema.extend({
   stock: z.number().optional().default(0),
   soldQuantity: z.number().optional().default(0),
 })
 export type ProductVariantWithStock = z.infer<typeof ProductVariantWithStockSchema>
 
-// Product vá»›i variants Ä‘áº§y Ä‘á»§ (bao gá»“m stock)
+// Product với variants đầy đủ (bao gồm stock)
 export const ProductWithVariantsSchema = ProductSchema.extend({
   variants: z.array(ProductVariantWithStockSchema),
 })
 export type ProductWithVariants = z.infer<typeof ProductWithVariantsSchema>
 
-// Schema cho response API getProductById (bao gá»“m category name vÃ  stock/soldQuantity)
+// Schema cho response API getProductById (bao gồm category name và stock/soldQuantity)
 export const ProductDetailSchema = ProductSchema.extend({
   variants: z.array(ProductVariantWithStockSchema),
   category: z.object({
     name: z.string(),
   }).optional(),
-  classifications: z.array(ClassificationInputSchema).optional(), // ThÃªm classifications
+  classifications: z.array(ClassificationInputSchema).optional(), // Thêm classifications
 })
 export type ProductDetail = z.infer<typeof ProductDetailSchema>
 
@@ -134,43 +134,43 @@ export const PaginationMetaSchema = z.object({
 })
 export type PaginationMeta = z.infer<typeof PaginationMetaSchema>
 
-// Response tá»« API products paginated
+// Response từ API products paginated
 export const ProductsPaginatedResponseSchema = z.object({
   items: z.array(ProductWithVariantsSchema),
   meta: PaginationMetaSchema,
 })
 export type ProductsPaginatedResponse = z.infer<typeof ProductsPaginatedResponseSchema>
 
-// Schema cho form cáº­p nháº­t sáº£n pháº©m
+// Schema cho form cập nhật sản phẩm
 export const UpdateProductSchema = z.object({
-  name: z.string().min(1, 'TÃªn sáº£n pháº©m khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
-  descriptions: z.string().min(1, 'MÃ´ táº£ sáº£n pháº©m khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
-  mainImage: z.string().min(1, 'áº¢nh chÃ­nh khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
-  galleryImage: z.array(z.string()).max(5, 'Tá»‘i Ä‘a 5 áº£nh phá»¥').optional().nullable(),
+  name: z.string().min(1, 'Tên sản phẩm không được để trống'),
+  descriptions: z.string().min(1, 'Mô tả sản phẩm không được để trống'),
+  mainImage: z.string().min(1, 'Ảnh chính không được để trống'),
+  galleryImage: z.array(z.string()).max(5, 'Tối đa 5 ảnh phụ').optional().nullable(),
   video: z.string().optional().nullable(),
-  unit: z.string().min(1, 'ÄÆ¡n vá»‹ khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
+  unit: z.string().min(1, 'Đơn vị không được để trống'),
   attributes: z.record(z.string(), z.string()),
-  classifications: z.array(ClassificationInputSchema).optional(), // ThÃªm classifications
+  classifications: z.array(ClassificationInputSchema).optional(), // Thêm classifications
   variants: z.array(
     z.object({
-      id: z.uuid().optional(), // Optional - variant má»›i khÃ´ng cÃ³ id
-      sku: z.string().min(1, 'SKU khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng'),
-      price: z.number().min(0, 'GiÃ¡ pháº£i lá»›n hÆ¡n hoáº·c báº±ng 0'),
-      stock: z.number().min(0, 'Sá»‘ lÆ°á»£ng pháº£i lá»›n hÆ¡n hoáº·c báº±ng 0'),
+      id: z.uuid().optional(), // Optional - variant mới không có id
+      sku: z.string().min(1, 'SKU không được để trống'),
+      price: z.number().min(0, 'Giá phải lớn hơn hoặc bằng 0'),
+      stock: z.number().min(0, 'Số lượng phải lớn hơn hoặc bằng 0'),
       image: z.string().optional().nullable(),
-      optionValues: z.array(z.string()).optional(), // ThÃªm optionValues
+      optionValues: z.array(z.string()).optional(), // Thêm optionValues
     })
   ),
 })
 export type UpdateProductInput = z.infer<typeof UpdateProductSchema>
 
-// Schema cho body gá»­i lÃªn API update
+// Schema cho body gửi lên API update
 export const UpdateProductBodySchema = UpdateProductSchema.extend({
   productId: z.uuid(),
 })
 export type UpdateProductBody = z.infer<typeof UpdateProductBodySchema>
 
-// ========== Schemas cho trang Admin duyá»‡t sáº£n pháº©m ==========
+// ========== Schemas cho trang Admin duyệt sản phẩm ==========
 
 export const AdminProductSchema = ProductSchema.extend({
   variants: z.array(ProductVariantSchema),
@@ -192,7 +192,7 @@ export const AdminProductsPaginatedResponseSchema = z.object({
 })
 export type AdminProductsPaginatedResponse = z.infer<typeof AdminProductsPaginatedResponseSchema>
 
-// ========== Schemas cho trang Chi tiáº¿t sáº£n pháº©m (Public) ==========
+// ========== Schemas cho trang Chi tiết sản phẩm (Public) ==========
 
 // Variant cho API getProductToSold
 export const ProductVariantToSoldSchema = z.object({
@@ -260,7 +260,7 @@ export const ProductReviewSchema = z.object({
 })
 export type ProductReview = z.infer<typeof ProductReviewSchema>
 
-// Schema cho response API getProductReviews vá»›i pagination
+// Schema cho response API getProductReviews với pagination
 export const ProductReviewsPaginatedResponseSchema = z.object({
   items: z.array(ProductReviewSchema),
   meta: PaginationMetaSchema,
@@ -326,4 +326,5 @@ export const ReportedReviewsPaginatedResponseSchema = z.object({
   meta: PaginationMetaSchema,
 })
 export type ReportedReviewsPaginatedResponse = z.infer<typeof ReportedReviewsPaginatedResponseSchema>
+
 

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 import { getTodayRecommendationsAPI } from '~/apiRequests/product.apiRequest'
 import HomeProductCard from '~/components/products/HomeProductCard'
@@ -64,30 +63,6 @@ export default function HomePage() {
               Chưa có sản phẩm gợi ý phù hợp
             </div>
           )}
-        </div>
-      </section>
-
-      {/* Newsletter Section */}
-      <section className='w-full py-16 md:py-20 bg-linear-to-r from-[#004643] to-[#005d58]'>
-        <div className='w-full max-w-400 mx-auto px-4 lg:px-6'>
-          <div className='text-center text-white'>
-            <h2 className='text-3xl md:text-4xl font-bold mb-4'>
-              Đăng Ký Nhận Tin Khuyến Mãi
-            </h2>
-            <p className='text-lg md:text-xl mb-8 text-white/80'>
-              Nhận thông tin về các chương trình khuyến mãi và sản phẩm mới nhất
-            </p>
-            <div className='max-w-2xl mx-auto flex flex-col sm:flex-row gap-4'>
-              <input
-                type='email'
-                placeholder='Nhập email của bạn...'
-                className='flex-1 px-6 py-4 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#FF6B35]'
-              />
-              <button className='bg-linear-to-r from-[#FF6B35] to-[#FF5722] hover:from-[#FF5722] hover:to-[#FF4500] text-white px-8 py-4 rounded-lg font-bold shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 whitespace-nowrap'>
-                Đăng Ký Ngay
-              </button>
-            </div>
-          </div>
         </div>
       </section>
     </div>

@@ -8,6 +8,7 @@ import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getUserOrdersPaginatedAPI, cancelOrderAPI } from '~/apiRequests/order.apiRequest'
 import type { UserOrder } from '~/apiRequests/order.apiRequest'
 import OrderCard from '~/app/(private)/profile/OrderCard'
+import OrderDeliveryTimelineDialog from '~/app/(private)/profile/OrderDeliveryTimelineDialog'
 
 const ORDER_TABS = [
   { id: 'AWAITING_CONFIRMATION', label: 'Chờ xác nhận' },
@@ -31,6 +32,8 @@ export default function MyOrders() {
   const [hasMore, setHasMore] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false)
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
 
   const buildQueryParams = (status: OrderStatusTab) => {
     if (status === 'RETURNED') {
@@ -122,6 +125,11 @@ export default function MyOrders() {
     }
   }
 
+  const handleOpenTimeline = (orderId: string) => {
+    setSelectedOrderId(orderId)
+    setIsTimelineOpen(true)
+  }
+
   return (
     <div className='bg-white rounded-2xl shadow-lg overflow-hidden'>
       {/* Header */}
@@ -174,6 +182,7 @@ export default function MyOrders() {
                 order={order}
                 activeStatus={activeStatus}
                 onCancelOrder={handleCancelOrder}
+                onViewTimeline={handleOpenTimeline}
               />
             ))}
 
@@ -186,6 +195,12 @@ export default function MyOrders() {
           </div>
         )}
       </div>
+
+      <OrderDeliveryTimelineDialog
+        open={isTimelineOpen}
+        onOpenChange={setIsTimelineOpen}
+        orderId={selectedOrderId}
+      />
     </div>
   )
 }

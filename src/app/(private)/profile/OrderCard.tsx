@@ -45,11 +45,19 @@ interface OrderCardProps {
   order: UserOrder
   activeStatus: string
   onCancelOrder: (orderId: string, reason?: string) => Promise<void>
+  onViewTimeline?: (orderId: string) => void
 }
 
-export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderCardProps) {
+export default function OrderCard({ order, activeStatus, onCancelOrder, onViewTimeline }: OrderCardProps) {
   const showCancelButton = activeStatus === 'AWAITING_CONFIRMATION' || activeStatus === 'PREPARING'
   const showReviewButton = activeStatus === 'DELIVERY_COMPLETED'
+  const showTimelineButton = [
+    'AWAITING_CONFIRMATION',
+    'PREPARING',
+    'SHIPPING',
+    'DELIVERY_COMPLETED',
+    'DELIVERY_FAILED',
+  ].includes(activeStatus)
   const user = useBoundStore((state) => state.user)
 
   const [isCancelling, setIsCancelling] = useState(false)
@@ -373,6 +381,14 @@ export default function OrderCard({ order, activeStatus, onCancelOrder }: OrderC
         </div>
 
         <div className='flex items-center gap-2'>
+          {showTimelineButton && (
+            <button
+              className='px-4 py-2 text-sm font-medium text-[#004643] border border-[#004643] rounded-lg hover:bg-[#f0f9f8] transition-all'
+              onClick={() => onViewTimeline?.(order.id)}
+            >
+              Xem tuyến đường
+            </button>
+          )}
           {showCancelButton && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
