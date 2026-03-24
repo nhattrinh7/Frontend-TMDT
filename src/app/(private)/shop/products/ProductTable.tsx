@@ -15,7 +15,7 @@ import {
 } from '~/components/ui/table'
 import { ProductWithVariants } from '~/zodSchema/product.schema'
 import { formatPrice } from '~/lib/utils'
-import DeleteProductDialog from './DeleteProductDialog'
+import DeleteProductDialog from '~/app/(private)/shop/products/DeleteProductDialog'
 
 type TabType = 'active' | 'rejected' | 'pending' | 'hidden'
 

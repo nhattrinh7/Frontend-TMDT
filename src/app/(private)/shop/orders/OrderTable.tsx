@@ -9,9 +9,9 @@ import { useDebounce } from 'use-debounce'
 import { formatPrice } from '~/lib/utils'
 import Image from 'next/image'
 import { Button } from '~/components/ui/button'
-import OrderDetailsDialog from '~/components/shop/OrderDetailsDialog'
-import DeliverOrderDialog from '~/components/shop/DeliverOrderDialog'
-import ConfirmOrderDialog from '~/components/shop/ConfirmOrderDialog'
+import OrderDetailsDialog from '~/app/(private)/shop/orders/OrderDetailsDialog'
+import DeliverOrderDialog from '~/app/(private)/shop/orders/DeliverOrderDialog'
+import ConfirmOrderDialog from '~/app/(private)/shop/orders/ConfirmOrderDialog'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 
 interface OrderTableProps {

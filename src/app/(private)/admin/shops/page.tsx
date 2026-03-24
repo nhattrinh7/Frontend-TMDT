@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { toast } from 'sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
-import ManageShopTable from '~/components/admin/ManageShopTable'
-import ShopSearch from '~/components/admin/ShopSearch'
-import ShopPagination from '~/components/admin/ShopPagination'
+import ManageShopTable from '~/app/(private)/admin/shops/ManageShopTable'
+import ShopSearch from '~/app/(private)/admin/shops/ShopSearch'
+import ShopPagination from '~/app/(private)/admin/shops/ShopPagination'
 import {
   getTopLevelCategoryIdsByRoleIdAPI,
   getShopsPaginatedAPI,

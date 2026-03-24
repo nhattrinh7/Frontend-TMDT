@@ -11,8 +11,8 @@ import {
   type AdminOrder,
   type OffsetMeta,
 } from '~/apiRequests/order.apiRequest'
-import AdminOrderTable, { type AdminOrderStatus } from '~/components/admin/AdminOrderTable'
-import AdminOrderPagination from '~/components/admin/AdminOrderPagination'
+import AdminOrderTable, { type AdminOrderStatus } from '~/app/(private)/admin/orders/AdminOrderTable'
+import AdminOrderPagination from '~/app/(private)/admin/orders/AdminOrderPagination'
 
 const DEFAULT_LIMIT = 10
 

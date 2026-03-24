@@ -29,7 +29,7 @@ import {
 import { Switch } from '~/components/ui/switch'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import { toast } from 'sonner'
-import { Address } from '~/app/(private)/profile/AddressManagement'
+import { Address } from '~/components/AddressManagement'
 import { closeShopAPI, toggleShopJoinSaleCampaignAPI, updateShopInfoAPI, updateShopLogoAPI } from '~/apiRequests/shop.apiRequest'
 import { getAddressesAPI } from '~/apiRequests/user.apiRequest'
 import { BankEnum } from '~/zodSchema/shop.schema'

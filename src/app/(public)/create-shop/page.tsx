@@ -26,7 +26,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import { Loader2, Plus, MapPin, Phone, X, Check } from 'lucide-react'
 import { BankEnum } from '~/zodSchema/shop.schema'
-import { Address } from '~/app/(private)/profile/AddressManagement'
+import { Address } from '~/components/AddressManagement'
 import { getAddressesAPI, addAddressAPI } from '~/apiRequests/user.apiRequest'
 import { getRootCategoriesAPI } from '~/apiRequests/category.apiRequest'
 import { Category } from '~/zodSchema/category.schema'

@@ -6,9 +6,9 @@ import Link from 'next/link'
 import { Button } from '~/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { toast } from 'sonner'
-import ProductTable from '~/components/products/ProductTable'
-import ProductSearch from '~/components/products/ProductSearch'
-import ProductPagination from '~/components/products/ProductPagination'
+import ProductTable from '~/app/(private)/shop/products/ProductTable'
+import ProductSearch from '~/app/(private)/shop/products/ProductSearch'
+import ProductPagination from '~/app/(private)/shop/products/ProductPagination'
 import {
   getShopProductsPaginatedAPI,
   hideProductAPI,

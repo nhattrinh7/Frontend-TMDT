@@ -9,7 +9,6 @@ import { getUserOrdersPaginatedAPI, type UserOrder } from '~/apiRequests/order.a
 import { formatPrice } from '~/lib/utils'
 import {
   Package,
-  MapPin,
   CreditCard,
   ArrowLeft,
   ShoppingBag,

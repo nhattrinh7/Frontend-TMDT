@@ -1,7 +1,7 @@
 'use client'
 
 import { SearchProduct } from '~/zodSchema/search.schema'
-import ProductCard from '~/components/products/ProductCard'
+import ProductCard from '~/app/(public)/shop/[shopId]/ProductCard'
 
 interface ProductResultsProps {
   products: SearchProduct[]

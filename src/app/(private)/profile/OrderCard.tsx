@@ -7,8 +7,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { requestReturnOrderItemAPI, type UserOrder } from '~/apiRequests/order.apiRequest'
 import { createProductReviewAPI, uploadImageAPI, uploadVideoAPI } from '~/apiRequests/product.apiRequest'
-import GalleryUploader from '~/components/products/GalleryUploader'
-import VideoUploader from '~/components/products/VideoUploader'
+import GalleryUploader from '~/app/(private)/shop/products/update/GalleryUploader'
+import VideoUploader from '~/app/(private)/shop/products/update/VideoUploader'
 import {
   AlertDialog,
   AlertDialogAction,

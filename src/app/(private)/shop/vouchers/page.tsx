@@ -45,8 +45,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '~/components/ui/alert-dialog'
-import { CreateVoucherForm } from '~/components/shop/CreateShopVoucherForm'
-import { UpdateShopVoucherForm } from '~/components/shop/UpdateShopVoucherForm'
+import { CreateVoucherForm } from '~/app/(private)/shop/vouchers/CreateShopVoucherForm'
+import { UpdateShopVoucherForm } from '~/app/(private)/shop/vouchers/UpdateShopVoucherForm'
 import {
   getShopVouchersAPI,
   softDeleteVoucherAPI,

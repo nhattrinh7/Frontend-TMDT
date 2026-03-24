@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '~/components/ui/tabs'
-import OrderTable from '~/components/shop/OrderTable'
+import OrderTable from '~/app/(private)/shop/orders/OrderTable'
 
 const TABS = [
   { value: 'AWAITING_CONFIRMATION', label: 'Chờ xác nhận' },

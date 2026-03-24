@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { getShopByOwnerIdAPI } from '~/apiRequests/shop.apiRequest'
 import { useBoundStore } from '~/zustand/store'
-import OrderTabs from '~/components/shop/OrderTabs'
+import OrderTabs from '~/app/(private)/shop/orders/OrderTabs'
 
 
 export default function OrdersPage() {

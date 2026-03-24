@@ -14,7 +14,7 @@ import {
   GetCartResType,
   CheckCartToAddResType
 } from '~/zodSchema/user.schema'
-import { Address } from '~/app/(private)/profile/AddressManagement'
+import { Address } from '~/components/AddressManagement'
 
 // GET PROFILE 
 export const getProfileAPI = async (userId: string,) => {

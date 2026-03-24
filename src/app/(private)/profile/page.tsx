@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { User, MapPin, Lock, KeyRound, ShoppingBag } from 'lucide-react'
 import PersonalInfo from '~/app/(private)/profile/PersonalInfo'
-import AddressManagement from '~/app/(private)/profile/AddressManagement'
+import AddressManagement from '~/components/AddressManagement'
 import ChangePassword from '~/app/(private)/profile/ChangePassword'
 import Passcode from '~/app/(private)/profile/Passcode'
 import MyOrders from '~/app/(private)/profile/MyOrders'

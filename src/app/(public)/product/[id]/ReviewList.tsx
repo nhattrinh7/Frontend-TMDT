@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { format } from 'date-fns'
 import { ProductReview } from '~/zodSchema/product.schema'
-import { ReportReviewModal } from '~/components/products/ReportReviewModal'
+import { ReportReviewModal } from '~/app/(public)/product/[id]/ReportReviewModal'
 
 interface ReviewListProps {
   reviews: ProductReview[];
@@ -16,7 +16,7 @@ function StarRating({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((star) => (
         <svg
           key={star}
-          className={`h-[14px] w-[14px] ${star <= rating ? 'text-emerald-600' : 'text-slate-300'}`}
+          className={`h-3.5 w-3.5 ${star <= rating ? 'text-emerald-600' : 'text-slate-300'}`}
           fill='currentColor'
           viewBox='0 0 20 20'
         >

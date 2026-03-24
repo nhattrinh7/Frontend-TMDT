@@ -4,10 +4,10 @@ import { useState, useEffect, useCallback } from 'react'
 import { Plus } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { toast } from 'sonner'
-import BrandTable from '~/components/admin/BrandTable'
-import BrandSearch from '~/components/admin/BrandSearch'
-import BrandPagination from '~/components/admin/BrandPagination'
-import BrandFormDialog from '~/components/admin/BrandFormDialog'
+import BrandTable from '~/app/(private)/admin/brands/BrandTable'
+import BrandSearch from '~/app/(private)/admin/brands/BrandSearch'
+import BrandPagination from '~/app/(private)/admin/brands/BrandPagination'
+import BrandFormDialog from '~/app/(private)/admin/brands/BrandFormDialog'
 import {
   getBrandsPaginatedAPI,
   createBrandAPI,

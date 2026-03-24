@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ChatBubble } from './ChatBubble'
-import { ChatPanel } from './ChatPanel'
+import { ChatBubble } from '~/components/chat/ChatBubble'
+import { ChatPanel } from '~/components/chat/ChatPanel'
 import { useChat } from '~/hooks/useChat'
 import { useBoundStore } from '~/zustand/store'
 

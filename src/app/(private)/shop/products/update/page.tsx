@@ -43,11 +43,11 @@ import {
   uploadImageAPI,
   uploadVideoAPI,
 } from '~/apiRequests/product.apiRequest'
-import VariantClassifications from '~/components/products/VariantClassifications'
-import SkuTable from '~/components/products/SkuTable'
-import ImageUploader from '~/components/products/ImageUploader'
-import GalleryUploader from '~/components/products/GalleryUploader'
-import VideoUploader from '~/components/products/VideoUploader'
+import VariantClassifications from '~/app/(private)/shop/products/update/VariantClassifications'
+import SkuTable from '~/app/(private)/shop/products/update/SkuTable'
+import ImageUploader from '~/app/(private)/shop/products/update/ImageUploader'
+import GalleryUploader from '~/app/(private)/shop/products/update/GalleryUploader'
+import VideoUploader from '~/app/(private)/shop/products/update/VideoUploader'
 
 function UpdateProductLoading() {
   return (

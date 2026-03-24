@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { toast } from 'sonner'
-import ShopTable from '~/components/admin/ShopTable'
-import ShopSearch from '~/components/admin/ShopSearch'
-import ShopPagination from '~/components/admin/ShopPagination'
+import ShopTable from '~/app/(private)/admin/shops/new/ReviewShopTable'
+import ShopSearch from '~/app/(private)/admin/shops/ShopSearch'
+import ShopPagination from '~/app/(private)/admin/shops/ShopPagination'
 import {
   getTopLevelCategoryIdsByRoleIdAPI,
   getShopsPaginatedAPI,

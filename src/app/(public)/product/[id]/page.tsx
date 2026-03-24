@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { ProductImageGallery } from '~/components/products/ProductImageGallery'
-import { VariantSelector } from '~/components/products/VariantSelector'
-import { QuantitySelector } from '~/components/products/QuantitySelector'
-import { ShopInfo } from '~/components/products/ShopInfo'
-import { ProductAttributesDisplay } from '~/components/products/ProductAttributesDisplay'
-import { ProductDescription } from '~/components/products/ProductDescription'
-import { ReviewFilters } from '~/components/products/ReviewFilters'
-import { ReviewList } from '~/components/products/ReviewList'
+import { ProductImageGallery } from '~/app/(public)/product/[id]/ProductImageGallery'
+import { VariantSelector } from '~/app/(public)/product/[id]/VariantSelector'
+import { QuantitySelector } from '~/app/(public)/product/[id]/QuantitySelector'
+import { ShopInfo } from '~/app/(public)/product/[id]/ShopInfo'
+import { ProductAttributesDisplay } from '~/app/(public)/product/[id]/ProductAttributesDisplay'
+import { ProductDescription } from '~/app/(public)/product/[id]/ProductDescription'
+import { ReviewFilters } from '~/app/(public)/product/[id]/ReviewFilters'
+import { ReviewList } from '~/app/(public)/product/[id]/ReviewList'
 import {
   getProductToSoldAPI,
   getProductReviewsPaginatedAPI,

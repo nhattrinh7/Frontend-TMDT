@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { toast } from 'sonner'
-import UserTable from '~/components/admin/UserTable'
-import UserSearch from '~/components/admin/UserSearch'
-import UserPagination from '~/components/admin/UserPagination'
+import UserTable from '~/app/(private)/admin/users/UserTable'
+import UserSearch from '~/app/(private)/admin/users/UserSearch'
+import UserPagination from '~/app/(private)/admin/users/UserPagination'
 import {
   getUsersPaginatedAPI,
   banUserAPI,

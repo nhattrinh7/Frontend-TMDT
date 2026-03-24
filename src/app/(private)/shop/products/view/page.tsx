@@ -34,8 +34,8 @@ import { formatPrice, formatRating } from '~/lib/utils'
 
 function ProductViewLoading() {
   return (
-    <div className="flex h-64 items-center justify-center">
-      <Loader2 className="size-8 animate-spin text-muted-foreground" />
+    <div className='flex h-64 items-center justify-center'>
+      <Loader2 className='size-8 animate-spin text-muted-foreground' />
     </div>
   )
 }
@@ -95,31 +95,31 @@ function ProductViewContent() {
 
     if (product.approveStatus === 'REJECTED') {
       return (
-        <Badge variant="destructive" className="gap-1">
-          <AlertCircle className="size-3" />
+        <Badge variant='destructive' className='gap-1'>
+          <AlertCircle className='size-3' />
           Không được duyệt
         </Badge>
       )
     }
     if (product.approveStatus === 'PENDING') {
       return (
-        <Badge variant="secondary" className="gap-1 bg-amber-100 text-amber-700">
-          <Loader2 className="size-3" />
+        <Badge variant='secondary' className='gap-1 bg-amber-100 text-amber-700'>
+          <Loader2 className='size-3' />
           Chờ duyệt
         </Badge>
       )
     }
     if (!product.isActive) {
       return (
-        <Badge variant="outline" className="gap-1">
-          <Package className="size-3" />
+        <Badge variant='outline' className='gap-1'>
+          <Package className='size-3' />
           Đang ẩn
         </Badge>
       )
     }
     return (
-      <Badge className="gap-1 bg-emerald-500 hover:bg-emerald-600">
-        <Package className="size-3" />
+      <Badge className='gap-1 bg-emerald-500 hover:bg-emerald-600'>
+        <Package className='size-3' />
         Đang hoạt động
       </Badge>
     )
@@ -159,10 +159,10 @@ function ProductViewContent() {
 
   if (isLoading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <Loader2 className="size-8 animate-spin text-primary" />
-          <span className="text-muted-foreground">Đang tải thông tin sản phẩm...</span>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='flex flex-col items-center gap-2'>
+          <Loader2 className='size-8 animate-spin text-primary' />
+          <span className='text-muted-foreground'>Đang tải thông tin sản phẩm...</span>
         </div>
       </div>
     )
@@ -170,8 +170,8 @@ function ProductViewContent() {
 
   if (!product) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Không tìm thấy sản phẩm</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Không tìm thấy sản phẩm</div>
       </div>
     )
   }
@@ -180,27 +180,27 @@ function ProductViewContent() {
   const allImages = [product.mainImage, ...(product.galleryImage || [])]
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className='flex flex-col gap-6 p-6'>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/shop/products">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="size-4" />
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-4'>
+          <Link href='/shop/products'>
+            <Button variant='ghost' size='icon'>
+              <ArrowLeft className='size-4' />
             </Button>
           </Link>
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-[#004643]">Chi tiết sản phẩm</h1>
+            <div className='flex items-center gap-3'>
+              <h1 className='text-2xl font-bold text-[#004643]'>Chi tiết sản phẩm</h1>
               {getStatusBadge()}
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className='text-sm text-muted-foreground'>
               Xem thông tin chi tiết của sản phẩm
             </p>
           </div>
         </div>
         <Link href={`/shop/products/update?id=${product.id}`}>
-          <Button className="gap-2 bg-[#004643] hover:bg-[#004643]/90">
+          <Button className='gap-2 bg-[#004643] hover:bg-[#004643]/90'>
             Chỉnh sửa sản phẩm
           </Button>
         </Link>
@@ -208,57 +208,57 @@ function ProductViewContent() {
 
       {/* Reject Reason Alert */}
       {product.approveStatus === 'REJECTED' && product.rejectReason && (
-        <div className="flex items-start gap-3 rounded-lg border border-destructive/50 bg-destructive/10 p-4">
-          <AlertCircle className="mt-0.5 size-5 shrink-0 text-destructive" />
+        <div className='flex items-start gap-3 rounded-lg border border-destructive/50 bg-destructive/10 p-4'>
+          <AlertCircle className='mt-0.5 size-5 shrink-0 text-destructive' />
           <div>
-            <p className="font-medium text-destructive">Lý do không được duyệt</p>
-            <p className="mt-1 text-sm text-destructive/80">{product.rejectReason}</p>
+            <p className='font-medium text-destructive'>Lý do không được duyệt</p>
+            <p className='mt-1 text-sm text-destructive/80'>{product.rejectReason}</p>
           </div>
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className='grid gap-6 lg:grid-cols-3'>
         {/* Left Column - Product Info */}
-        <div className="space-y-6 lg:col-span-2">
+        <div className='space-y-6 lg:col-span-2'>
           {/* Basic Info Card */}
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2">
-                <Package className="size-5 text-[#004643]" />
+            <CardHeader className='pb-3'>
+              <CardTitle className='flex items-center gap-2'>
+                <Package className='size-5 text-[#004643]' />
                 Thông tin cơ bản
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className='space-y-4'>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">
+                <label className='text-sm font-medium text-muted-foreground'>
                   Tên sản phẩm
                 </label>
-                <p className="mt-1 text-lg font-semibold">{product.name}</p>
+                <p className='mt-1 text-lg font-semibold'>{product.name}</p>
               </div>
 
               <Separator />
 
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Mô tả</label>
-                <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed">
+                <label className='text-sm font-medium text-muted-foreground'>Mô tả</label>
+                <p className='mt-1 whitespace-pre-wrap text-sm leading-relaxed'>
                   {product.descriptions}
                 </p>
               </div>
 
               <Separator />
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <label className='text-sm font-medium text-muted-foreground'>
                     Đơn vị tính
                   </label>
-                  <p className="mt-1 font-medium">{product.unit}</p>
+                  <p className='mt-1 font-medium'>{product.unit}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <label className='text-sm font-medium text-muted-foreground'>
                     Ngành hàng
                   </label>
-                  <p className="mt-1 font-medium">
+                  <p className='mt-1 font-medium'>
                     {product.category?.name || 'Chưa phân loại'}
                   </p>
                 </div>
@@ -267,18 +267,18 @@ function ProductViewContent() {
               <Separator />
 
               {/* Summary Stats */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="rounded-lg bg-muted/50 p-3 text-center">
-                  <p className="text-sm text-muted-foreground">Khoảng giá</p>
-                  <p className="mt-1 font-semibold text-[#004643]">{summary.priceRange}</p>
+              <div className='grid grid-cols-3 gap-4'>
+                <div className='rounded-lg bg-muted/50 p-3 text-center'>
+                  <p className='text-sm text-muted-foreground'>Khoảng giá</p>
+                  <p className='mt-1 font-semibold text-[#004643]'>{summary.priceRange}</p>
                 </div>
-                <div className="rounded-lg bg-muted/50 p-3 text-center">
-                  <p className="text-sm text-muted-foreground">Tổng tồn kho</p>
-                  <p className="mt-1 font-semibold text-[#004643]">{summary.totalStock}</p>
+                <div className='rounded-lg bg-muted/50 p-3 text-center'>
+                  <p className='text-sm text-muted-foreground'>Tổng tồn kho</p>
+                  <p className='mt-1 font-semibold text-[#004643]'>{summary.totalStock}</p>
                 </div>
-                <div className="rounded-lg bg-muted/50 p-3 text-center">
-                  <p className="text-sm text-muted-foreground">Đã bán</p>
-                  <p className="mt-1 font-semibold text-[#004643]">{summary.totalSold}</p>
+                <div className='rounded-lg bg-muted/50 p-3 text-center'>
+                  <p className='text-sm text-muted-foreground'>Đã bán</p>
+                  <p className='mt-1 font-semibold text-[#004643]'>{summary.totalSold}</p>
                 </div>
               </div>
             </CardContent>
@@ -287,24 +287,24 @@ function ProductViewContent() {
           {/* Attributes Card */}
           {product.attributes && Object.keys(product.attributes).length > 0 && (
             <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2">
-                  <Tag className="size-5 text-[#004643]" />
+              <CardHeader className='pb-3'>
+                <CardTitle className='flex items-center gap-2'>
+                  <Tag className='size-5 text-[#004643]' />
                   Thuộc tính sản phẩm
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className='grid gap-3 sm:grid-cols-2'>
                   {Object.entries(product.attributes as Record<string, string>).map(
                     ([key, value]) => (
                       <div
                         key={key}
-                        className="flex items-center justify-between rounded-lg border bg-muted/30 p-3"
+                        className='flex items-center justify-between rounded-lg border bg-muted/30 p-3'
                       >
-                        <span className="text-sm font-medium text-muted-foreground">
+                        <span className='text-sm font-medium text-muted-foreground'>
                           {key}
                         </span>
-                        <span className="font-medium">{value}</span>
+                        <span className='font-medium'>{value}</span>
                       </div>
                     )
                   )}
@@ -315,22 +315,22 @@ function ProductViewContent() {
 
           {/* Variants Table Card */}
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2">
-                <Package className="size-5 text-[#004643]" />
+            <CardHeader className='pb-3'>
+              <CardTitle className='flex items-center gap-2'>
+                <Package className='size-5 text-[#004643]' />
                 Danh sách phân loại hàng ({product.variants?.length || 0} SKU)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="rounded-lg border">
+              <div className='rounded-lg border'>
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead className="w-16">Ảnh</TableHead>
+                    <TableRow className='bg-muted/50'>
+                      <TableHead className='w-16'>Ảnh</TableHead>
                       <TableHead>SKU</TableHead>
-                      <TableHead className="text-right">Giá</TableHead>
-                      <TableHead className="text-right">Tồn kho</TableHead>
-                      <TableHead className="text-right">Đã bán</TableHead>
+                      <TableHead className='text-right'>Giá</TableHead>
+                      <TableHead className='text-right'>Tồn kho</TableHead>
+                      <TableHead className='text-right'>Đã bán</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -338,26 +338,26 @@ function ProductViewContent() {
                       <TableRow key={variant.id}>
                         <TableCell>
                           {variant.image ? (
-                            <div className="relative size-12 overflow-hidden rounded-md border">
+                            <div className='relative size-12 overflow-hidden rounded-md border'>
                               <Image
                                 src={variant.image}
                                 alt={variant.sku}
                                 fill
-                                className="object-cover"
+                                className='object-cover'
                               />
                             </div>
                           ) : (
-                            <div className="flex size-12 items-center justify-center rounded-md border bg-muted">
-                              <ImageIcon className="size-4 text-muted-foreground" />
+                            <div className='flex size-12 items-center justify-center rounded-md border bg-muted'>
+                              <ImageIcon className='size-4 text-muted-foreground' />
                             </div>
                           )}
                         </TableCell>
-                        <TableCell className="font-medium">{variant.sku}</TableCell>
-                        <TableCell className="text-right font-semibold text-[#004643]">
+                        <TableCell className='font-medium'>{variant.sku}</TableCell>
+                        <TableCell className='text-right font-semibold text-[#004643]'>
                           {formatPrice(variant.price)}
                         </TableCell>
-                        <TableCell className="text-right">{variant.stock || 0}</TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className='text-right'>{variant.stock || 0}</TableCell>
+                        <TableCell className='text-right'>
                           {variant.soldQuantity || 0}
                         </TableCell>
                       </TableRow>
@@ -370,46 +370,46 @@ function ProductViewContent() {
 
           {/* Additional Info Card */}
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="size-5 text-[#004643]" />
+            <CardHeader className='pb-3'>
+              <CardTitle className='flex items-center gap-2'>
+                <Calendar className='size-5 text-[#004643]' />
                 Thông tin bổ sung
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="rounded-lg border bg-muted/30 p-3">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Star className="size-4" />
-                    <span className="text-sm">Đánh giá</span>
+              <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+                <div className='rounded-lg border bg-muted/30 p-3'>
+                  <div className='flex items-center gap-2 text-muted-foreground'>
+                    <Star className='size-4' />
+                    <span className='text-sm'>Đánh giá</span>
                   </div>
-                  <p className="mt-1 font-semibold">
+                  <p className='mt-1 font-semibold'>
                     {formatRating(product.ratingAvg)} / 5{' '}
-                    <span className="text-sm font-normal text-muted-foreground">
+                    <span className='text-sm font-normal text-muted-foreground'>
                       ({product.ratingCount} lượt)
                     </span>
                   </p>
                 </div>
-                <div className="rounded-lg border bg-muted/30 p-3">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Calendar className="size-4" />
-                    <span className="text-sm">Ngày tạo</span>
+                <div className='rounded-lg border bg-muted/30 p-3'>
+                  <div className='flex items-center gap-2 text-muted-foreground'>
+                    <Calendar className='size-4' />
+                    <span className='text-sm'>Ngày tạo</span>
                   </div>
-                  <p className="mt-1 font-medium">{formatDate(product.createdAt)}</p>
+                  <p className='mt-1 font-medium'>{formatDate(product.createdAt)}</p>
                 </div>
-                <div className="rounded-lg border bg-muted/30 p-3">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Calendar className="size-4" />
-                    <span className="text-sm">Cập nhật lần cuối</span>
+                <div className='rounded-lg border bg-muted/30 p-3'>
+                  <div className='flex items-center gap-2 text-muted-foreground'>
+                    <Calendar className='size-4' />
+                    <span className='text-sm'>Cập nhật lần cuối</span>
                   </div>
-                  <p className="mt-1 font-medium">{formatDate(product.updatedAt)}</p>
+                  <p className='mt-1 font-medium'>{formatDate(product.updatedAt)}</p>
                 </div>
-                <div className="rounded-lg border bg-muted/30 p-3">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Package className="size-4" />
-                    <span className="text-sm">Trạng thái hiển thị</span>
+                <div className='rounded-lg border bg-muted/30 p-3'>
+                  <div className='flex items-center gap-2 text-muted-foreground'>
+                    <Package className='size-4' />
+                    <span className='text-sm'>Trạng thái hiển thị</span>
                   </div>
-                  <p className="mt-1 font-medium">
+                  <p className='mt-1 font-medium'>
                     {product.isActive ? 'Hiển thị' : 'Đang ẩn'}
                   </p>
                 </div>
@@ -419,29 +419,29 @@ function ProductViewContent() {
         </div>
 
         {/* Right Column - Media */}
-        <div className="space-y-6">
+        <div className='space-y-6'>
           {/* Main Image Card */}
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2">
-                <ImageIcon className="size-5 text-[#004643]" />
+            <CardHeader className='pb-3'>
+              <CardTitle className='flex items-center gap-2'>
+                <ImageIcon className='size-5 text-[#004643]' />
                 Hình ảnh sản phẩm
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className='space-y-4'>
               {/* Selected Image */}
-              <div className="relative aspect-square overflow-hidden rounded-lg border bg-muted">
+              <div className='relative aspect-square overflow-hidden rounded-lg border bg-muted'>
                 <Image
                   src={selectedImage}
                   alt={product.name}
                   fill
-                  className="object-cover"
+                  className='object-cover'
                 />
               </div>
 
               {/* Thumbnails */}
               {allImages.length > 1 && (
-                <div className="flex flex-wrap gap-2">
+                <div className='flex flex-wrap gap-2'>
                   {allImages.map((img, index) => (
                     <button
                       key={index}
@@ -456,7 +456,7 @@ function ProductViewContent() {
                         src={img}
                         alt={`${product.name} - ${index + 1}`}
                         fill
-                        className="object-cover"
+                        className='object-cover'
                       />
                     </button>
                   ))}
@@ -468,18 +468,18 @@ function ProductViewContent() {
           {/* Video Card */}
           {product.video && (
             <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2">
-                  <Play className="size-5 text-[#004643]" />
+              <CardHeader className='pb-3'>
+                <CardTitle className='flex items-center gap-2'>
+                  <Play className='size-5 text-[#004643]' />
                   Video sản phẩm
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="relative aspect-video overflow-hidden rounded-lg border bg-muted">
+                <div className='relative aspect-video overflow-hidden rounded-lg border bg-muted'>
                   <video
                     src={product.video}
                     controls
-                    className="size-full object-cover"
+                    className='size-full object-cover'
                     poster={product.mainImage}
                   />
                 </div>

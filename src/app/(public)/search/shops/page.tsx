@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { searchAPI } from '~/apiRequests/search.apiRequest'
 import { SearchShop } from '~/zodSchema/search.schema'
-import SearchPagination from '~/components/search/SearchPagination'
+import SearchPagination from '~/components/SearchPagination'
 import { Loader2 } from 'lucide-react'
 
 function ShopsContent() {

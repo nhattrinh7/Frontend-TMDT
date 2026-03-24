@@ -11,7 +11,7 @@ import {
 } from '~/components/ui/table'
 import { formatPrice } from '~/lib/utils'
 import type { AdminOrder } from '~/apiRequests/order.apiRequest'
-import AdminOrderDetailsDialog from '~/components/admin/AdminOrderDetailsDialog'
+import AdminOrderDetailsDialog from '~/app/(private)/admin/orders/AdminOrderDetailsDialog'
 
 export type AdminOrderStatus =
   | 'AWAITING_CONFIRMATION'

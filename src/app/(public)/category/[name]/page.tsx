@@ -5,9 +5,9 @@ import { useRouter, useSearchParams, useParams } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { getRootCategoryProductsAPI } from '~/apiRequests/search.apiRequest'
 import { RootCategoryProductsResponse } from '~/zodSchema/search.schema'
-import SearchSidebar from '~/components/search/SearchSidebar'
-import ProductResults from '~/components/search/ProductResults'
-import SearchPagination from '~/components/search/SearchPagination'
+import SearchSidebar from '~/app/(public)/search/SearchSidebar'
+import ProductResults from '~/app/(public)/search/ProductResults'
+import SearchPagination from '~/components/SearchPagination'
 
 function RootCategoryContent() {
   const router = useRouter()

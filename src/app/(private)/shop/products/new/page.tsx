@@ -23,13 +23,13 @@ import {
 } from '~/components/ui/form'
 
 // Product Components
-import CategorySelector from '~/components/products/CategorySelector'
-import ImageUploader from '~/components/products/ImageUploader'
-import GalleryUploader from '~/components/products/GalleryUploader'
-import VideoUploader from '~/components/products/VideoUploader'
-import ProductAttributes from '~/components/products/ProductAttributes'
-import VariantClassifications from '~/components/products/VariantClassifications'
-import SkuTable from '~/components/products/SkuTable'
+import CategorySelector from '~/app/(private)/shop/products/new/CategorySelector'
+import ImageUploader from '~/app/(private)/shop/products/update/ImageUploader'
+import GalleryUploader from '~/app/(private)/shop/products/update/GalleryUploader'
+import VideoUploader from '~/app/(private)/shop/products/update/VideoUploader'
+import ProductAttributes from '~/app/(private)/shop/products/new/ProductAttributes'
+import VariantClassifications from '~/app/(private)/shop/products/update/VariantClassifications'
+import SkuTable from '~/app/(private)/shop/products/update/SkuTable'
 
 // API & Schema
 import { getCategoriesAPI } from '~/apiRequests/category.apiRequest'
@@ -157,7 +157,7 @@ export default function NewProductPage() {
 
       // Chuyển đổi variants để bao gồm optionValues
       const variantsForAPI = variants.map(v => {
-        // SKU format: "Đỏ-S" -> optionValues: ["Đỏ", "S"]
+        // SKU format: 'Đỏ-S' -> optionValues: ['Đỏ', 'S']
         const optionValues = v.sku.split('-')
         return {
           sku: v.sku,
@@ -192,47 +192,47 @@ export default function NewProductPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className='flex items-center justify-center min-h-[400px]'>
+        <Loader2 className='h-8 w-8 animate-spin text-primary' />
       </div>
     )
   }
 
   return (
-    <div className="container max-w-4xl py-6 space-y-6">
+    <div className='container max-w-4xl py-6 space-y-6'>
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-primary/10">
-          <Package className="h-6 w-6 text-primary" />
+      <div className='flex items-center gap-3'>
+        <div className='p-2 rounded-lg bg-primary/10'>
+          <Package className='h-6 w-6 text-primary' />
         </div>
         <div>
-          <h1 className="text-2xl font-bold">Thêm sản phẩm mới</h1>
-          <p className="text-muted-foreground text-sm">
+          <h1 className='text-2xl font-bold'>Thêm sản phẩm mới</h1>
+          <p className='text-muted-foreground text-sm'>
             Điền đầy đủ thông tin để tạo sản phẩm mới cho cửa hàng
           </p>
         </div>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           {/* Thông tin cơ bản */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Thông tin cơ bản</CardTitle>
+              <CardTitle className='text-lg'>Thông tin cơ bản</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className='space-y-4'>
               {/* Tên sản phẩm */}
               <FormField
                 control={form.control}
-                name="name"
+                name='name'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Tên sản phẩm <span className="text-destructive">*</span>
+                      Tên sản phẩm <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Nhập tên sản phẩm"
+                        placeholder='Nhập tên sản phẩm'
                         {...field}
                       />
                     </FormControl>
@@ -244,16 +244,16 @@ export default function NewProductPage() {
               {/* Mô tả */}
               <FormField
                 control={form.control}
-                name="descriptions"
+                name='descriptions'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Mô tả sản phẩm <span className="text-destructive">*</span>
+                      Mô tả sản phẩm <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Nhập mô tả chi tiết về sản phẩm"
-                        className="min-h-[120px] resize-y"
+                        placeholder='Nhập mô tả chi tiết về sản phẩm'
+                        className='min-h-[120px] resize-y'
                         {...field}
                       />
                     </FormControl>
@@ -265,15 +265,15 @@ export default function NewProductPage() {
               {/* Đơn vị */}
               <FormField
                 control={form.control}
-                name="unit"
+                name='unit'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Đơn vị <span className="text-destructive">*</span>
+                      Đơn vị <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Ví dụ: Cái, Chiếc, Bộ, Hộp..."
+                        placeholder='Ví dụ: Cái, Chiếc, Bộ, Hộp...'
                         {...field}
                       />
                     </FormControl>
@@ -290,17 +290,17 @@ export default function NewProductPage() {
           {/* Media */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Hình ảnh & Video</CardTitle>
+              <CardTitle className='text-lg'>Hình ảnh & Video</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className='space-y-6'>
               {/* Ảnh chính */}
               <FormField
                 control={form.control}
-                name="mainImage"
+                name='mainImage'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Ảnh chính <span className="text-destructive">*</span>
+                      Ảnh chính <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <ImageUploader
@@ -319,7 +319,7 @@ export default function NewProductPage() {
               {/* Ảnh phụ */}
               <FormField
                 control={form.control}
-                name="galleryImage"
+                name='galleryImage'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Ảnh phụ</FormLabel>
@@ -341,7 +341,7 @@ export default function NewProductPage() {
               {/* Video */}
               <FormField
                 control={form.control}
-                name="video"
+                name='video'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Video sản phẩm</FormLabel>
@@ -362,16 +362,16 @@ export default function NewProductPage() {
           {/* Ngành hàng */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Ngành hàng</CardTitle>
+              <CardTitle className='text-lg'>Ngành hàng</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className='space-y-4'>
               <FormField
                 control={form.control}
-                name="categoryId"
+                name='categoryId'
                 render={() => (
                   <FormItem>
                     <FormLabel>
-                      Chọn ngành hàng <span className="text-destructive">*</span>
+                      Chọn ngành hàng <span className='text-destructive'>*</span>
                     </FormLabel>
                     <FormControl>
                       <CategorySelector
@@ -401,9 +401,9 @@ export default function NewProductPage() {
           {/* Phân loại hàng */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Phân loại hàng</CardTitle>
+              <CardTitle className='text-lg'>Phân loại hàng</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className='space-y-4'>
               <VariantClassifications
                 value={classifications}
                 onChange={setClassifications}
@@ -416,7 +416,7 @@ export default function NewProductPage() {
           {classifications.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Danh sách phân loại hàng</CardTitle>
+                <CardTitle className='text-lg'>Danh sách phân loại hàng</CardTitle>
               </CardHeader>
               <CardContent>
                 <SkuTable
@@ -430,10 +430,10 @@ export default function NewProductPage() {
           )}
 
           {/* Submit button */}
-          <div className="flex justify-end gap-3 pt-4">
+          <div className='flex justify-end gap-3 pt-4'>
             <Button
-              type="button"
-              variant="outline"
+              type='button'
+              variant='outline'
               onClick={() => {
                 form.reset()
                 setSelectedCategory(null)
@@ -443,15 +443,15 @@ export default function NewProductPage() {
             >
               Hủy
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type='submit' disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Loader2 className='h-4 w-4 mr-2 animate-spin' />
                   Đang tạo...
                 </>
               ) : (
                 <>
-                  <Save className="h-4 w-4 mr-2" />
+                  <Save className='h-4 w-4 mr-2' />
                   Tạo sản phẩm
                 </>
               )}

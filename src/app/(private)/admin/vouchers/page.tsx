@@ -33,8 +33,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '~/components/ui/pagination'
-import { CreateSzoneVoucherForm } from '~/components/admin/CreateSzoneVoucherForm'
-import { UpdateSzoneVoucherForm } from '~/components/admin/UpdateSzoneVoucherForm'
+import { CreateSzoneVoucherForm } from '~/app/(private)/admin/vouchers/CreateSzoneVoucherForm'
+import { UpdateSzoneVoucherForm } from '~/app/(private)/admin/vouchers/UpdateSzoneVoucherForm'
 import { getSzoneVouchersPaginatedAPI, SzoneVouchersPaginatedResponse, deleteSzoneVoucherAPI } from '~/apiRequests/voucher.apiRequest'
 import { Voucher } from '~/zodSchema/voucher.schema'
 import { toast } from 'sonner'

@@ -1,8 +1,8 @@
 import type React from 'react'
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '~/components/ui/sidebar'
-import { ShopSidebar } from '~/components/sidebars/ShopSidebar'
+import { ShopSidebar } from '~/app/(private)/shop/ShopSidebar'
 import { Separator } from '~/components/ui/separator'
-import { ChatSidebar } from '~/components/sidebars/ChatSidebar'
+import { ChatSidebar } from '~/app/(private)/shop/ChatSidebar'
 
 export default function ShopLayout({
   children,

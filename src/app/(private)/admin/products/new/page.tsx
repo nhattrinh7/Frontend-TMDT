@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { toast } from 'sonner'
-import PendingProductTable from '~/components/admin/PendingProductTable'
-import ProductSearch from '~/components/admin/ProductSearch'
-import ProductPagination from '~/components/admin/ProductPagination'
+import PendingProductTable from '~/app/(private)/admin/products/new/ReviewProductTable'
+import ProductSearch from '~/app/(private)/admin/products/ProductSearch'
+import ProductPagination from '~/app/(private)/admin/products/ProductPagination'
 import {
   getProductsPaginatedAPI,
   approveProductAPI,

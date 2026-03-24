@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
-import ManageProductTable from '~/components/admin/ManageProductTable'
-import ProductSearch from '~/components/admin/ProductSearch'
-import ProductPagination from '~/components/admin/ProductPagination'
+import ManageProductTable from '~/app/(private)/admin/products/ManageProductTable'
+import ProductSearch from '~/app/(private)/admin/products/ProductSearch'
+import ProductPagination from '~/app/(private)/admin/products/ProductPagination'
 import { getProductsPaginatedAPI } from '~/apiRequests/product.apiRequest'
 import { AdminProduct, PaginationMeta } from '~/zodSchema/product.schema'
 
