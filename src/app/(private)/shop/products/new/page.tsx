@@ -49,6 +49,18 @@ import {
 // Zustand
 import { useBoundStore } from '~/zustand/store'
 
+const defaultFormValues: CreateProductInput = {
+  name: '',
+  descriptions: '',
+  categoryId: '',
+  mainImage: '',
+  galleryImage: [],
+  video: null,
+  unit: '',
+  attributes: {},
+  variants: [],
+}
+
 export default function NewProductPage() {
   const { shop } = useBoundStore()
 
@@ -63,17 +75,7 @@ export default function NewProductPage() {
   // Form
   const form = useForm<CreateProductInput>({
     resolver: zodResolver(CreateProductSchema),
-    defaultValues: {
-      name: '',
-      descriptions: '',
-      categoryId: '',
-      mainImage: '',
-      galleryImage: [],
-      video: null,
-      unit: '',
-      attributes: {},
-      variants: [],
-    },
+    defaultValues: defaultFormValues,
   })
 
   // Fetch categories on mount
@@ -179,7 +181,7 @@ export default function NewProductPage() {
       toast.success('Tạo sản phẩm thành công!')
 
       // Reset form
-      form.reset()
+      form.reset(defaultFormValues)
       setSelectedCategory(null)
       setClassifications([])
       setVariants([])
@@ -435,7 +437,7 @@ export default function NewProductPage() {
               type='button'
               variant='outline'
               onClick={() => {
-                form.reset()
+                form.reset(defaultFormValues)
                 setSelectedCategory(null)
                 setClassifications([])
                 setVariants([])
