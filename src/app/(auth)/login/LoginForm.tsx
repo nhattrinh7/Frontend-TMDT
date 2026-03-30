@@ -108,12 +108,12 @@ export function LoginForm({
                 <div className='flex items-center'>
                   <FieldLabel htmlFor='password'>Mật Khẩu</FieldLabel>
 
-                  <a
-                    href='#'
+                  <Link
+                    href='/forgot-password'
                     className='ml-auto inline-block text-sm underline-offset-4 hover:underline'
                   >
                     Quên mật khẩu?
-                  </a>
+                  </Link>
                 </div>
 
                 <Controller

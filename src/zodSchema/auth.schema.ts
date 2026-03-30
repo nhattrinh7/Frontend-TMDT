@@ -87,3 +87,22 @@ export const refreshTokenSchema = z.object({
 export type RefreshTokenResType = z.infer<typeof refreshTokenSchema>
 
 
+// Forgot password
+export const forgotPasswordBodySchema = z.object({
+  email: z.email('Email không hợp lệ'),
+})
+export type ForgotPasswordBodyType = z.infer<typeof forgotPasswordBodySchema>
+
+
+// Reset password
+export const resetPasswordBodySchema = z.object({
+  otp: z
+    .string()
+    .length(6, 'OTP phải đủ 6 số')
+    .regex(/^\d+$/, 'OTP chỉ gồm số'),
+  newPassword: z.string().min(8, 'Mật khẩu mới phải có ít nhất 8 ký tự'),
+})
+export type ResetPasswordBodyType = z.infer<typeof resetPasswordBodySchema>
+export type ResetPasswordBodyCallAPI = ResetPasswordBodyType & { email: string }
+
+

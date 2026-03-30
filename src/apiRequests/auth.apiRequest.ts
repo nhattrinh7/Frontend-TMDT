@@ -7,6 +7,8 @@ import {
   LoginResType,
   VerifyEmailBodyType,
   RefreshTokenResType,
+  ForgotPasswordBodyType,
+  ResetPasswordBodyCallAPI,
 } from '~/zodSchema/auth.schema'
 
 // REGISTER
@@ -51,6 +53,18 @@ export const loginClientAPI = async (data: LoginBodyType): Promise<ApiResponse<L
   }
   const json: ApiResponse<LoginResType> = await response.json()
   return json
+}
+
+// FORGOT PASSWORD
+export const forgotPasswordAPI = async (data: ForgotPasswordBodyType) => {
+  const response = await http.post<ApiResponse>('/api/v1/auth/forgot-password', data)
+  return response
+}
+
+// RESET PASSWORD
+export const resetPasswordAPI = async (data: ResetPasswordBodyCallAPI) => {
+  const response = await http.post<ApiResponse>('/api/v1/auth/reset-password', data)
+  return response
 }
 
 // Logout đến route handler
