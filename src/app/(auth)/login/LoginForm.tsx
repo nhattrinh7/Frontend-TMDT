@@ -32,6 +32,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<'div'>) {
   const [isLoading, setIsLoading] = useState(false)
+  const [isAccountLocked, setIsAccountLocked] = useState(false)
   const [error, setError] = useState({
     hasError: false,
     message: '',
@@ -49,9 +50,12 @@ export function LoginForm({
   const setUser = useBoundStore((state) => state.setUser)
 
   const submitLogin = async (data: LoginBodyType) => {
+    if (isAccountLocked) return
+
     try {
       setIsLoading(true)
       setError({ hasError: false, message: '' })
+      setIsAccountLocked(false)
 
       const response = await loginClientAPI(data)
       localStorage.setItem('accessToken', response.data.accessToken)
@@ -63,10 +67,14 @@ export function LoginForm({
       } 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError({
-        hasError: true,
-        message: err?.message || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.'
-      })
+      const message = err?.message || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.'
+
+      // Kiểm tra xem tài khoản có bị khóa không (message từ backend chứa 'khóa tạm thời')
+      if (message.includes('khóa tạm thời')) {
+        setIsAccountLocked(true)
+      }
+
+      setError({ hasError: true, message })
     } finally {
       setIsLoading(false)
     }
@@ -85,10 +93,11 @@ export function LoginForm({
       if (response) {
         router.push('/')
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError({
         hasError: true,
-        message: err?.message || 'ÄÃ£ cÃ³ lá»—i xáº£y ra. Vui lÃ²ng thá»­ láº¡i sau.'
+        message: err?.message || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.'
       })
     } finally {
       setIsLoading(false)
@@ -118,6 +127,7 @@ export function LoginForm({
                       id='email'
                       type='email'
                       placeholder='m@example.com'
+                      disabled={isAccountLocked}
                     />
                   )}
                 />
@@ -148,6 +158,7 @@ export function LoginForm({
                       {...field}
                       id='password'
                       type='password'
+                      disabled={isAccountLocked}
                     />
                   )}
                 />
@@ -161,10 +172,10 @@ export function LoginForm({
               <Field>
                 <Button 
                   type='submit' 
-                  disabled={isLoading}
+                  disabled={isLoading || isAccountLocked}
                   className='w-full'
                 >
-                  {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+                  {isLoading ? 'Đang đăng nhập...' : isAccountLocked ? 'Tài khoản đã bị khóa' : 'Đăng nhập'}
                 </Button>
                 <div className='w-full flex justify-center'>
                   <GoogleLogin
@@ -188,9 +199,22 @@ export function LoginForm({
                   />
                 </div>
                 {error.hasError && (
-                  <FieldDescription className='text-red-500'>
-                    {error.message}
-                  </FieldDescription>
+                  <div className={cn(
+                    'rounded-md p-3 text-sm',
+                    isAccountLocked
+                      ? 'bg-red-50 border border-red-200 text-red-700'
+                      : 'bg-amber-50 border border-amber-200 text-amber-700'
+                  )}>
+                    <div className='flex items-start gap-2'>
+                      <span className='mt-0.5'>{isAccountLocked ? '🔒' : '⚠️'}</span>
+                      <span>{error.message}</span>
+                    </div>
+                    {isAccountLocked && (
+                      <p className='mt-2 text-xs text-red-500'>
+                        Bạn có thể <Link href='/forgot-password' className='underline font-medium'>đặt lại mật khẩu</Link> để mở khóa tài khoản ngay.
+                      </p>
+                    )}
+                  </div>
                 )}
                 <FieldDescription className='text-center'>
                   Chưa có tài khoản?{' '}

@@ -35,7 +35,7 @@ export const refreshTokenAPI = async (refreshToken: string) => {
 
 // LOGIN
 export const loginAPI = async (data: LoginBodyType): Promise<ApiResponse<LoginResType>> => {
-  const response = await http.post<ApiResponse<LoginResType>>('/api/v1/auth/login', data)
+  const response = await http.post<ApiResponse<LoginResType>>('/api/v1/auth/login', data, { skipInterceptor: true })
   return response
 }
 
@@ -100,4 +100,3 @@ export const logoutAPI = async (): Promise<{ message: string }> => {
   )
   return response
 }
-

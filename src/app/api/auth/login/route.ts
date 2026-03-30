@@ -34,10 +34,10 @@ export async function POST(request: Request) {
 
     return Response.json(payload)
   } catch (error: any) {
-    console.error('Login error:', error) // Thêm log để debug
-    return Response.json({ 
-      message: 'Unexpected error when login from Next server',
-      error: error.message 
-    }, { status: 500 })
+    // Forward đúng status code và message từ backend
+    const statusCode = error?.statusCode || 500
+    const message = error?.message || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.'
+
+    return Response.json({ message }, { status: statusCode })
   }
 }
