@@ -5,6 +5,7 @@ import {
   RegisterResType,
   LoginBodyType,
   LoginResType,
+  GoogleLoginBodyType,
   VerifyEmailBodyType,
   RefreshTokenResType,
   ForgotPasswordBodyType,
@@ -50,6 +51,29 @@ export const loginClientAPI = async (data: LoginBodyType): Promise<ApiResponse<L
   if (!response.ok) {
     const errorData = await response.json()
     throw new Error(errorData.message || 'Login failed')
+  }
+  const json: ApiResponse<LoginResType> = await response.json()
+  return json
+}
+
+// GOOGLE LOGIN
+export const googleLoginAPI = async (data: GoogleLoginBodyType): Promise<ApiResponse<LoginResType>> => {
+  const response = await http.post<ApiResponse<LoginResType>>('/api/v1/auth/google-login', data)
+  return response
+}
+
+export const googleLoginClientAPI = async (data: GoogleLoginBodyType): Promise<ApiResponse<LoginResType>> => {
+  const response = await fetch('/api/auth/google-login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json()
+    throw new Error(errorData.message || 'Google login failed')
   }
   const json: ApiResponse<LoginResType> = await response.json()
   return json

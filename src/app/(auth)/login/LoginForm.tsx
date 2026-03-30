@@ -4,6 +4,7 @@ import type React from 'react'
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { GoogleLogin } from '@react-oauth/google'
 import { cn } from '~/lib/utils'
 import { Button } from '~/components/ui/button'
 import {
@@ -20,7 +21,7 @@ import {
   FieldLabel,
 } from '~/components/ui/field'
 import { Input } from '~/components/ui/input'
-import { loginClientAPI } from '~/apiRequests/auth.apiRequest'
+import { googleLoginClientAPI, loginClientAPI } from '~/apiRequests/auth.apiRequest'
 import { loginBodySchema, type LoginBodyType } from '~/zodSchema/auth.schema'
 import { useBoundStore } from '~/zustand/store'
 import Link from 'next/link'
@@ -65,6 +66,29 @@ export function LoginForm({
       setError({
         hasError: true,
         message: err?.message || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.'
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const submitGoogleLogin = async (credential: string) => {
+    try {
+      setIsLoading(true)
+      setError({ hasError: false, message: '' })
+
+      const response = await googleLoginClientAPI({ credential })
+      localStorage.setItem('accessToken', response.data.accessToken)
+      localStorage.setItem('refreshToken', response.data.refreshToken)
+      setUser(response.data.user)
+      
+      if (response) {
+        router.push('/')
+      }
+    } catch (err: any) {
+      setError({
+        hasError: true,
+        message: err?.message || 'ÄÃ£ cÃ³ lá»—i xáº£y ra. Vui lÃ²ng thá»­ láº¡i sau.'
       })
     } finally {
       setIsLoading(false)
@@ -142,9 +166,27 @@ export function LoginForm({
                 >
                   {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
                 </Button>
-                <Button variant='outline' type='button' className='w-full'>
-                  Đăng nhập với Google
-                </Button>
+                <div className='w-full flex justify-center'>
+                  <GoogleLogin
+                    onSuccess={(credentialResponse) => {
+                      const credential = credentialResponse.credential
+                      if (!credential) {
+                        setError({
+                          hasError: true,
+                          message: 'Không nhận được credential từ Google'
+                        })
+                        return
+                      }
+                      submitGoogleLogin(credential)
+                    }}
+                    onError={() => {
+                      setError({
+                        hasError: true,
+                        message: 'Đăng nhập Google thất bại'
+                      })
+                    }}
+                  />
+                </div>
                 {error.hasError && (
                   <FieldDescription className='text-red-500'>
                     {error.message}

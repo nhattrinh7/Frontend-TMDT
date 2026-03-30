@@ -70,6 +70,12 @@ export const loginResSchema = z.object({
 })
 export type LoginResType = z.infer<typeof loginResSchema>
 
+// Google login
+export const googleLoginBodySchema = z.object({
+  credential: z.string().min(1, 'Credential is required'),
+})
+export type GoogleLoginBodyType = z.infer<typeof googleLoginBodySchema>
+
 
 // Verify email
 export const verifyEmailSchema = z.object({
