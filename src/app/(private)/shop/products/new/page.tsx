@@ -192,6 +192,43 @@ export default function NewProductPage() {
     }
   }
 
+  // Handler khi form validation fail
+  const onFormError = (errors: Record<string, unknown>) => {
+    console.log('--- FORM VALIDATION ERRORS ---', errors)
+    const errorMessages: string[] = []
+    const fieldErrors = errors as Record<string, { message?: string; root?: { message?: string } }>
+
+    if (fieldErrors.name?.message) errorMessages.push(fieldErrors.name.message)
+    if (fieldErrors.descriptions?.message) errorMessages.push(fieldErrors.descriptions.message)
+    if (fieldErrors.unit?.message) errorMessages.push(fieldErrors.unit.message)
+    if (fieldErrors.categoryId) errorMessages.push('Vui lòng chọn ngành hàng')
+    if (fieldErrors.mainImage) errorMessages.push('Vui lòng tải lên ảnh chính')
+    if (fieldErrors.variants) {
+      const variantError = fieldErrors.variants
+      errorMessages.push(variantError.message || variantError.root?.message || 'Vui lòng thêm ít nhất 1 SKU')
+    }
+
+    console.log('Error Messages:', errorMessages)
+
+    if (errorMessages.length > 0) {
+      toast.error('Vui lòng kiểm tra lại thông tin', {
+        description: errorMessages.join('. '),
+      })
+    } else {
+      toast.error('Vui lòng điền đầy đủ thông tin bắt buộc')
+    }
+
+    // Scroll to the first error manually, as a fallback
+    const firstErrorField = Object.keys(errors)[0]
+    if (firstErrorField) {
+      const element = document.getElementsByName(firstErrorField)[0]
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        element.focus()
+      }
+    }
+  }
+
   if (isLoading) {
     return (
       <div className='flex items-center justify-center min-h-[400px]'>
@@ -216,7 +253,7 @@ export default function NewProductPage() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+        <form onSubmit={form.handleSubmit(onSubmit, onFormError)} className='space-y-6'>
           {/* Thông tin cơ bản */}
           <Card>
             <CardHeader>
