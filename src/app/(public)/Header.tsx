@@ -128,28 +128,31 @@ export default function Header() {
       <div className='hidden md:flex items-center justify-center border-b border-white/10'>
         <div className='w-full max-w-400 flex items-center justify-between px-4 lg:px-6 py-2 text-sm text-white'>
           <div className='flex items-center gap-4 lg:gap-6'>
-            {shopStatus === 'ACTIVE'
-              ? (
-                <Link href='/shop/orders' target='_blank' rel='noopener noreferrer' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
-                  Kênh Người Bán
-                </Link>
-              )
-              : shopStatus === 'UNDER_REVIEW' || shopStatus === 'REJECTED'
+            {user && ['SELLER', 'CUSTOMER'].includes(user.roleName.toUpperCase()) && (
+              shopStatus === 'ACTIVE'
                 ? (
-                  <Link href='/shop-pending' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
-                    Đăng kí bán hàng
+                  <Link href='/shop/orders' target='_blank' rel='noopener noreferrer' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
+                    Kênh Người Bán
                   </Link>
                 )
-                : (
-                  <Link href='/create-shop' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
-                    Đăng kí bán hàng
-                  </Link>
-                )
-            }
+                : shopStatus === 'UNDER_REVIEW' || shopStatus === 'REJECTED'
+                  ? (
+                    <Link href='/shop-pending' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
+                      Đăng kí bán hàng
+                    </Link>
+                  )
+                  : (
+                    <Link href='/create-shop' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
+                      Đăng kí bán hàng
+                    </Link>
+                  )
+            )}
             
-            <Link href='/admin/users' target='_blank' rel='noopener noreferrer' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
-              Kênh Quản Lý
-            </Link>
+            {user && user.roleName.toUpperCase().includes('ADMIN') && (
+              <Link href='/admin/users' target='_blank' rel='noopener noreferrer' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
+                Kênh Quản Lý
+              </Link>
+            )}
           </div>
           <div className='flex items-center gap-2 lg:gap-4'>
             {/* <button className='hover:text-[#ABD1C6] transition-colors flex items-center gap-1.5 font-semibold'>

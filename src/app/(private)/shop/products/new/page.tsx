@@ -194,7 +194,6 @@ export default function NewProductPage() {
 
   // Handler khi form validation fail
   const onFormError = (errors: Record<string, unknown>) => {
-    console.log('--- FORM VALIDATION ERRORS ---', errors)
     const errorMessages: string[] = []
     const fieldErrors = errors as Record<string, { message?: string; root?: { message?: string } }>
 
@@ -207,8 +206,6 @@ export default function NewProductPage() {
       const variantError = fieldErrors.variants
       errorMessages.push(variantError.message || variantError.root?.message || 'Vui lòng thêm ít nhất 1 SKU')
     }
-
-    console.log('Error Messages:', errorMessages)
 
     if (errorMessages.length > 0) {
       toast.error('Vui lòng kiểm tra lại thông tin', {
