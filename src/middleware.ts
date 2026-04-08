@@ -10,8 +10,11 @@ export function middleware(request: NextRequest) {
 
   const accessToken = request.cookies.get('accessToken')?.value
   const refreshToken = request.cookies.get('refreshToken')?.value
+
+  const isPrivatePath = privatePaths.some((path) => pathname.startsWith(path)) || pathname === '/'
+
   // Chưa đăng nhập thì không cho vào private paths
-  if (privatePaths.some((path) => pathname.startsWith(path)) && !refreshToken) {
+  if (isPrivatePath && !refreshToken) {
     const url = new URL('/login', request.url)
     return NextResponse.redirect(url)
   }
@@ -21,7 +24,7 @@ export function middleware(request: NextRequest) {
   }
   // Trường hợp đăng nhập rồi, nhưng access token lại hết hạn
   if (
-    privatePaths.some((path) => pathname.startsWith(path)) &&
+    isPrivatePath &&
     !accessToken &&
     refreshToken
   ) {
@@ -34,5 +37,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/profile', '/login']
+  matcher: ['/', '/profile', '/login']
 }
