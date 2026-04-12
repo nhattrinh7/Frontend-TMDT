@@ -20,20 +20,41 @@ export function usePaymentSocket() {
   const [isConnected, setIsConnected] = useState(false)
   const callbacksRef = useRef<PaymentCallbacks>({})
 
-  const connect = (callbacks: PaymentCallbacks) => {
+  const connect = (callbacks: PaymentCallbacks): Promise<boolean> => {
     callbacksRef.current = callbacks
 
-    if (socketRef.current?.connected) return
+    if (socketRef.current?.connected) return Promise.resolve(true)
 
     const accessToken = localStorage.getItem('accessToken')
-    if (!accessToken) return
+    if (!accessToken) return Promise.resolve(false)
+
+    if (socketRef.current && !socketRef.current.connected) {
+      socketRef.current.disconnect()
+      socketRef.current = null
+    }
 
     const socket = io(`${env.NEXT_PUBLIC_SAGA_WS_URL}/payment`, {
       auth: { token: accessToken },
-      transports: ['websocket'],
+      transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 2000,
+    })
+
+    const connectionPromise = new Promise<boolean>((resolve) => {
+      const timeout = setTimeout(() => {
+        resolve(false)
+      }, 8000)
+
+      socket.once('connect', () => {
+        clearTimeout(timeout)
+        resolve(true)
+      })
+
+      socket.once('connect_error', () => {
+        clearTimeout(timeout)
+        resolve(false)
+      })
     })
 
     socket.on('connect', () => setIsConnected(true))
@@ -56,6 +77,7 @@ export function usePaymentSocket() {
     })
 
     socketRef.current = socket
+    return connectionPromise
   }
 
   const disconnect = () => {

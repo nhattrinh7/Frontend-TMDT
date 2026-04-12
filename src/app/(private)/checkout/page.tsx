@@ -191,8 +191,8 @@ export default function CheckoutPage() {
   /**
    * Kết nối WebSocket và setup listeners
    */
-  const connectWebSocket = () => {
-    connect({
+  const connectWebSocket = async () => {
+    const isSocketConnected = await connect({
       onSuccess: (data) => {
         setShowProcessingOverlay(false)
         setShowWalletDialog(false)
@@ -218,6 +218,7 @@ export default function CheckoutPage() {
         setShowQRDialog(true)
       },
     })
+    return isSocketConnected
   }
 
   /**
@@ -252,7 +253,10 @@ export default function CheckoutPage() {
 
     try {
       // 1. Kết nối WebSocket TRƯỚC khi gọi API
-      connectWebSocket()
+      const isSocketConnected = await connectWebSocket()
+      if (!isSocketConnected) {
+        throw new Error('Không thể kết nối realtime thanh toán, vui lòng thử lại')
+      }
 
       // 2. Gọi placeOrder API
       const itemsByShop = buildItemsByShop()

@@ -61,6 +61,7 @@ export default function Header() {
   }, [user, setCartItemsCount])
 
   const pathname = usePathname()
+  const normalizedRoleName = typeof user?.roleName === 'string' ? user.roleName.toUpperCase() : ''
 
   // Handle search submit
   const handleSearch = useCallback(() => {
@@ -128,7 +129,7 @@ export default function Header() {
       <div className='hidden md:flex items-center justify-center border-b border-white/10'>
         <div className='w-full max-w-400 flex items-center justify-between px-4 lg:px-6 py-2 text-sm text-white'>
           <div className='flex items-center gap-4 lg:gap-6'>
-            {user && ['SELLER', 'CUSTOMER'].includes(user.roleName.toUpperCase()) && (
+            {user && ['SELLER', 'CUSTOMER'].includes(normalizedRoleName) && (
               shopStatus === 'ACTIVE'
                 ? (
                   <Link href='/shop/orders' target='_blank' rel='noopener noreferrer' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
@@ -148,7 +149,7 @@ export default function Header() {
                   )
             )}
             
-            {user && user.roleName.toUpperCase().includes('ADMIN') && (
+            {user && normalizedRoleName.includes('ADMIN') && (
               <Link href='/admin/users' target='_blank' rel='noopener noreferrer' className='hover:text-[#ABD1C6] transition-colors font-semibold'>
                 Kênh Quản Lý
               </Link>
