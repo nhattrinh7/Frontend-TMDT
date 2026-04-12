@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: [
+    'https://szone.top',
+    'https://api.szone.top',
+  ],
   experimental: {
     reactCompiler: true,
   },
