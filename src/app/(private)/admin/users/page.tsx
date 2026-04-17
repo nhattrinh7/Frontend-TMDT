@@ -100,18 +100,18 @@ export default function ManageUsersPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className='flex flex-col gap-6 p-6'>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[#004643]">Quản lý người dùng</h1>
+      <div className='flex items-center justify-between'>
+        <h1 className='text-2xl font-bold text-[#004643]'>Quản lý người dùng</h1>
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full max-w-md grid-cols-2">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className='w-full'>
+        <TabsList className='grid w-full max-w-md grid-cols-2'>
           {(Object.entries(TAB_CONFIG) as [TabType, typeof TAB_CONFIG[TabType]][]).map(
             ([key, config]) => (
-              <TabsTrigger key={key} value={key} className="text-sm">
+              <TabsTrigger key={key} value={key} className='text-sm'>
                 {config.label}
               </TabsTrigger>
             )
@@ -119,11 +119,11 @@ export default function ManageUsersPage() {
         </TabsList>
 
         {(Object.keys(TAB_CONFIG) as TabType[]).map((tab) => (
-          <TabsContent key={tab} value={tab} className="mt-6 space-y-4">
+          <TabsContent key={tab} value={tab} className='mt-6 space-y-4'>
             {/* Search */}
-            <div className="flex items-center justify-between gap-4">
+            <div className='flex items-center justify-between gap-4'>
               <UserSearch onSearch={handleSearch} />
-              <div className="text-sm text-muted-foreground">
+              <div className='text-sm text-muted-foreground'>
                 Tổng: {meta.total} người dùng
               </div>
             </div>
@@ -138,7 +138,7 @@ export default function ManageUsersPage() {
             />
 
             {/* Pagination */}
-            <div className="flex justify-center">
+            <div className='flex justify-center'>
               <UserPagination meta={meta} onPageChange={handlePageChange} />
             </div>
           </TabsContent>

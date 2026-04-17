@@ -298,8 +298,8 @@ export default function ManageReviewsPage() {
                                   {review.report.description}
                                 </p>
                               )}
-                        </div>
-                      </TableCell>
+                            </div>
+                          </TableCell>
 
                           <TableCell className='align-top'>
                             <Button

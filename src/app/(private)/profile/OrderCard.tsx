@@ -424,18 +424,18 @@ export default function OrderCard({ order, activeStatus, onCancelOrder, onViewTi
                         className={`
                           relative flex items-center rounded-xl border p-3 cursor-pointer transition-all duration-200
                           ${cancelReason === reason 
-                            ? 'border-red-500 bg-red-50/50 shadow-sm' 
-                            : 'border-gray-200 hover:border-red-200 hover:bg-gray-50'
-                          }
+                        ? 'border-red-500 bg-red-50/50 shadow-sm' 
+                        : 'border-gray-200 hover:border-red-200 hover:bg-gray-50'
+                      }
                         `}
                         onClick={() => setCancelReason(reason)}
                       >
                         <div className={`
                           flex shrink-0 items-center justify-center w-5 h-5 rounded-full border mr-3 transition-colors duration-200
                           ${cancelReason === reason
-                            ? 'border-red-500 bg-red-500'
-                            : 'border-gray-300'
-                          }
+                        ? 'border-red-500 bg-red-500'
+                        : 'border-gray-300'
+                      }
                         `}>
                           {cancelReason === reason && (
                             <div className='w-2 h-2 rounded-full bg-white'></div>

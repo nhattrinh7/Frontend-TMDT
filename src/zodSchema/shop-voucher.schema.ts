@@ -16,23 +16,22 @@ export const shopVoucherSchema = z
       .min(10, 'Mô tả phải có ít nhất 10 ký tự')
       .max(500, 'Mô tả không được quá 500 ký tự'),
     discountType: z.enum(['FIXED', 'PERCENT']),
-    discountValue: z.coerce.number().positive('Giá trị giảm phải lớn hơn 0'),
-    minOrderValue: z.coerce
+    discountValue: z.number().positive('Giá trị giảm phải lớn hơn 0'),
+    minOrderValue: z
       .number()
-      .nonnegative('Giá trị đơn hàng tối thiểu phải >= 0')
-      .default(0),
-    maxDiscountValue: z.coerce
+      .nonnegative('Giá trị đơn hàng tối thiểu phải >= 0'),
+    maxDiscountValue: z
       .number()
       .nonnegative('Mức giảm tối đa phải >= 0')
       .optional(),
     startDate: z.date(),
     endDate: z.date(),
-    usageLimit: z.coerce
+    usageLimit: z
       .number()
       .int('Số lượt sử dụng phải là số nguyên')
       .positive('Số lượt sử dụng phải lớn hơn 0')
       .min(1, 'Số lượt sử dụng tối thiểu là 1'),
-    perUserLimit: z.coerce
+    perUserLimit: z
       .number()
       .int('Giới hạn mỗi người phải là số nguyên')
       .positive('Giới hạn mỗi người phải lớn hơn 0')

@@ -68,8 +68,8 @@ export default function ChangePassword() {
   // Early return if user not loaded
   if (!user) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Đang tải...</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Đang tải...</div>
       </div>
     )
   }
@@ -77,7 +77,7 @@ export default function ChangePassword() {
   return (
     <div className='bg-white rounded-2xl shadow-lg overflow-hidden'>
       {/* Header */}
-      <div className='bg-gradient-to-r from-[#004643] to-[#005d58] p-8'>
+      <div className='bg-linear-to-r from-[#004643] to-[#005d58] p-8'>
         <h1 className='text-3xl font-bold text-white mb-2'>Đổi Mật Khẩu</h1>
         <p className='text-white/80'>Cập nhật mật khẩu để bảo mật tài khoản</p>
       </div>
@@ -93,7 +93,7 @@ export default function ChangePassword() {
                 Mật khẩu hiện tại
               </label>
               <Controller
-                name="currentPassword"
+                name='currentPassword'
                 control={control}
                 render={({ field }) => (
                   <div className='relative'>
@@ -127,7 +127,7 @@ export default function ChangePassword() {
                 Mật khẩu mới
               </label>
               <Controller
-                name="newPassword"
+                name='newPassword'
                 control={control}
                 render={({ field }) => (
                   <div className='relative'>
@@ -161,7 +161,7 @@ export default function ChangePassword() {
                 Xác nhận mật khẩu mới
               </label>
               <Controller
-                name="confirmPassword"
+                name='confirmPassword'
                 control={control}
                 render={({ field }) => (
                   <div className='relative'>
@@ -191,9 +191,9 @@ export default function ChangePassword() {
             {/* Submit Button */}
             <div className='flex justify-end pt-6 border-t border-gray-200'>
               <button
-                type="submit"
+                type='submit'
                 disabled={isLoading}
-                className='bg-gradient-to-r from-[#004643] to-[#005d58] hover:from-[#005d58] hover:to-[#004643] text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none'
+                className='bg-linear-to-r from-[#004643] to-[#005d58] hover:from-[#005d58] hover:to-[#004643] text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none'
               >
                 {isLoading ? (
                   <>

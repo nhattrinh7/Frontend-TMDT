@@ -179,18 +179,18 @@ export default function ManageShopsPage() {
 
   if (isInitializing) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Đang khởi tạo...</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Đang khởi tạo...</div>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className='flex flex-col gap-6 p-6'>
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#004643]">Quản lý Shop</h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <h1 className='text-2xl font-bold text-[#004643]'>Quản lý Shop</h1>
+        <p className='text-sm text-muted-foreground mt-1'>
           Quản lý tất cả các shop trên hệ thống
         </p>
       </div>
@@ -199,13 +199,13 @@ export default function ManageShopsPage() {
       <Tabs
         value={activeTab}
         onValueChange={(value) => setActiveTab(value as ShopStatus)}
-        className="w-full"
+        className='w-full'
       >
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className='grid w-full grid-cols-4'>
           {tabs.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value}>
               {tab.label}
-              <span className="ml-2 text-xs bg-muted px-1.5 py-0.5 rounded">
+              <span className='ml-2 text-xs bg-muted px-1.5 py-0.5 rounded'>
                 {tabStates[tab.value].meta.total}
               </span>
             </TabsTrigger>
@@ -213,16 +213,16 @@ export default function ManageShopsPage() {
         </TabsList>
 
         {tabs.map((tab) => (
-          <TabsContent key={tab.value} value={tab.value} className="space-y-4">
+          <TabsContent key={tab.value} value={tab.value} className='space-y-4'>
             {/* Search & Stats */}
-            <div className="flex items-center justify-between gap-4">
+            <div className='flex items-center justify-between gap-4'>
               <ShopSearch
                 onSearch={handleSearch}
                 placeholder={`Tìm kiếm shop ${tab.label.toLowerCase()}...`}
               />
-              <div className="text-sm text-muted-foreground">
+              <div className='text-sm text-muted-foreground'>
                 Tổng:{' '}
-                <span className="font-semibold text-[#004643]">
+                <span className='font-semibold text-[#004643]'>
                   {tabStates[tab.value].meta.total}
                 </span>{' '}
                 shop
@@ -240,7 +240,7 @@ export default function ManageShopsPage() {
             />
 
             {/* Pagination */}
-            <div className="flex justify-center">
+            <div className='flex justify-center'>
               <ShopPagination
                 meta={tabStates[tab.value].meta}
                 onPageChange={handlePageChange}

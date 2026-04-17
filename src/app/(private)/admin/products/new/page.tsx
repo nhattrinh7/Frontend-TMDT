@@ -89,24 +89,24 @@ export default function ApproveNewProductPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className='flex flex-col gap-6 p-6'>
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#004643]">Duyệt sản phẩm mới</h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <h1 className='text-2xl font-bold text-[#004643]'>Duyệt sản phẩm mới</h1>
+        <p className='text-sm text-muted-foreground mt-1'>
           Xem xét và duyệt các sản phẩm mới từ người bán trên hệ thống
         </p>
       </div>
 
       {/* Search & Stats */}
-      <div className="flex items-center justify-between gap-4">
+      <div className='flex items-center justify-between gap-4'>
         <ProductSearch
           onSearch={handleSearch}
-          placeholder="Tìm kiếm sản phẩm..."
+          placeholder='Tìm kiếm sản phẩm...'
         />
-        <div className="text-sm text-muted-foreground">
+        <div className='text-sm text-muted-foreground'>
           Tổng:{' '}
-          <span className="font-semibold text-[#004643]">
+          <span className='font-semibold text-[#004643]'>
             {meta.total}
           </span>{' '}
           sản phẩm cần duyệt
@@ -123,7 +123,7 @@ export default function ApproveNewProductPage() {
       />
 
       {/* Pagination */}
-      <div className="flex justify-center">
+      <div className='flex justify-center'>
         <ProductPagination
           meta={meta}
           onPageChange={handlePageChange}

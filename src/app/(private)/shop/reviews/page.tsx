@@ -393,71 +393,71 @@ export default function ReviewsPage() {
     </div>
   )
 
-const renderProductImage = (url: string, alt: string) => {
-  if (!url) {
+  const renderProductImage = (url: string, alt: string) => {
+    if (!url) {
+      return (
+        <div className='h-16 w-16 rounded-md border border-[#004643]/10 bg-[#f0f7f6] flex items-center justify-center text-[10px] text-[#004643]/70'>
+          No image
+        </div>
+      )
+    }
+
     return (
-      <div className='h-16 w-16 rounded-md border border-[#004643]/10 bg-[#f0f7f6] flex items-center justify-center text-[10px] text-[#004643]/70'>
-        No image
-      </div>
+      <Image
+        src={url}
+        alt={alt}
+        width={64}
+        height={64}
+        className='h-16 w-16 rounded-md object-cover border border-[#004643]/10'
+        unoptimized
+      />
     )
   }
 
-  return (
-    <Image
-      src={url}
-      alt={alt}
-      width={64}
-      height={64}
-      className='h-16 w-16 rounded-md object-cover border border-[#004643]/10'
-      unoptimized
-    />
-  )
-}
+  const renderReviewMedia = (images: string[], video?: string | null) => {
+    const mediaItems = [
+      ...images.map((url) => ({ type: 'image' as const, url })),
+      ...(video ? [{ type: 'video' as const, url: video }] : []),
+    ]
 
-const renderReviewMedia = (images: string[], video?: string | null) => {
-  const mediaItems = [
-    ...images.map((url) => ({ type: 'image' as const, url })),
-    ...(video ? [{ type: 'video' as const, url: video }] : []),
-  ]
+    if (mediaItems.length === 0) return null
 
-  if (mediaItems.length === 0) return null
-
-  return (
-    <div className='flex flex-wrap gap-2 mt-2'>
-      {mediaItems.map((item, index) => (
-        <button
-          key={`${item.type}-${item.url}-${index}`}
-          type='button'
-          onClick={() => openMediaViewer(item.url, item.type, 'review-media')}
-          className='relative h-14 w-14 rounded-md border border-[#004643]/10 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004643]/40'
-        >
-          {item.type === 'image' ? (
-            <Image
-              src={item.url}
-              alt='review-image'
-              width={56}
-              height={56}
-              className='h-full w-full object-cover'
-              unoptimized
-            />
-          ) : (
-            <>
-              <video
+    return (
+      <div className='flex flex-wrap gap-2 mt-2'>
+        {mediaItems.map((item, index) => (
+          <button
+            key={`${item.type}-${item.url}-${index}`}
+            type='button'
+            onClick={() => openMediaViewer(item.url, item.type, 'review-media')}
+            className='relative h-14 w-14 rounded-md border border-[#004643]/10 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#004643]/40'
+          >
+            {item.type === 'image' ? (
+              <Image
                 src={item.url}
+                alt='review-image'
+                width={56}
+                height={56}
                 className='h-full w-full object-cover'
-                muted
-                playsInline
+                unoptimized
               />
-              <span className='absolute inset-0 flex items-center justify-center bg-black/20 text-white text-xs font-semibold'>
-                Video
-              </span>
-            </>
-          )}
-        </button>
-      ))}
-    </div>
-  )
-}
+            ) : (
+              <>
+                <video
+                  src={item.url}
+                  className='h-full w-full object-cover'
+                  muted
+                  playsInline
+                />
+                <span className='absolute inset-0 flex items-center justify-center bg-black/20 text-white text-xs font-semibold'>
+                  Video
+                </span>
+              </>
+            )}
+          </button>
+        ))}
+      </div>
+    )
+  }
 
   const renderReviewTable = () => {
     if (loading) return renderTableSkeleton()

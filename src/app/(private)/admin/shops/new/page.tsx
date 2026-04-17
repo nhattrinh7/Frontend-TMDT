@@ -121,29 +121,29 @@ export default function ApproveNewShopPage() {
 
   if (isInitializing) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-muted-foreground">Đang khởi tạo...</div>
+      <div className='flex h-64 items-center justify-center'>
+        <div className='text-muted-foreground'>Đang khởi tạo...</div>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className='flex flex-col gap-6 p-6'>
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className='flex items-center justify-between'>
         <div>
-          <h1 className="text-2xl font-bold text-[#004643]">Duyệt Shop Mới</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h1 className='text-2xl font-bold text-[#004643]'>Duyệt Shop Mới</h1>
+          <p className='text-sm text-muted-foreground mt-1'>
             Xét duyệt các shop đang chờ được phê duyệt hoạt động
           </p>
         </div>
       </div>
 
       {/* Search & Stats */}
-      <div className="flex items-center justify-between gap-4">
-        <ShopSearch onSearch={handleSearch} placeholder="Tìm kiếm theo tên shop..." />
-        <div className="text-sm text-muted-foreground">
-          Tổng: <span className="font-semibold text-[#004643]">{meta.total}</span> shop chờ duyệt
+      <div className='flex items-center justify-between gap-4'>
+        <ShopSearch onSearch={handleSearch} placeholder='Tìm kiếm theo tên shop...' />
+        <div className='text-sm text-muted-foreground'>
+          Tổng: <span className='font-semibold text-[#004643]'>{meta.total}</span> shop chờ duyệt
         </div>
       </div>
 
@@ -158,7 +158,7 @@ export default function ApproveNewShopPage() {
       />
 
       {/* Pagination */}
-      <div className="flex justify-center">
+      <div className='flex justify-center'>
         <ShopPagination meta={meta} onPageChange={handlePageChange} />
       </div>
     </div>

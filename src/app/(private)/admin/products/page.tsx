@@ -108,20 +108,20 @@ export default function ManageProductsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between">
+    <div className='flex flex-col gap-6 p-6'>
+      <div className='flex items-center justify-between'>
         <div>
-          <h1 className="text-2xl font-bold text-[#004643]">Quản lý sản phẩm</h1>
-          <p className="text-sm text-muted-foreground mt-1">Danh sách các sản phẩm đang hoạt động và bị từ chối</p>
+          <h1 className='text-2xl font-bold text-[#004643]'>Quản lý sản phẩm</h1>
+          <p className='text-sm text-muted-foreground mt-1'>Danh sách các sản phẩm đang hoạt động và bị từ chối</p>
         </div>
       </div>
 
       <Tabs
         value={activeTab}
         onValueChange={(value) => setActiveTab(value as ProductStatusTab)}
-        className="w-full"
+        className='w-full'
       >
-        <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
+        <TabsList className='grid w-full grid-cols-2 max-w-[400px]'>
           {tabs.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value}>
               {tab.label}
@@ -129,7 +129,7 @@ export default function ManageProductsPage() {
                   For now, we can show count if we have it loaded.
                */}
               {tabStates[tab.value].products.length > 0 && (
-                <span className="ml-2 text-xs bg-muted px-1.5 py-0.5 rounded">
+                <span className='ml-2 text-xs bg-muted px-1.5 py-0.5 rounded'>
                   {tabStates[tab.value].meta.total}
                 </span>
               )}
@@ -138,15 +138,15 @@ export default function ManageProductsPage() {
         </TabsList>
 
         {tabs.map((tab) => (
-          <TabsContent key={tab.value} value={tab.value} className="space-y-4 pt-4">
-            <div className="flex items-center justify-between gap-4">
+          <TabsContent key={tab.value} value={tab.value} className='space-y-4 pt-4'>
+            <div className='flex items-center justify-between gap-4'>
               <ProductSearch
                 onSearch={handleSearch}
                 placeholder={`Tìm kiếm sản phẩm ${tab.label.toLowerCase()}...`}
               />
               {tabStates[tab.value].meta.total > 0 && (
-                <div className="text-sm text-muted-foreground">
-                    Tổng: <span className="font-semibold text-[#004643]">{tabStates[tab.value].meta.total}</span> sản phẩm
+                <div className='text-sm text-muted-foreground'>
+                    Tổng: <span className='font-semibold text-[#004643]'>{tabStates[tab.value].meta.total}</span> sản phẩm
                 </div>
               )}
             </div>
@@ -156,7 +156,7 @@ export default function ManageProductsPage() {
               isLoading={tabStates[tab.value].isLoading}
             />
 
-            <div className="flex justify-center">
+            <div className='flex justify-center'>
               <ProductPagination
                 meta={tabStates[tab.value].meta}
                 onPageChange={handlePageChange}

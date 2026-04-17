@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     'https://szone.top',
     'https://api.szone.top',
   ],
+  output: 'standalone',
   experimental: {
     reactCompiler: true,
   },

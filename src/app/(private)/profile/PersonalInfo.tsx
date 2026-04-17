@@ -78,7 +78,7 @@ export default function ProfilePage() {
     // Tạo Date object (month - 1 vì month trong JS bắt đầu từ 0)
     const date = new Date(year, month - 1, day)
     
-    // Trả về ISO-8601 datetime: "2024-12-14T00:00:00.000Z"
+    // Trả về ISO-8601 datetime: '2024-12-14T00:00:00.000Z'
     return date.toISOString()
   }
 
@@ -359,7 +359,7 @@ export default function ProfilePage() {
                 Tên đăng nhập
               </label>
               <Controller
-                name="username"
+                name='username'
                 control={control}
                 render={({ field }) => (
                   <input
@@ -381,7 +381,7 @@ export default function ProfilePage() {
                 Họ và tên
               </label>
               <Controller
-                name="fullName"
+                name='fullName'
                 control={control}
                 render={({ field }) => (
                   <input
@@ -403,7 +403,7 @@ export default function ProfilePage() {
                 Số điện thoại
               </label>
               <Controller
-                name="phoneNumber"
+                name='phoneNumber'
                 control={control}
                 render={({ field }) => (
                   <input
@@ -425,7 +425,7 @@ export default function ProfilePage() {
                 Ngày sinh
               </label>
               <Controller
-                name="dob"
+                name='dob'
                 control={control}
                 render={({ field }) => (
                   <input

@@ -287,6 +287,7 @@ export function CreateSzoneVoucherForm({
                               : 'VD: 50000'
                           }
                           {...field}
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
                           className='border-[#004643]/20 focus:border-[#004643] pr-12 bg-white text-gray-900'
                         />
                         <span className='absolute right-3 top-1/2 -translate-y-1/2 text-[#004643]/70 font-semibold'>
@@ -365,6 +366,7 @@ export function CreateSzoneVoucherForm({
                         type='number'
                         placeholder='VD: 100'
                         {...field}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
                         className='border-[#004643]/20 focus:border-[#004643] bg-white text-gray-900'
                       />
                     </FormControl>
@@ -389,6 +391,7 @@ export function CreateSzoneVoucherForm({
                         type='number'
                         placeholder='VD: 1'
                         {...field}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
                         className='border-[#004643]/20 focus:border-[#004643] bg-white text-gray-900'
                       />
                     </FormControl>
@@ -418,6 +421,7 @@ export function CreateSzoneVoucherForm({
                           type='number'
                           placeholder='VD: 100000'
                           {...field}
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
                           className='border-[#004643]/20 focus:border-[#004643] pr-12 bg-white text-gray-900'
                         />
                         <span className='absolute right-3 top-1/2 -translate-y-1/2 text-[#004643]/70 font-semibold'>

@@ -116,23 +116,23 @@ export default function ManageBrandsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className='flex flex-col gap-6 p-6'>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[#004643]">Quản lý thương hiệu</h1>
+      <div className='flex items-center justify-between'>
+        <h1 className='text-2xl font-bold text-[#004643]'>Quản lý thương hiệu</h1>
         <Button
-          className="gap-2 bg-[#004643] hover:bg-[#004643]/90"
+          className='gap-2 bg-[#004643] hover:bg-[#004643]/90'
           onClick={handleCreateClick}
         >
-          <Plus className="size-4" />
+          <Plus className='size-4' />
           Tạo thương hiệu mới
         </Button>
       </div>
 
       {/* Search */}
-      <div className="flex items-center justify-between gap-4">
+      <div className='flex items-center justify-between gap-4'>
         <BrandSearch onSearch={handleSearch} />
-        <div className="text-sm text-muted-foreground">
+        <div className='text-sm text-muted-foreground'>
           Tổng: {meta.total} thương hiệu
         </div>
       </div>
@@ -146,7 +146,7 @@ export default function ManageBrandsPage() {
       />
 
       {/* Pagination */}
-      <div className="flex justify-center">
+      <div className='flex justify-center'>
         <BrandPagination meta={meta} onPageChange={handlePageChange} />
       </div>
 
