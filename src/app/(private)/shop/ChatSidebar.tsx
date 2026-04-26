@@ -94,6 +94,8 @@ export function ChatSidebar() {
             ...c,
             unreadCountUser: data.readByType === 'USER' ? 0 : c.unreadCountUser,
             unreadCountShop: data.readByType === 'SHOP' ? 0 : c.unreadCountShop,
+            lastReadMessageIdUser: data.readByType === 'USER' ? data.lastReadMessageId : c.lastReadMessageIdUser,
+            lastReadMessageIdShop: data.readByType === 'SHOP' ? data.lastReadMessageId : c.lastReadMessageIdShop,
           }
           : c
         )
@@ -247,6 +249,7 @@ export function ChatSidebar() {
                       isOwnMessage={msg.senderType === SENDER_TYPE.SHOP}
                       onReply={(m) => setReplyTo(m)}
                       onDelete={handleDeleteMessage}
+                      isSeen={msg.senderType === SENDER_TYPE.SHOP && msg.id === activeConv?.lastReadMessageIdUser}
                     />
                   ))}
                   <div ref={messagesEndRef} />
@@ -353,3 +356,6 @@ export function ChatSidebar() {
     </>
   )
 }
+
+
+

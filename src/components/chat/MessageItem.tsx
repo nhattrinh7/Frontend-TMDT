@@ -13,9 +13,10 @@ interface MessageItemProps {
   isOwnMessage: boolean
   onReply: (message: ChatMessage) => void
   onDelete: (messageId: string) => void
+  isSeen?: boolean
 }
 
-export function MessageItem({ message, isOwnMessage, onReply, onDelete }: MessageItemProps) {
+export function MessageItem({ message, isOwnMessage, onReply, onDelete, isSeen }: MessageItemProps) {
   const [showActions, setShowActions] = useState(false)
 
   if (message.isDeleted) {
@@ -82,6 +83,12 @@ export function MessageItem({ message, isOwnMessage, onReply, onDelete }: Messag
             {timeStr}
           </p>
         </div>
+
+        {isSeen && (
+          <div className="text-[10px] text-gray-500 text-right mt-0.5 mr-1">
+            Đã xem
+          </div>
+        )}
 
         {/* Action buttons on hover */}
         {showActions && (

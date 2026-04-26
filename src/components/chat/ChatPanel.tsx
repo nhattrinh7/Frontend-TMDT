@@ -15,6 +15,7 @@ import {
   sendImageMessageAPI,
   markAsReadAPI,
   deleteMessageAPI,
+  checkConversationAPI,
 } from '~/apiRequests/chat.apiRequest'
 import { SENDER_TYPE } from '~/constants/chat.constant'
 import { useBoundStore } from '~/zustand/store'
@@ -61,7 +62,14 @@ export function ChatPanel({ onClose, onMinimize, initialShopId, initialShopName 
     try {
       setLoadingMoreConvs(true)
       const res = await getConversationsAPI({ type: 'user', cursor: convCursor })
-      setConversations(prev => [...prev, ...(res.data || [])])
+      
+      setConversations(prev => {
+        const newConvs = res.data || []
+        // Lọc bỏ những conversation bị trùng (đã có trong state trước đó)
+        const filteredNewConvs = newConvs.filter(newC => !prev.some(p => p.id === newC.id))
+        return [...prev, ...filteredNewConvs]
+      })
+      
       setConvCursor(res.meta?.nextCursor || null)
       setConvHasMore(res.meta?.hasMore || false)
     } catch {
@@ -113,7 +121,7 @@ export function ChatPanel({ onClose, onMinimize, initialShopId, initialShopName 
     onLoadMore: loadMoreMessages,
     hasMore: msgHasMore,
     isLoading: loadingMoreMsgs,
-  })
+  }) 
 
   // Load conversations on mount
   useEffect(() => {
@@ -122,35 +130,71 @@ export function ChatPanel({ onClose, onMinimize, initialShopId, initialShopName 
 
   // Chỉ chạy khi bấm vào nút Chat ngay ở ShopBanner hoặc ShopInfo
   // khi danh sách conversations được load xong hoặc có conversation mới
+  // Còn khi mở bằng bong bóng chat thì ko chạy code trong useEffect này vì initialShopId = null
   useEffect(() => {
-    if (initialShopId) {
-      const existing = conversations.find(c => c.shopId === initialShopId)
-      if (existing) {
-        setActiveConversationId(existing.id)
-        setNewChatShop(null)
-      } else {
-        // New conversation (lazy creation) - chỉ khi gửi tin nhắn đầu tiên mới tạo conversation mới
-        // cụ thể xem dưới hàm handleSendText()
-        setNewChatShop({ shopId: initialShopId, shopName: initialShopName || 'Shop' })
-        setActiveConversationId(null)
-        setMessages([])
+    // Chờ loadConversations() chạy xong rồi mới check, tránh gọi checkConversationAPI thừa 1 lần
+    // khi mảng conversations còn rỗng (chưa load xong từ API)
+    if (initialShopId && !loadingConvs) {
+      const checkAndSetActive = async () => {
+        // Kiểm tra xem có conversation nào với shop này chưa (tức là đã từng nhắn tín với shop này chưa)
+        // Nếu đã rồi thì tự động tìm tới conversation đó và load tin nhắn cũ setActiveConversationId(existing.id)
+        // Còn nếu chưa thì tạo conversation mới setNewChatShop({ shopId: initialShopId, shopName: initialShopName || 'Shop' })
+        const existing = conversations.find(c => c.shopId === initialShopId)
+        if (existing) {
+          setActiveConversationId(existing.id)
+          setNewChatShop(null)
+        } else {
+          // Không có trong mảng hiện tại, chủ động hỏi BE xem đã từng chat chưa
+          const res = await checkConversationAPI(initialShopId)
+          
+          if (res.data) {
+            // User với shop này có conversation từ trước rồi -> push lên đầu mảng để hiển thị
+            setConversations(prev => [res.data!, ...prev])
+            setActiveConversationId(res.data.id)
+            setNewChatShop(null)
+          } else {
+            // New conversation (lazy creation) - chỉ khi gửi tin nhắn đầu tiên mới tạo conversation mới
+            // cụ thể xem dưới hàm handleSendText()
+            setNewChatShop({ shopId: initialShopId, shopName: initialShopName || `Shop ${initialShopId.slice(0, 6)}` })
+
+            // vốn state khi khởi tạo mang giá trị null rồi, nhưng ở đây vẫn set lại null để phòng trường hợp:
+            // 1. user đang chat với 1 shop A đã có trong danh sách conversations, activeConversationId mang gtri id của shop A
+            // 2. user minimize ChatPanel, việc minimize chỉ đóng ChatPanel lại chứ ko xóa giá trị state activeConversationId
+            // 3. Sau đó vào shop B và bấn Chat ngay, shop B là shop chưa chat bao giờ, prop initialShopId thay đổi thành ID của Shop B.
+            // 4. useEffect này chạy, ở đây mà ko setActiveConversationId(null) thì activeConversationId vẫn mang giá trị id của shop A
+            setActiveConversationId(null)
+
+            // Đang hiển thị các tin nhắn cũ của shop A, sau đó nhấn nút Chat ngay với shop B chưa chat bao giờ, thì cần
+            // setMessages([]) nhằm xóa đi các tin nhắn cũ của shop A, bắt đầu chat với shop B với lịch sử tin nhắn trống.
+            setMessages([])
+          }
+        }
       }
+      
+      checkAndSetActive()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialShopId, conversations.length]) // conversations.length ở đây là cần thiết để tránh tạo mới conversation
-  // trong trường hợp bấm Chat ngay
-  // với 1 shop mà user từng chat với shop đó rồi. khi bấm Chat ngay sẽ chạy code
-  // trong if (initialShopId){}, nhưng có thể khi này chưa chạy xong loadConversations() nên state conversations rỗng. 
-  // dòng const existing = conversations.find(c => c.shopId === initialShopId) tìm ko thấy thì sẽ chạy
-  // setNewChatShop({ shopId: initialShopId, shopName: initialShopName || `Shop ${initialShopId.slice(0, 6)}` })
-  // để tạo conversation mới, nhưng sau khi chạy lại setNewChatShop(null) thì ko bị tạo lặp conversation nữa
-  // dù cho conversation giữa user và shop này đã có rồi.
+  }, [initialShopId, conversations.length])
+  // conversations.length ở đây là cần thiết để tránh tạo mới conversation, giải thích:
+  // useEffect này với useEffect ngay phía trên được chạy đồng thời khi component ChatPanel được mount. 
+  // trong trường hợp user bấm Chat ngay với 1 shop mà user từng chat với shop đó rồi. 
+  // khi bấm Chat ngay sẽ chạy code trong if (initialShopId){}, nhưng có thể khi này chưa chạy xong loadConversations() 
+  // vì API chạy cần thời gian mà. Nên state conversations tại thời điểm ban đầu là 1 mảng rỗng. 
+  // dòng const existing = conversations.find(c => c.shopId === initialShopId) tìm ko thấy conversation của user với shop đó 
+  // thì sẽ chạy xuống phần else, tức là sẽ chạy dòng 
+  // setNewChatShop({ shopId: initialShopId, shopName: initialShopName || `Shop ${initialShopId.slice(0, 6)}` }) để lăm le tạo conversation mới ko cần thiết,
+  // quá nguy hiểm. Tuy nhiên nhờ có conversations.length trong deps của useEffect này nên khi loadConversations() chạy xong,
+  // state conversations được cập nhật thì useEffect này được chạy lại và lần này 
+  // const existing = conversations.find(c => c.shopId === initialShopId) đã check ra được conversation của user với shop đó,
+  // nên sẽ chạy lại code trong phần if(existing). trong if(existing) ta setNewChatShop(null) để xóa bỏ cái rủi ro tạo
+  // conversation mới ko cần thiết. 
+
 
   // Load messages when active conversation changes
   useEffect(() => {
     if (activeConversationId) {
       loadMessages(activeConversationId)
-      // Mark as read
+      // Mark as read tất cả các tin nhắn chưa đọc của conversation
       markAsReadAPI(activeConversationId, user?.id || '', SENDER_TYPE.USER).catch(() => {})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -188,7 +232,7 @@ export function ChatPanel({ onClose, onMinimize, initialShopId, initialShopName 
       )
       // Nếu la conversation mới (lazy creation) → reload list
       // vốn là ko cần loadConversations() khi có conversation mới vì khi BE tạo conversation mới sẽ bắn cả 2 event
-      // chat:newMessage và chat:conversationUpdated nên ở onNewMessage đã loadConversations() rồi, những vẫn gọi
+      // chat:newMessage và chat:conversationUpdated nên ở onNewMessage đã loadConversations() rồi, những vẫn gọi 
       // loadConversations() ở đây vì tốt cho trường hợp multi-tab/multi-device.
       if (!conversations.find(c => c.id === updatedConv.id)) {
         loadConversations()
@@ -207,13 +251,15 @@ export function ChatPanel({ onClose, onMinimize, initialShopId, initialShopName 
 
     // chạy mỗi khi BE bắn event chat:messagesRead
     onMessagesRead((data) => {
-      // Cập nhật unread count của đúng conversation đó
+      // Cập nhật unreadCount của đúng conversation đó (của bên nhận)
       setConversations(prev =>
         prev.map(c => c.id === data.conversationId
           ? {
             ...c,
             unreadCountUser: data.readByType === 'USER' ? 0 : c.unreadCountUser,
             unreadCountShop: data.readByType === 'SHOP' ? 0 : c.unreadCountShop,
+            lastReadMessageIdUser: data.readByType === 'USER' ? data.lastReadMessageId : c.lastReadMessageIdUser,
+            lastReadMessageIdShop: data.readByType === 'SHOP' ? data.lastReadMessageId : c.lastReadMessageIdShop,
           }
           : c
         )
@@ -238,6 +284,17 @@ export function ChatPanel({ onClose, onMinimize, initialShopId, initialShopName 
   useEffect(() => {
     // Luôn cuộn xuống mỗi khi danh sách tin nhắn thay đổi (kể cả lúc Init và nhận tin mới)
     requestAnimationFrame(() => scrollToBottom('smooth'))
+    // requestAnimationFrame là 1 build-in web API. Về cách hoạt động thì:
+    // Màn hình ví dụ 60FPS thì 16.6ms sẽ vẽ lại màn hình 1 lần - gọi là repaint. lệnh requestAnimationFrame(hàm_x)
+    // yêu cầu trình duyệt gọi hàm_x ngay trước lần repaint kế tiếp
+    // messages nằm trong deps của useEffect này, mỗi khi có tin nhắn mới thì messages sẽ thay đổi
+    // dẫn đến gọi lại requestAnimationFrame và cuộn xuống để ta nhìn thấy tin nhắn mới.
+
+    // dùng requestAnimationFrame() thay vì gọi scrollToBottom trực tiếp là vì:
+    // khi load lần đầu hay nhận tin nhắn mới, việc cập nhật DOM và tính toán lại layout có thể chưa hoàn thành ngay lập tức,
+    // chiều cao vẫn là chiều cao cũ thì có thực hiện scroll cũng ko scroll hẳn xuống đáy thực sự được.
+    // requestAnimationFrame đảm bảo việc cuộn chỉ diễn ra sau khi DOM và layout đã được cập nhật, đồng nghĩa với việc chiều cao
+    // thực sự đã được tính toán xong, đảm bảo luôn scroll xuống đến tin nhắn cuối cùng.
     
     // Nếu là load lần đầu thì đánh dấu đã qua stage đó (để có thể xử lý việc cuộn ngược InfinityScroll sau này)
     if (isInitialMsgLoad.current && messages.length > 0) {
@@ -439,6 +496,7 @@ export function ChatPanel({ onClose, onMinimize, initialShopId, initialShopName 
                         isOwnMessage={msg.senderType === SENDER_TYPE.USER}
                         onReply={(m) => setReplyTo(m)}
                         onDelete={handleDeleteMessage}
+                        isSeen={msg.senderType === SENDER_TYPE.USER && msg.id === activeConversation?.lastReadMessageIdShop}
                       />
                     ))}
                     <div ref={messagesEndRef} />

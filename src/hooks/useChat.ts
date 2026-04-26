@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { io, Socket } from 'socket.io-client'
 import type { ChatMessage, ChatConversation } from '~/apiRequests/chat.apiRequest'
+import { getTotalUnreadCountAPI } from '~/apiRequests/chat.apiRequest'
 
 const CHAT_WS_URL = process.env.NEXT_PUBLIC_CHAT_WS_URL || 'http://localhost:3004'
 
@@ -18,7 +19,7 @@ interface UseChatReturn {
   onNewMessage: (callback: (message: ChatMessage) => void) => void
   onConversationUpdated: (callback: (conversation: ChatConversation) => void) => void
   onMessageDeleted: (callback: (data: { messageId: string; conversationId: string }) => void) => void
-  onMessagesRead: (callback: (data: { conversationId: string; readBy: string; readByType: string }) => void) => void
+  onMessagesRead: (callback: (data: { conversationId: string; readById: string; readByType: string; lastReadMessageId: string }) => void) => void
 }
 
 
@@ -29,16 +30,18 @@ export function useChat(options?: UseChatOptions): UseChatReturn {
   const [isConnected, setIsConnected] = useState(false)
   const [totalUnread, setTotalUnread] = useState(0)
 
-  // Callback refs
+  // 
   const newMessageCallbackRef = useRef<((message: ChatMessage) => void) | null>(null)
   const conversationUpdatedCallbackRef = useRef<((conversation: ChatConversation) => void) | null>(null)
   const messageDeletedCallbackRef = useRef<((data: { messageId: string; conversationId: string }) => void) | null>(null)
-  const messagesReadCallbackRef = useRef<((data: { conversationId: string; readBy: string; readByType: string }) => void) | null>(null)
+  const messagesReadCallbackRef = useRef<((data: { conversationId: string; readById: string; readByType: string; lastReadMessageId: string }) => void) | null>(null)
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken')
     if (!accessToken) return
 
+    // B1: Tại đây khi gọi đến địa chỉ BE, FE chủ động gõ cửa BE xin kết nối. 
+    // BE kiểm tra token thấy ok thì cho vào. đường hầm được thiết lập
     const socket = io(`${CHAT_WS_URL}/chat`, {
       auth: {
         token: accessToken,
@@ -52,13 +55,27 @@ export function useChat(options?: UseChatOptions): UseChatReturn {
 
     socketRef.current = socket
 
+    //------------------------------
+    // 2 sự kiện build in của socket.io. 
+
+    // B2: B1 OK thì B2 FE tự kích hoạt sự kiện connect ngay trên máy user
+    // Nó là 1 tiếng reo lên của FE báo hiệu Đã kết nối thành công
     socket.on('connect', () => {
       setIsConnected(true)
+      
+      // Khởi tạo lấy totalUnread khi vừa kết nối thành công để hiển thị badge đỏ lên ChatBubble
+      const type = options?.shopId ? 'shop' : 'user'
+      getTotalUnreadCountAPI(type, options?.shopId).then(res => {
+        setTotalUnread(res.data.totalUnread)
+      }).catch(console.error)
     })
 
+    // Khi đường hầm bị đứt vì bất cứ lí do gì, sự kiện disconnect được kích hoạt
+    // Nó là 1 tiếng kếu thông báo đường hầm đã sập
     socket.on('disconnect', () => {
       setIsConnected(false)
     })
+    //---------------------------------
 
     // Listen for events
     socket.on('chat:newMessage', (message: ChatMessage) => {
@@ -73,14 +90,15 @@ export function useChat(options?: UseChatOptions): UseChatReturn {
       messageDeletedCallbackRef.current?.(data)
     })
 
-    socket.on('chat:messagesRead', (data: { conversationId: string; readBy: string; readByType: string }) => {
+    socket.on('chat:messagesRead', (data: { conversationId: string; readById: string; readByType: string; lastReadMessageId: string }) => {
       messagesReadCallbackRef.current?.(data)
     })
 
-    socket.on('chat:unreadCountUpdate', (data: { totalUnread: number }) => {
+    socket.on('chat:totalUnreadCountUpdate', (data: { totalUnread: number }) => {
       setTotalUnread(data.totalUnread)
     })
 
+    // cleanup khi component unmount
     return () => {
       socket.disconnect()
       socketRef.current = null
@@ -102,7 +120,7 @@ export function useChat(options?: UseChatOptions): UseChatReturn {
     messageDeletedCallbackRef.current = callback
   }
 
-  const onMessagesRead = (callback: (data: { conversationId: string; readBy: string; readByType: string }) => void) => {
+  const onMessagesRead = (callback: (data: { conversationId: string; readById: string; readByType: string; lastReadMessageId: string }) => void) => {
     messagesReadCallbackRef.current = callback
   }
 

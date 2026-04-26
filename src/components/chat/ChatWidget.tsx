@@ -11,7 +11,7 @@ import { useBoundStore } from '~/zustand/store'
 let setChatTarget: ((shopId: string, shopName?: string) => void) | null = null
 
 // B2. Khi nhấn nút Chat ngay ở ShopBanner hoặc ShopInfo, cái hàm được gán cho biến setChatTarget sẽ được chạy,
-// sẽ chạysetTargetShopId(), setTargetShopName() và setIsOpen(true).
+// sẽ chạy setTargetShopId(), setTargetShopName() và setIsOpen(true).
 // khi này các state bị thay đổi giá nên sẽ kích hoạt re-render, khi này isOpen = true nên ChatPanel sẽ bung ra
 export function openChatWithShop(shopId: string, shopName?: string) {
   setChatTarget?.(shopId, shopName)

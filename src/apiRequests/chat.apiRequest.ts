@@ -15,6 +15,8 @@ export interface ChatConversation {
   lastMessageSenderType: SenderType | null
   unreadCountUser: number
   unreadCountShop: number
+  lastReadMessageIdUser: string | null
+  lastReadMessageIdShop: string | null
   createdAt: string
   updatedAt: string
   // FE enrichment fields (populated after API call)
@@ -61,6 +63,14 @@ export const getConversationsAPI = async (params: {
 
   const response = await http.get<ApiResponse<ChatConversation[]> & { meta: CursorMeta }>(
     `/api/v1/chats/conversations?${searchParams.toString()}`
+  )
+  return response
+}
+
+// Check xem conversation đã tồn tại chưa (dùng khi click Chat ngay)
+export const checkConversationAPI = async (shopId: string) => {
+  const response = await http.get<ApiResponse<ChatConversation | null>>(
+    `/api/v1/chats/conversations/check?shopId=${shopId}`
   )
   return response
 }
@@ -123,8 +133,9 @@ export const sendImageMessageAPI = async (data: {
 }
 
 // Đánh dấu đã đọc
-export const markAsReadAPI = async (conversationId: string, readBy: string, readByType: SenderType) => {
-  await http.patch<ApiResponse>(`/api/v1/chats/conversations/${conversationId}/read`, { readBy, readByType })
+// Được gọi khi người nhận nhấn vào conversation hoặc Khi người dùng ĐANG MỞ SẴN cửa sổ của cuộc hội thoại đó
+export const markAsReadAPI = async (conversationId: string, readById: string, readByType: SenderType) => {
+  await http.patch<ApiResponse>(`/api/v1/chats/conversations/${conversationId}/read`, { readById, readByType })
 }
 
 // Xóa tin nhắn (soft delete)
@@ -134,8 +145,8 @@ export const deleteMessageAPI = async (messageId: string, requesterId: string, r
   )
 }
 
-// Lấy tổng unread count
-export const getUnreadCountAPI = async (type: 'user' | 'shop', shopId?: string) => {
+// Lấy số conversation có tin nhắn chưa đọc để hiển thị lên ChatBubble
+export const getTotalUnreadCountAPI = async (type: 'user' | 'shop', shopId?: string) => {
   const searchParams = new URLSearchParams()
   searchParams.set('type', type)
   if (shopId) searchParams.set('shopId', shopId)
